@@ -1,0 +1,10 @@
+<app-nav (featureSelected)="onNavigate($event)"></app-nav>
+<div style="display: flexbox; justify-content: space-evenly;">
+  <app-item></app-item>
+  <div>
+      <app-catalog *ngIf="loadedFeature === 'catalog'"></app-catalog>
+      <app-cart *ngIf="loadedFeature === 'cart'"></app-cart>
+      <app-purchases *ngIf="loadedFeature === 'purchases'"></app-purchases>
+      <app-settings *ngIf="loadedFeature === 'settings'"></app-settings>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="cartContainer">
+  <div class="checkoutContainer">
+    <div class="total">Total: ${{cartTotal}}</div>
+    <a href="#" class="btn btn-success" (click)="checkout()">Checkout</a>
+    <a href="#" class="btn btn-danger" (click)="clear()">Clear</a>
+  </div>
+  <div class="cardList">
+    <ng-container *ngFor="let item of cartItems; let i = index">
+      <div class="card flex-item" style="width: 18rem;">
+        <img class="card-img-top" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{item.name}} {{item.amount}}</h5>
+          <p class="card-text">{{item.description}}</p>
+          <div class="row" style="display: flexbox; justify-content: space-evenly;" >
+            <a href="#" class="btn btn-success" (click)="addItem(item)">Purchase</a>
+            <a href="#" class="btn btn-danger" (click)="removeItem(item)">Remove</a>
+
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

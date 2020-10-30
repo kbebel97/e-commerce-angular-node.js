@@ -1,0 +1,48 @@
+.container{
+  width: max-content;
+}
+
+#image{
+  max-width: 100%;
+  max-height: 50%;
+}
+
+/*
+.cardList {
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+} */
+/* Column Gap */
+.cardList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  row-gap: 10px;
+}
+/* Column Gap */
+
+.cartContainer{
+  margin: 10px;
+}
+
+.checkoutContainer{
+  margin: 10px;
+  column-gap: 10px;
+  display: flex;
+  align-content: flex-start;
+}
+
+.total{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  background-color: blue;
+  color: white;
+  padding-left: 10px;
+  padding-right: 10px;
+}

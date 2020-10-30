@@ -1,0 +1,12 @@
+.cardList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  row-gap: 10px;
+}
+/* Column Gap */
+
+.cartContainer{
+  margin: 10px;
+}
