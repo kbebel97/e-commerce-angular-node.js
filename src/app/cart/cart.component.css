@@ -1,10 +1,6 @@
-.container{
-  width: max-content;
-}
 
-#image{
-  max-width: 100%;
-  max-height: 50%;
+.card-img-top{
+  height: 150px;
 }
 
 /*
@@ -29,11 +25,20 @@
   margin: 10px;
 }
 
+
+
 .checkoutContainer{
   margin: 10px;
   column-gap: 10px;
   display: flex;
   align-content: flex-start;
+}
+
+.empty-cart{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
 }
 
 .total{
@@ -45,4 +50,22 @@
   color: white;
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.card-title{
+  margin-bottom: 5px;
+
+}
+.card-body{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 10px;
+
+}
+
+
+.card-text{
+  margin-bottom: 10px;
+  overflow-y: scroll;
 }

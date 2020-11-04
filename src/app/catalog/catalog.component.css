@@ -7,6 +7,28 @@
 }
 /* Column Gap */
 
-.cartContainer{
+.catalogContainer{
   margin: 10px;
+}
+
+.card-img-top{
+  height: 150px;
+}
+
+.card-body{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 10px;
+
+}
+
+.card-title{
+  margin-bottom: 5px;
+
+}
+
+.card-text{
+  margin-bottom: 10px;
+  overflow-y: scroll;
 }

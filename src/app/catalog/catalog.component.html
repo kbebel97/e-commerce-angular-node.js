@@ -1,13 +1,16 @@
 
-<div class="cartContainer">
+<div class="catalogContainer">
+
   <div class="cardList">
     <ng-container *ngFor="let item of catalogItems">
       <div class="card flex-item" style="width: 18rem;">
         <img class="card-img-top" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
         <div class="card-body">
-          <h5 class="card-title">{{item.name}} {{item.amount}}</h5>
-          <p class="card-text">{{item.description}}</p>
-          <a href="#" class="btn btn-primary">Add to Cart</a>
+          <h5 class="card-title" style="height: 40px;">{{item.name}} {{item.amount}}</h5>
+          <p style="height: 140px;" class="card-text">{{item.description}}</p>
+          <a class="btn btn-primary" (click)="onSelected(item)" style="margin-bottom: 2px;">Add to Cart</a>
+          <a class="btn btn-primary" (click)="onShowMore(item)">Show more</a>
+
         </div>
       </div>
     </ng-container>

@@ -1,1 +1,14 @@
-<p>purchases works!</p>
+<div class="purchasesContainer">
+  <div class="cardList">
+    <ng-container *ngFor="let item of purchasedItems">
+      <div class="card flex-item" style="width: 18rem;">
+        <img class="card-img-top" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{item.name}} {{item.amount}}</h5>
+          <p class="card-text">{{item.description}}</p>
+          <a href="#" class="btn btn-primary">Add to Cart</a>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

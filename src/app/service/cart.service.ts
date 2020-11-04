@@ -1,16 +1,17 @@
 import { EventEmitter } from '@angular/core';
 import { Item } from '../shared/Item.model';
+import { Review } from '../shared/review.model';
 
 
 export class cartService{
   purchaseItem = new EventEmitter<Item>();
+  addItemHistory = new EventEmitter<Item>();
   purchaseAll = new EventEmitter<Item[]>();
+  removeItem = new EventEmitter<Item>();
 
   private items: Item[] = [
-    new Item('Carrot','its orange', 4),
-    new Item('PS5', 'great console', 500),
-    new Item('PS5', 'great console', 500),
-    new Item('PS5', 'great console', 500)
+
+
   ];
 
   addItem(item: Item){

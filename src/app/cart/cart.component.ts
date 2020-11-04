@@ -1,31 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { cartService } from '../service/cart.service';
+import { generalService } from '../service/general.service';
 import { Item } from '../shared/Item.model';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.css'],
-  providers: [cartService]
+  styleUrls: ['./cart.component.css']
+
 })
 export class CartComponent implements OnInit {
-  cartTotal: number = 0;
-  cartItems = [];
-  constructor(private service: cartService) { }
+  @Input() cartTotal = 0;
+  showlist: boolean;
+  @Input() hello: string;
+  @Input() cartItems = [];
+  // @Output() deletefromCar = new EventEmitter<Item>();
+  constructor(private generalService : generalService, private cartService: cartService) { }
 
   ngOnInit(){
-    this.cartItems = this.service.getItems();
-    for (var item of this.cartItems) {
-      this.cartTotal = this.cartTotal + item.amount;
+    this.cartItems = this.generalService.getcartItems();
+    this.cartTotal += this.generalService.getCartTotal();
+    console.log(this.cartItems);
+    // this.generalService.addtoCart.subscribe(
+    //   (item: Item) => {
+    //     console.log(item);
+    //     this.cartItems.push(item);
+    //   }
+    // )
+    if(this.cartItems.length == 0){
+      this.showlist = false;
     }
-    // this.service.itemChange
-    //   .subscribe(
-    //     (items : Item[]) => {
-    //       this.cartItems = items;
-    //     }
-    //   )
+    else this.showlist = true;
   }
+
+
   checkout(){
-    this.service.addAll()
+    // this.cartService.purchaseAll.emit(this.cartItems)
     this.cartItems = [];
 
   }
@@ -35,18 +44,20 @@ export class CartComponent implements OnInit {
   }
 
   addItem(item: Item){
-    this.service.addItem(item);
-    const index = this.cartItems.indexOf(item, 0);
-    if (index > -1) {
-      this.cartItems.splice(index, 1);
-    }
+    this.cartItems.push(item);
+
+  }
+
+
+
+  buyItem(item: Item){
+    this.cartService.addItemHistory.emit(item);
+    this.cartService.removeItem.emit(item);
+
 
   }
 
   removeItem(item: Item){
-    const index = this.cartItems.indexOf(item, 0);
-    if (index > -1) {
-      this.cartItems.splice(index, 1);
-    }
+    this.cartService.removeItem.emit(item);
   }
 }
