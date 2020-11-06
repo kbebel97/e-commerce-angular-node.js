@@ -56,7 +56,9 @@ export class CartComponent implements OnInit {
           this.cartTotal = parseFloat((this.cartTotal - item.total).toFixed(2));
           this.cartService.setCartTotal(this.cartTotal);
           this.cartItems.splice(this.cartItems.indexOf(a), 1);
-          this.showlist = false;
+          if(this.cartItems.length == 0){
+            this.showlist = false;
+          }
         }
 
       }
@@ -76,6 +78,9 @@ export class CartComponent implements OnInit {
           this.cartTotal = parseFloat((this.cartTotal - item.total).toFixed(2));
           this.cartService.setCartTotal(this.cartTotal);
           this.cartItems.splice(this.cartItems.indexOf(a), 1);
+          if(this.cartItems.length == 0){
+            this.showlist = false;
+          }
         }
 
 
