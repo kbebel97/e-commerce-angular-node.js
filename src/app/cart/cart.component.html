@@ -1,24 +1,25 @@
-<div class="cartContainer" (itemSelected)="addItem($event)">
+<div class="cartContainer">
   <div class="checkoutContainer">
     <div class="total">Total: ${{cartTotal}}</div>
-    <a href="#" class="btn btn-success" (click)="checkout()">Checkout</a>
-    <a href="#" class="btn btn-danger" (click)="clear()">Clear</a>
+    <a class="btn btn-success" (click)="checkout()">Checkout</a>
+    <a class="btn btn-danger" (click)="clear()">Clear</a>
   </div>
   <div *ngIf="showlist" class="cardList">
     <ng-container *ngFor="let item of cartItems; let i = index">
       <div class="card flex-item" style="width: 18rem;">
         <img class="card-img-top" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
         <div class="card-body">
-          <h4 class="card-title" style="height: 20px;">{{item.name}} ${{item.amount}}</h4>
+          <h4 class="card-title" style="height: 20px;">
+            <div class="name"> {{item.name}} </div>
+            <div class="amount"> ${{item.amount}} </div>
+            <div class="qty">Qty: {{item.qty}}</div>
+          </h4>
           <h6 class="shippingFee" style="height: 20px; margin-bottom: 5px;">+ shipping ${{item.shippingFee}}</h6>
-          <h6 class="shippingFee" style="height: 20px; margin-bottom: 5px;">+ shipping ${{item.shippingFee}}</h6>
+          <h6 class="total" style="height: 20px; margin-bottom: 5px;">total ${{item.total}}</h6>
           <p style="height: 140px;" class="card-text">{{item.description}}</p>
-          <a href="#" class="btn btn-success" (click)="buyItem(item)" style="margin-bottom: 2px;">Purchase</a>
-          <a href="#" class="btn btn-danger" (click)="removeItem(item)"  style="margin-bottom: 2px;">Remove</a>
-          <a href="#" class="btn btn-primary" (click)="removeItem(item)">Show more</a>
-
-
-
+          <a class="btn btn-success" (click)="buyItem(item)" style="margin-bottom: 2px;">Purchase</a>
+          <a class="btn btn-danger" (click)="removeItem(item)"  style="margin-bottom: 2px;">Remove</a>
+          <a class="btn btn-primary" (click)="showMore(item)">Show more</a>
         </div>
       </div>
     </ng-container>
@@ -29,41 +30,7 @@
 
     </div>
   </div>
-  <!-- <div class="cardList">
-    <ng-container *ngFor="let item of cartItems; let i = index">
-      <div class="card flex-item" style="width: 18rem;">
-        <img class="card-img-top" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
-        <div class="card-body" style="display: flexbox;">
-
-          <h5 class="card-title">{{item.name}} {{item.amount}}</h5>
-          <p class="card-text">{{item.description}}</p>
-          <div class="row" style="display: flexbox; justify-content: space-evenly;" >
-            <a href="#" class="btn btn-success" (click)="buyItem(item)">Purchase</a>
-            <a href="#" class="btn btn-danger" (click)="removeItem(item)">Remove</a>
-
-          </div>
-
-        </div>
-      </div>
-    </ng-container>
-  </div> -->
 </div>
 
 
-
-
-  <!-- <div class="cardList">
-    <ng-container *ngFor="let item of cartItems; let i = index">
-      <div class="card flex-item" style="width: 18rem;">
-        <img class="card-img-top" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title" style="height: 40px;">{{item.name}} {{item.amount}}</h5>
-          <p style="height: 140px;" class="card-text">{{item.description}}</p>
-          <a href="#" class="btn btn-primary" (click)="buyItem(item)" style="margin-bottom: 2px;">Add to Cart</a>
-          <a href="#" class="btn btn-primary" (click)="removeItem(item)">Show more</a>
-
-        </div>
-      </div>
-    </ng-container>
-  </div> -->
 

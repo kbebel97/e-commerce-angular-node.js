@@ -1,17 +1,7 @@
-
 .card-img-top{
   height: 150px;
 }
 
-/*
-.cardList {
-
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-} */
-/* Column Gap */
 .cardList {
   display: flex;
   flex-direction: row;
@@ -19,13 +9,10 @@
   justify-content: space-evenly;
   row-gap: 10px;
 }
-/* Column Gap */
 
 .cartContainer{
   margin: 10px;
 }
-
-
 
 .checkoutContainer{
   margin: 10px;
@@ -53,19 +40,39 @@
 }
 
 .card-title{
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fill);
   margin-bottom: 5px;
-
 }
+
 .card-body{
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   padding: 10px;
-
 }
 
+.name{
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.amount{
+  grid-column: 2/span 2;
+  grid-row: 1;
+  text-align: center;
+}
+
+.qty{
+  grid-column: 4;
+  grid-row: 1;
+  text-align: end;
+}
 
 .card-text{
   margin-bottom: 10px;
   overflow-y: scroll;
 }
+
+

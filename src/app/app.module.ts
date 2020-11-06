@@ -12,14 +12,14 @@ import { SettingsComponent } from './settings/settings.component';
 // ...
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { ItemComponent } from './item/item.component';
-import { catalogService } from './service/catalog.service';
 import { DropdownDirective} from './nav/dropdown.directive'
-import { cartService } from './service/cart.service';
-import { CatDirective } from './catalog/cat.directive';
 import { CarouselComponent } from './item/carousel/carousel.component';
-import { itemService } from './service/item.service';
 import { RouterModule, Routes } from '@angular/router';
 import { generalService } from './service/general.service';
+import { itemService } from './item/item.service';
+import { cartService } from './cart/cart.service';
+import { catalogService } from './catalog/catalog.service';
+import { purchasesService } from './purchases/purchases.service';
 
 const appRoutes: Routes = [
   {path: 'item', component: ItemComponent},
@@ -39,7 +39,6 @@ const appRoutes: Routes = [
     SettingsComponent,
     ItemComponent,
     DropdownDirective,
-    CatDirective,
     CarouselComponent
   ],
   imports: [
@@ -48,7 +47,7 @@ const appRoutes: Routes = [
     NgbModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [catalogService, cartService, itemService, generalService],
+  providers: [catalogService, cartService, itemService, generalService, purchasesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

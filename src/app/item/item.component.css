@@ -89,6 +89,7 @@
   max-height: 80px;
   overflow-y: scroll;
 }
+
 ::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* make scrollbar transparent */

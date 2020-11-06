@@ -1,28 +1,25 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { purchasesService } from '../service/purchases.service';
+import { generalService } from '../service/general.service';
+import { purchasesService } from './purchases.service';
 import { Item } from '../shared/Item.model';
 
 @Component({
   selector: 'app-purchases',
   templateUrl: './purchases.component.html',
-  styleUrls: ['./purchases.component.css'],
-  providers: [purchasesService]
+  styleUrls: ['./purchases.component.css']
 })
 export class PurchasesComponent implements OnInit {
   @Input() purchasedItems = [];
-  constructor(private service: purchasesService) { }
+  showPurchases: boolean;
+  constructor(private generalService: generalService, private purchasesService: purchasesService) { }
 
   ngOnInit(){
-    console.log(this.purchasedItems);
-    // this.purchasedItems = this.service.getItems();
-    for (var item of this.purchasedItems) {
+    this.purchasedItems = this.purchasesService.getPurchaseHistory();
+    // this.showPurchases = false;
+    if(this.purchasedItems.length == 0){
+      this.showPurchases = false;
     }
-    // this.service.itemChange
-    //   .subscribe(
-    //     (items : Item[]) => {
-    //       this.cartItems = items;
-    //     }
-    //   )
+    else this.showPurchases = true;
   }
 
   returnItem(item: Item){

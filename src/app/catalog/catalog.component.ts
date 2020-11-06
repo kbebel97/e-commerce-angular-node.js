@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { cartService } from '../cart/cart.service';
 import { generalService } from '../service/general.service';
 import { Item } from '../shared/Item.model';
+import { catalogService } from './catalog.service';
 
 @Component({
   selector: 'app-catalog',
@@ -12,31 +14,18 @@ export class CatalogComponent implements OnInit {
   @Input() catalogItems = [];
   showCatalog: boolean;
 
-  constructor(private service: generalService, private router: Router) { }
+  constructor(private generalService: generalService, private catalogService: catalogService, private cartService: cartService, private router: Router) { }
 
   ngOnInit(){
-    this.catalogItems = this.service.getItems();
-    // this.service.itemChange
-    //   .subscribe(
-    //     (items : Item[]) => {
-    //       this.catalogItems = items;
-    //     }
-    //   )
+    this.catalogItems = this.catalogService.getItems();
   }
 
   onSelected(item: Item){
-    // this.service.addtoCart.emit(item);
-    // this.service.addtoCart.emit(item);
-    this.service.pushtoCart(item);
-
+    this.cartService.pushtoCart(item);
   }
 
   onShowMore(item: Item){
-    // this.service.inspectMore.emit(item);
     this.router.navigate(['/item', item.name], {queryParams: {id: item.id}});
-
-
-
   }
 
 

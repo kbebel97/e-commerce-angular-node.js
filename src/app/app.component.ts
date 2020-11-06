@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { cartService } from './service/cart.service';
-import { catalogService } from './service/catalog.service';
-import { itemService } from './service/item.service';
-import { cartItem } from './shared/cartItem.model';
+import { cartService } from './cart/cart.service';
+import { catalogService } from './catalog/catalog.service';
+import { itemService } from './item/item.service';
 import { Item } from './shared/Item.model';
 
 @Component({
@@ -23,25 +22,25 @@ export class AppComponent {
 
 
 
-  ngOnInit(){
-    // this.catalogItems = this.service.getItems();
-    this.catalogService.itemSelected
-      .subscribe(
-        (item : Item) => {
+  ngOnInit(){}
+    // this.catalogService.itemSelected
+    //   .subscribe(
+    //     (item : Item) => {
 
-          this.shippingFee = item.amount * .02;
-          this.cartItems.push(new cartItem(item.name, item.description, item.amount, this.shippingFee));
-          let a = 0;
-          for(let i=0; i<this.cartItems.length; i++){
-            console.log(this.cartItems[i].amount);
-            a += parseInt(this.cartItems[i].amount);
-          }            console.log(a);
-          this.cartTotal = a;
-
+    //       this.shippingFee = item.amount * .02;
+    //       this.cartItems.push(new cartItem(item.name, item.description, item.amount, this.shippingFee));
+    //       let a = 0;
+    //       for(let i=0; i<this.cartItems.length; i++){
+    //         console.log(this.cartItems[i].amount);
+    //         a += parseInt(this.cartItems[i].amount);
+    //       }            console.log(a);
+    //       this.cartTotal = a;
 
 
-        }
-      )
+
+    //     }
+    //   )
+
 
     // this.catalogService.inspectMore
     // .subscribe(
@@ -51,62 +50,62 @@ export class AppComponent {
     //   }
     // )
 
-    this.cartService.removeItem
-      .subscribe(
-        (item: Item) => {
-          const index = this.cartItems.indexOf(item, 0);
-          if (index > -1) {
-            this.cartTotal -= this.cartItems[index].amount;
-            this.cartItems.splice(index, 1);
-          }
-        }
-      )
+  //   this.cartService.removeItem
+  //     .subscribe(
+  //       (item: Item) => {
+  //         const index = this.cartItems.indexOf(item, 0);
+  //         if (index > -1) {
+  //           this.cartTotal -= this.cartItems[index].amount;
+  //           this.cartItems.splice(index, 1);
+  //         }
+  //       }
+  //     )
 
-    this.cartService.addItemHistory
-      .subscribe((item: Item) => {
-        this.purchasedItems.push(item);
-        }
-      )
+  //   this.cartService.addItemHistory
+  //     .subscribe((item: Item) => {
+  //       this.purchasedItems.push(item);
+  //       }
+  //     )
 
-    this.itemService.goBack
-      .subscribe((loadedFeature: string)=> {
-          this.loadedFeature = loadedFeature;
-        }
-      )
+  //   this.itemService.goBack
+  //     .subscribe((loadedFeature: string)=> {
+  //         this.loadedFeature = loadedFeature;
+  //       }
+  //     )
 
-    this.itemService.addtoCart
-      .subscribe(
-      (item : Item) => {
+  //   this.itemService.addtoCart
+  //     .subscribe(
+  //     (item : Item) => {
 
-        this.shippingFee = item.amount * .02;
-        this.cartItems.push(new cartItem(item.name, item.description, item.amount, this.shippingFee));
-        let a = 0;
-        for(let i=0; i<this.cartItems.length; i++){
-          console.log(this.cartItems[i].amount);
-          a += parseInt(this.cartItems[i].amount);
-        }            console.log(a);
-        this.cartTotal = a;
-
-
-
-      }
-    )
+  //       this.shippingFee = item.amount * .02;
+  //       this.cartItems.push(new cartItem(item.name, item.description, item.amount, this.shippingFee));
+  //       let a = 0;
+  //       for(let i=0; i<this.cartItems.length; i++){
+  //         console.log(this.cartItems[i].amount);
+  //         a += parseInt(this.cartItems[i].amount);
+  //       }            console.log(a);
+  //       this.cartTotal = a;
 
 
 
-
-  }
-
-  inspectItem(){
-    this.loadedFeature = null;
-    return false;
-
-  }
+  //     }
+  //   )
 
 
-  onNavigate(feature: string){
-    this.loadedFeature = feature;
-  }
+
+
+  // }
+
+  // inspectItem(){
+  //   this.loadedFeature = null;
+  //   return false;
+
+  // }
+
+
+  // onNavigate(feature: string){
+  //   this.loadedFeature = feature;
+  // }
 
   // addtoCart(item: Item){
   //   this.cartItems.push(item);

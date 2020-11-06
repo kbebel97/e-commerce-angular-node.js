@@ -11,7 +11,7 @@
         <div *ngFor="let dummy of ' '.repeat(item.rating).split(''), let x = index" class="material-icons" style="font-size:30px;">star</div>
         <div style="flex: 6; align-self: center; display: flex; align-items: flex-end; justify-content: flex-end;">
           <a class="btn btn-primary" (click)="onaddtoCart(item)" style="align-self: center; margin-right: 2.5px;">Add to cart</a>
-          <a class="btn btn-primary" (click)="onBackclick(item)" style="align-self: center; margin-left: 2.5px;">Go Back</a>
+          <a class="btn btn-primary" (click)="onBackclick()" style="align-self: center; margin-left: 2.5px;">Go Back</a>
 
 
         </div>
