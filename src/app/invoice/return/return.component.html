@@ -1,0 +1,77 @@
+<div *ngIf="!returnInvoice" class="return-item" style="display: flex; flex-direction: row; background-color: yellow; color: black; padding: 3px;">
+  <!-- <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div>
+      Transaction Date: {{invoice.date}}
+    </div>
+    <div>
+      Tax: ${{item.singleItemTax * item.quantity}}
+    </div>
+    <div>
+      Quantity: {{item.quantity}}
+    </div>
+    <div>
+      Shipping: ${{item.singleItemShippingFee * item.quantity}}
+    </div>
+    <div>
+      Total: ${{invoice.total * item.quantity}}
+    </div>
+  </div> -->
+  <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; align-items: flex-start; ">
+    <div>
+      Item: {{name}}
+    </div>
+    <div>
+      Tax: ${{tax | number : '.2-2'}}
+    </div>
+    <div>
+      Shipping: ${{shipping | number : '.2-2'}}
+    </div>
+    <div>
+      Item Price: ${{price | number : '.2-2'}}
+    </div>
+    <div>
+      Total: ${{total | number : '.2-2'}}
+    </div>
+    <div>
+
+    </div>
+  </div>
+  <div style="flex: 2; display: flex; flex-direction: column; justify-content: space-evenly;">
+      <div class="form-group" style="display: flex; flex-direction: row; align-items: center; margin: 0;">
+        <label style="flex: .5; text-align: center; margin: 0px;" for="power">Confirm Return Request:</label>
+        <div style="flex: .5; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center;">
+          <a class="btn material-icons" (click)="increaseItemQuantity()"style="flex: 1; background-color: yellow;">keyboard_arrow_up</a>
+          <span style="flex: .5;">{{quantity}}</span>
+          <a class="btn material-icons" (click)="decreaseItemQuantity()" style="flex: 1; background-color: yellow;" >keyboard_arrow_down</a>
+        </div>
+        <a class="btn btn-success" (click)="confirm()" style="margin-bottom: 2px; flex: 1; margin-right: 1px;">Confirm</a>
+        <a class="btn btn-danger" (click)="cancel()" style="margin-bottom: 2px; flex: 1; margin-left: 1px;">Cancel</a>
+      </div>
+
+  </div>
+
+</div>
+
+
+
+<div *ngIf="returnInvoice" class="return-all" style="display: flex; flex-direction: row; background-color: yellow;">
+  <div style="flex: 1;">
+    <div>
+      Transaction Date: {{invoice.date}}
+    </div>
+    <div>
+      Tax: ${{invoice.tax}}
+    </div>
+    <div>
+      Shipping: ${{invoice.shipping}}
+    </div>
+    <div>
+      Total: ${{invoice.total}}
+    </div>
+    <div>Helllllllllllllllllllllllllllllllllllooooooooooooooooooo</div>
+  </div>
+  <div style="flex: 4;">
+    Hello
+  </div>
+
+</div>

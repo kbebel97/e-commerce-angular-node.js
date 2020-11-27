@@ -7,26 +7,28 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CatalogComponent } from './catalog/catalog.component';
 import { NavComponent } from './nav/nav.component';
 import { CartComponent } from './cart/cart.component';
-import { PurchasesComponent } from './purchases/purchases.component';
 import { SettingsComponent } from './settings/settings.component';
-// ...
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { ItemComponent } from './item/item.component';
 import { DropdownDirective} from './nav/dropdown.directive'
 import { CarouselComponent } from './item/carousel/carousel.component';
+import { CarouselInvoiceComponent} from './invoice/carousel-invoice/carousel-invoice.component'
 import { RouterModule, Routes } from '@angular/router';
 import { generalService } from './service/general.service';
 import { itemService } from './item/item.service';
 import { cartService } from './cart/cart.service';
 import { catalogService } from './catalog/catalog.service';
-import { purchasesService } from './purchases/purchases.service';
+import { InvoiceComponent } from './invoice/invoice.component';
+import { invoiceService } from './invoice/invoice.service';
+import { ReturnComponent } from './invoice/return/return.component';
+import { returnService } from './invoice/return/return.service';
 
 const appRoutes: Routes = [
   {path: 'item', component: ItemComponent},
   {path: 'item/:item', component: ItemComponent},
   {path: '', component: CatalogComponent},
   {path: 'cart', component: CartComponent},
-  {path: 'purchaseHistory', component: PurchasesComponent},
+  {path: 'purchaseHistory', component: InvoiceComponent},
   {path: 'settings', component: SettingsComponent}
 ];
 @NgModule({
@@ -35,11 +37,13 @@ const appRoutes: Routes = [
     CatalogComponent,
     NavComponent,
     CartComponent,
-    PurchasesComponent,
     SettingsComponent,
     ItemComponent,
     DropdownDirective,
-    CarouselComponent
+    CarouselComponent,
+    InvoiceComponent,
+    CarouselInvoiceComponent,
+    ReturnComponent
   ],
   imports: [
     FlexLayoutModule,
@@ -47,7 +51,7 @@ const appRoutes: Routes = [
     NgbModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [catalogService, cartService, itemService, generalService, purchasesService],
+  providers: [catalogService, cartService, itemService, generalService, invoiceService, returnService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

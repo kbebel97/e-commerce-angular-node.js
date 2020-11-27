@@ -1,12 +1,16 @@
-import { Review } from './review.model';
 
 export class purchasedItem {
   constructor(public id: number,
               public name: string,
               public description: string,
-              public amount: number,
               public manufacturer: string,
-              public date: Date
+              public singleItemTotal: number,
+              public singleItemTax: number,
+              public singleItemShippingFee: number,
+              public quantity: number,
+              public total: number,
+              public returned: boolean,
+              public display: boolean
              ){
 
   }

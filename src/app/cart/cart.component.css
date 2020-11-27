@@ -16,7 +16,6 @@
 
 .checkoutContainer{
   margin: 10px;
-  column-gap: 10px;
   display: flex;
   align-content: flex-start;
 }
@@ -37,13 +36,26 @@
   color: white;
   padding-left: 10px;
   padding-right: 10px;
+  width: 120px;
+}
+
+.total-1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  background-color: blue;
+  color: white;
+  padding-left: 10px;
+  padding-right: 10px;
+
 }
 
 .card-title{
   display: grid;
   width: 100%;
   grid-template-columns: repeat(auto-fill);
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .card-body{

@@ -1,0 +1,58 @@
+<div class="emptyPurchases" *ngIf="!invoiceHistory?.length">
+  <div >No purchases have been made yet!</div>
+</div>
+
+<div *ngIf="invoiceHistory?.length" class="invoice-container">
+  <ng-container *ngFor="let invoice of invoiceHistory">
+    <div class="invoice" *ngIf="invoice.display">
+      <ng-container *ngFor="let item of invoice.purchasedItems">
+        <div *ngIf="item.display">
+          <div style="display: flex; flex-direction: row; background: blueviolet; padding: 5px; align-items: center;">
+            <div style="display: flex; flex-direction: column; flex: 1.33; align-items: center;">
+              <div *ngIf="item.returned" style="font-weight: bolder; color: yellow;">Item Returned</div>
+              <div>Item: {{item.name}}</div>
+              <div>Manufacturer: {{item.manufacturer}}</div>
+              <div>Quantity: {{item.quantity}}</div>
+            </div>
+            <div style="display: flex; flex-direction: column; flex: 1.33; justify-content: center; align-items: center;">
+              <div>Item Tax: ${{item.singleItemTax}}</div>
+              <div>Item Shipping: ${{item.singleItemShippingFee}}</div>
+              <div>Item Price: ${{item.singleItemTotal}}</div>
+            </div>
+            <div style="display: flex; flex-direction: column; flex: 1.33; justify-content: center; align-items: center; font-weight: bold; color: #fffb00;">
+              <div>Total: ${{item.total}}</div>
+            </div>
+            <div style="display: flex; flex: 1; justify-content: center; align-items: center;">
+              <a style="color: #fffb00; font-weight: bold;"class="btn btn-primary" (click)="returnItem(item, invoice)">Return Item</a>
+            </div>
+
+            <div >
+
+            </div>
+          </div>
+
+        </div>
+        <div *ngIf="!item.display">
+          <app-return></app-return>
+        </div>
+
+      </ng-container>
+      <div style="display: flex; flex-direction: row; align-items: center; padding: 5px;">
+        <!-- <div style="flex: 2; align-items: center; flex-direction: row; display: flex;"> -->
+          <div style="flex: 1; text-align: center;">Invoice Total Tax: ${{invoice.tax}}</div>
+          <div style="flex: 1; text-align: center;">Invoice Total Shipping: ${{invoice.shipping}}</div>
+          <div style="flex: 1; text-align: center;  font-weight: bold; color: #fffb00;">Invoice Total: ${{invoice.total}}</div>
+        <!-- </div> -->
+        <!-- <div style="flex: 1; display: flex; flex-direction: row; align-items: center; justify-content: space-evenly;"> -->
+          <div style="flex: 1; text-align: center;color: #fffb00; font-weight: bold;">Invoice Date: {{invoice.date}} </div>
+          <div style="flex: 1; align-items: center; justify-content: center; display: flex;">
+            <a style=" color: #fffb00; font-weight: bold;"class="btn btn-primary" (click)="returnAll(invoice)">Return All</a>
+          </div>
+        <!-- </div> -->
+      </div>
+    </div>
+    <div *ngIf="!invoice.display">
+      <app-return></app-return>
+    </div>
+  </ng-container>
+</div>

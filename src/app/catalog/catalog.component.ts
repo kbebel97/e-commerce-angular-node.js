@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { cartService } from '../cart/cart.service';
-import { generalService } from '../service/general.service';
 import { Item } from '../shared/Item.model';
 import { catalogService } from './catalog.service';
 
@@ -14,7 +13,7 @@ export class CatalogComponent implements OnInit {
   @Input() catalogItems = [];
   showCatalog: boolean;
 
-  constructor(private generalService: generalService, private catalogService: catalogService, private cartService: cartService, private router: Router) { }
+  constructor(private catalogService: catalogService, private cartService: cartService, private router: Router) { }
 
   ngOnInit(){
     this.catalogItems = this.catalogService.getItems();

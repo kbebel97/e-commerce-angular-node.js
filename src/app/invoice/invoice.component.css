@@ -1,0 +1,67 @@
+/* .cardList {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  row-gap: 10px;
+  width: 100%;
+}
+
+
+.card-img-top{
+  height: 300px;
+}
+
+.emptyPurchases{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.card-text{
+  margin-bottom: 10px;
+  overflow-y: scroll;
+}
+
+.item-body{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: blue;
+  border-top: black solid 5px;
+  border-bottom: black solid 5px;
+  height: 300px;
+}
+
+.title{
+  background-color: rgba(255, 255, 255, 0.8);
+  margin: 5px;
+  display: flex;
+  max-height: 150px;
+  justify-content: space-around;
+  align-items: center;
+  flex: 1;
+
+}
+
+.body{
+  margin: 5px;
+} */
+
+
+.invoice-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.invoice{
+  margin-bottom: 5px;
+  border: black 5px solid;
+  background: blue;
+  color: white;
+  height: 100%;
+
+}
+
+

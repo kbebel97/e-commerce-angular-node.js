@@ -6,17 +6,16 @@
    display: flex;
    flex-direction: row;
    /* height: 300px; */
-   border: black 5px solid;
+   border-top: black 5px solid;
    justify-content: space-evenly;
  }
 
  .item-body{
   display: flex;
   flex-direction: column;
-  height: 300px;
+  height: fit-content;
   border: black 5px solid;
   border-top: none;
-  overflow-y: scroll;
 
  }
 
@@ -31,14 +30,13 @@
    flex: 1;
    display: flex;
    flex-direction: column;
-   background-color: rgb(241, 231, 231);
+   background-color: rgb(255, 255, 255);
    height: 300px;
  }
 
  .item-container{
    display: block;
-   margin: 10px;
-   border: black 3px;
+
  }
 
  .heading{
@@ -57,10 +55,9 @@
 }
 
 .reviews{
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgb(255, 255, 255);
   margin: 5px;
   display: grid;
-  max-height: 150px;
   justify-content: start;
   align-items: center;
   flex: 1;
@@ -86,7 +83,7 @@
 .description {
   grid-column:5/ span 12;
   grid-row: 1;
-  max-height: 80px;
+  max-height: 150px;
   overflow-y: scroll;
 }
 
