@@ -1,66 +1,76 @@
-/* .cardList {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  row-gap: 10px;
-  width: 100%;
-}
 
 
-.card-img-top{
-  height: 300px;
-}
-
-.emptyPurchases{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
-}
-
-.card-text{
-  margin-bottom: 10px;
-  overflow-y: scroll;
-}
-
-.item-body{
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  background-color: blue;
-  border-top: black solid 5px;
-  border-bottom: black solid 5px;
-  height: 300px;
-}
-
-.title{
-  background-color: rgba(255, 255, 255, 0.8);
-  margin: 5px;
-  display: flex;
-  max-height: 150px;
-  justify-content: space-around;
-  align-items: center;
-  flex: 1;
-
-}
-
-.body{
-  margin: 5px;
-} */
-
-
+/* Invoice component main container */
 .invoice-container{
   display: flex;
   flex-direction: column;
+  border-top: 2px black solid;
+  border-bottom: 2px black solid;
 }
 
-.invoice{
-  margin-bottom: 5px;
-  border: black 5px solid;
-  background: blue;
-  color: white;
-  height: 100%;
+
+.invoice-foot{
+  display: flex;
+  flex-direction: row;
+  background: black;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 50px;
+}
+
+.invoice-foot-container{
+  display: flex;
+  flex-direction: row;
+}
+
+
+.invoice-column{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* align-items: stretch; */
+}
+
+.return-notification{
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+}
+
+.return-button{
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  border: black 1px solid;
+  border-radius: 3px;
+}
+
+.return-all-button{
+  background-color: white;
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  border: black 1px solid;
+  border-radius: 3px;
+}
+
+.return-button:hover{
+  background-color: #37AE46;
+}
+
+.return-all-button:hover{
+  background-color: #37AE46;
+}
+
+
+
+@media (max-width: 1490px) {
+  .media-label-value{
+    display: inline;
+  }
+  #center{
+    width: 50%;
+  }
 
 }
 

@@ -1,90 +1,80 @@
-.card-img-top{
-  height: 150px;
-}
 
+/* Containers */
 .cardList {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-evenly;
+  align-items: flex-start;
   row-gap: 10px;
 }
 
 .cartContainer{
-  margin: 10px;
+  background-color: rgba(190, 239, 200, 0.97);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top: 2px solid black;
 }
 
 .checkoutContainer{
-  margin: 10px;
+  padding: 5px;
   display: flex;
   align-content: flex-start;
-}
+  background: rgba(190, 239, 200, 0.97);
 
-.empty-cart{
+}
+/* Empty cart message */
+#empty-cart{
   display: flex;
   justify-content: center;
   align-items: center;
   height: 300px;
 }
 
-.total{
+/* Div ID's */
+
+#total{
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
-  background-color: blue;
+  border-radius: 3px;
+  background: black;
   color: white;
   padding-left: 10px;
   padding-right: 10px;
-  width: 120px;
+  height: 30px;
+  margin-bottom: 5px;
 }
 
-.total-1{
+#quantity{
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  background-color: blue;
-  color: white;
-  padding-left: 10px;
-  padding-right: 10px;
-
-}
-
-.card-title{
-  display: grid;
+  flex-direction: row;
   width: 100%;
-  grid-template-columns: repeat(auto-fill);
-  margin-bottom: 8px;
 }
 
-.card-body{
+#info{
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  padding: 10px;
+  flex-direction: row;
+  padding: 5px;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.name{
-  grid-column: 1;
-  grid-row: 1;
-}
+/* Button and Label stylings  */
 
-.amount{
-  grid-column: 2/span 2;
-  grid-row: 1;
+.showmore-button{
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  border: black 1px solid;
+  border-radius: 3px;
   text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 0;
 }
 
-.qty{
-  grid-column: 4;
-  grid-row: 1;
-  text-align: end;
+.showmore-button:hover{
+  background-color: #5bc0de;
 }
-
-.card-text{
-  margin-bottom: 10px;
-  overflow-y: scroll;
-}
-
 

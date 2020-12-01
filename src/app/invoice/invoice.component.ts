@@ -11,7 +11,7 @@ import { returnService } from './return/return.service';
   styleUrls: ['./invoice.component.css']
 })
 export class InvoiceComponent implements OnInit {
-
+  returnedall : boolean;
   invoiceHistory : invoice[];
   invoiceSelected: invoice;
   purchasedItemSelected: purchasedItem;
@@ -21,6 +21,7 @@ export class InvoiceComponent implements OnInit {
 
   ngOnInit(){
     this.invoiceHistory = this.invoiceService.getPurchaseHistory();
+
     this.invoiceSelected = this.invoiceService.getInvoiceSelected();
     this.purchasedItemSelected = this.invoiceService.getPurchasedItemSelected();
 
@@ -32,6 +33,20 @@ export class InvoiceComponent implements OnInit {
     }
 
   }
+
+
+  isReturned(invoice){
+    let returned : boolean = false;
+      invoice.purchasedItems.forEach(item => {
+        if(item.returnQ != item.purchaseQ){
+          returned = true;
+        }
+      });
+      return returned;
+
+  }
+
+
 
   onShowMore(purchasedItem: purchasedItem){
     this.router.navigate(['/item', purchasedItem.name], {queryParams: {id: purchasedItem.id}});
@@ -52,21 +67,23 @@ export class InvoiceComponent implements OnInit {
     this.returnService.purchasedItemtoReturn(this.purchasedItemSelected, invoice);
   }
 
-  // confirmReturn(purchasedItem: purchasedItem){
-  //   purchasedItem.returned = true;
-  // };
+
 
 
 
   returnAll(invoice: invoice){
     if(this.invoiceSelected!=null){
-      this.invoiceSelected.display = false;
-      this.purchasedItemSelected = null;
+      this.invoiceSelected.display = true;
+    }
+    if(this.purchasedItemSelected!= null){
+      this.purchasedItemSelected.display = true;
     }
     this.invoiceSelected = invoice;
+    this.invoiceSelected.display = false;
+    this.invoiceService.setInvoiceSelected(invoice);
+    this.returnService.invoicetoReturn(invoice);
   };
 
-  // confirmReturns(){
 
-  // };
+
 }

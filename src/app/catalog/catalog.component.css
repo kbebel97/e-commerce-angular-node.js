@@ -5,30 +5,22 @@
   justify-content: space-evenly;
   row-gap: 10px;
 }
-/* Column Gap */
 
 .catalogContainer{
-  margin: 10px;
+  padding: 5px;
+  border-top: 2px solid black ;
 }
 
-.card-img-top{
+.card-img{
   height: 150px;
 }
 
-.card-body{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  padding: 10px;
-
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }
 
-.card-title{
-  margin-bottom: 5px;
 
-}
 
-.card-text{
-  margin-bottom: 10px;
-  overflow-y: scroll;
-}
+
+

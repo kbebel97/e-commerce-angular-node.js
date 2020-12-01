@@ -1,9 +1,103 @@
-.return{
-  margin-bottom: 5px;
-  /* border: black 5px solid; */
-  background: yellow;
-  color: black;
+
+
+.invoice-container{
   display: flex;
   flex-direction: column;
+  border-top: 2px black solid;
+}
 
+
+.label-value-item{
+  display: flex;
+  flex-direction: row;
+}
+
+.label-value-invoice{
+  display: flex;
+  flex-direction: row;
+}
+
+.invoice-labels{
+  font-weight: bolder;
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-size: larger;
+  font-weight: 300;
+
+}
+
+.invoice-values{
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-size: larger;
+  font-weight: 500;
+}
+
+.invoice-column{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.return-notification{
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+}
+
+.confirm-button{
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  border: black 1px solid;
+  border-radius: 3px;
+}
+
+.cancel-button{
+
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  border: black 1px solid;
+  border-radius: 3px;
+}
+
+.cancel-button:hover{
+  background-color: rgb(223, 14, 14);
+}
+
+.return-all-button{
+  background-color: white;
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  border: black 1px solid;
+  border-radius: 3px;
+}
+
+.confirm-button:hover{
+  background-color: #37AE46;
+}
+
+.return-all-button:hover{
+  background-color: #37AE46;
+}
+
+.total-invoice-values{
+  color: white;
+  font-family: 'Oswald', sans-serif;
+  font-size: larger;
+  font-weight: 500;
+}
+
+.total-invoice-labels{
+  color: white;
+  font-family: 'Oswald', sans-serif;
+  font-size: larger;
+  font-weight: 300;
+
+}
+
+.arrow-buttons{
+  padding: 0;
 }

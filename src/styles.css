@@ -1,1 +1,99 @@
-/* You can add global styles to this file, and also import other style files */
+/* Main Button stylings */
+.confirm-button{
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  border: black 1px solid;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.confirm-button:hover{
+  background-color: #5cb85c;
+}
+
+.cancel-button{
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  border: black 1px solid;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.cancel-button:hover{
+  background-color: #d9534f;
+}
+
+/* label and Value stylings */
+.label{
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+}
+
+.value{
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+}
+
+.label-value{
+  display: flex;
+  flex-direction: row;
+}
+
+/* Card stylings */
+
+.card-title{
+  display: flex;
+  flex-direction: row;
+  height: 30px;
+  justify-content: space-between;
+}
+
+
+.card-img{
+  height: 150px;
+}
+
+
+
+.card-body{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 5px;
+}
+
+.card{
+  width: 20rem;
+  background-color: transparent;
+  border: black 3px solid;
+}
+
+.card-text{
+  margin-bottom: 10px;
+  overflow-y: scroll;
+  height: 140px;
+  color: black;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+}
+
+/* Font stylings */
+
+.large-font{
+  font-size: larger;
+}
+
+.small-font{
+  font-size: small;
+}
+
+.medium-font{
+  font-size: medium;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}

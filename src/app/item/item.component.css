@@ -5,8 +5,6 @@
 .item-header{
    display: flex;
    flex-direction: row;
-   /* height: 300px; */
-   border-top: black 5px solid;
    justify-content: space-evenly;
  }
 
@@ -14,8 +12,6 @@
   display: flex;
   flex-direction: column;
   height: fit-content;
-  border: black 5px solid;
-  border-top: none;
 
  }
 
@@ -30,12 +26,14 @@
    flex: 1;
    display: flex;
    flex-direction: column;
-   background-color: rgb(255, 255, 255);
+   background: transparent;
    height: 300px;
  }
 
  .item-container{
    display: block;
+   border-top: black solid 2px;
+   border-bottom: black solid 2px;
 
  }
 

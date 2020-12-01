@@ -18,7 +18,23 @@ export class catalogService{
       new Review('Kacper', 6, this.a),
       new Review('Kacper', 6, this.a)],6),
 
-    new Item(3, 'Carrot','its orange, its delicious. Bugs bunny recommends it', 10000,'sony',
+    new Item(3, 'Carrot', this.a , 10000,'sony',
+      [new Review('Kacper', 6, 'great. I can believe how good it was'),
+      new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6),
+
+    new Item(4, 'Carrot','its orange, its delicious. Bugs bunny recommends it', 10000,'sony',
+    [new Review('Kacper', 6, 'great. I can believe how good it was'),
+    new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6),
+
+    new Item(5, 'Carrot','its orange, its delicious. Bugs bunny recommends it', 10000,'sony',
+      [new Review('Kacper', 6, 'great. I can believe how good it was'),
+      new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6),
+
+    new Item(6, 'Carrot','its orange, its delicious. Bugs bunny recommends it', 10000,'sony',
+    [new Review('Kacper', 6, 'great. I can believe how good it was'),
+    new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6),
+
+    new Item(7, 'Carrot','its orange, its delicious. Bugs bunny recommends it', 10000,'sony',
       [new Review('Kacper', 6, 'great. I can believe how good it was'),
       new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6)
 

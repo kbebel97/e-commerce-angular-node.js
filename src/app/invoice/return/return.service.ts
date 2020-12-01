@@ -6,6 +6,7 @@ import { purchasedItem } from 'src/app/shared/purchasedItem.model';
 export class returnService{
   invoice: invoice;
   purchasedItem: purchasedItem;
+  componentSelected: string;
 
   invoicetoReturn(invoice: invoice){
     this.invoice = invoice;
@@ -19,6 +20,10 @@ export class returnService{
 
   getInvoice(){
     return this.invoice;
+  }
+
+  getComponentSelected(){
+    return this.componentSelected;
   }
 
   getPurchasedItem(){

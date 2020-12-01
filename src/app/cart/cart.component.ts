@@ -14,7 +14,6 @@ import { cartService } from './cart.service';
 export class CartComponent implements OnInit {
   @Input() cartTotal = 0;
   showlist: boolean;
-  @Input() hello: string;
   @Input() cartItems : cartItem[] = [];
   constructor(private cartService: cartService, private router: Router, private invoiceService: invoiceService) { }
 
@@ -30,11 +29,11 @@ export class CartComponent implements OnInit {
 
   checkout(){
     this.cartTotal = 0;
-    this.cartService.clearCart();
     this.showlist = false;
-    for(let item of this.cartItems){
-      // this.purchasesService.pushtoHistory(item);
-    }
+    this.invoiceService.pushtoHistory(this.cartItems);
+    this.cartService.clearCart();
+
+
   }
 
   clear(){
@@ -50,39 +49,39 @@ export class CartComponent implements OnInit {
     this.cartTotal = parseFloat((this.cartTotal - ((cartItem.indiviudalshippingFee + cartItem.individualTax + cartItem.individualPrice) * cartItem.qty)).toFixed(2));
     this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
     this.cartService.setCartTotal(this.cartTotal);
-
   }
 
+
+
   decreaseItemQuantity(item: cartItem){
-        if(item.qty > 1){
-          let singleItemShippingFee = parseFloat((item.shippingFee/item.qty).toFixed(2));
-          let singleItemTax = parseFloat((item.tax/item.qty).toFixed(2));
-          let singleItemTotal = parseFloat((item.total/item.qty).toFixed(2));
-          item.shippingFee = parseFloat((item.shippingFee - singleItemShippingFee).toFixed(2));
-          item.tax = parseFloat((item.tax - singleItemTax).toFixed(2));
-          item.total = parseFloat((item.total - singleItemTotal).toFixed(2));
-          item.qty = item.qty - 1;
-          // a.shippingFee = parseFloat((a.shippingFee - (item.total - item.amount)).toFixed(2));
-          this.cartTotal = parseFloat((this.cartTotal - singleItemTotal).toFixed(2));
-          this.cartService.setCartTotal(this.cartTotal);
-        }
-        else{
-          this.cartTotal = parseFloat((this.cartTotal - item.total).toFixed(2));
-          this.cartService.setCartTotal(this.cartTotal);
-          this.cartItems.splice(this.cartItems.indexOf(item), 1);
-          if(this.cartItems.length == 0){
-            this.showlist = false;
-          }
-        }
+    if(item.qty > 1){
+      let singleItemShippingFee = parseFloat((item.shippingFee/item.qty).toFixed(2));
+      let singleItemTax = parseFloat((item.tax/item.qty).toFixed(2));
+      let singleItemTotal = parseFloat((item.total/item.qty).toFixed(2));
+      item.shippingFee = parseFloat((item.shippingFee - singleItemShippingFee).toFixed(2));
+      item.tax = parseFloat((item.tax - singleItemTax).toFixed(2));
+      item.total = parseFloat((item.total - singleItemTotal).toFixed(2));
+      item.qty = item.qty - 1;
+      this.cartTotal = parseFloat((this.cartTotal - singleItemTotal).toFixed(2));
+      this.cartService.setCartTotal(this.cartTotal);
+    }
+    else{
+      this.cartTotal = parseFloat((this.cartTotal - item.total).toFixed(2));
+      this.cartService.setCartTotal(this.cartTotal);
+      this.cartItems.splice(this.cartItems.indexOf(item), 1);
+      if(this.cartItems.length == 0){
+        this.showlist = false;
+      }
+    }
   }
 
   increaseItemQuantity(item: cartItem){
-      item.qty = item.qty + 1;
-      item.tax = parseFloat((item.tax + item.individualTax).toFixed(2));
-      item.shippingFee = parseFloat((item.shippingFee + item.indiviudalshippingFee).toFixed(2));
-      item.total = parseFloat((item.total + item.individualPrice + item.individualTax + item.indiviudalshippingFee).toFixed(2));
-      this.cartTotal = parseFloat((this.cartTotal + item.individualPrice + item.individualTax + item.indiviudalshippingFee).toFixed(2));
-      this.cartService.setCartTotal(this.cartTotal);
+    item.qty = item.qty + 1;
+    item.tax = parseFloat((item.tax + item.individualTax).toFixed(2));
+    item.shippingFee = parseFloat((item.shippingFee + item.indiviudalshippingFee).toFixed(2));
+    item.total = parseFloat((item.total + item.individualPrice + item.individualTax + item.indiviudalshippingFee).toFixed(2));
+    this.cartTotal = parseFloat((this.cartTotal + item.individualPrice + item.individualTax + item.indiviudalshippingFee).toFixed(2));
+    this.cartService.setCartTotal(this.cartTotal);
 
 
   }

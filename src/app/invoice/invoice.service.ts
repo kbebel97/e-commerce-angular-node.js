@@ -15,6 +15,7 @@ export class invoiceService{
 
 
     for(let cartItem of items){
+      console.log(cartItem);
       invoiceTax = parseFloat((invoiceTax + (cartItem.individualTax * cartItem.qty)).toFixed(2));
       invoiceTotal = parseFloat((invoiceTotal + (cartItem.individualPrice + cartItem.individualTax + cartItem.indiviudalshippingFee) * cartItem.qty).toFixed(2));
       invoiceShipping = parseFloat((invoiceShipping + (cartItem.indiviudalshippingFee * cartItem.qty)).toFixed(2));
@@ -27,9 +28,10 @@ export class invoiceService{
                              cartItem.individualTax,
                              cartItem.indiviudalshippingFee,
                              cartItem.qty,
+                             0,
                              parseFloat((itemTotal).toFixed(2)),
-                             false,
                              true);
+                             console.log(pI);
         purchasedItems.push(pI);
     }
     let unformatteddate : Date = new Date();
@@ -37,7 +39,7 @@ export class invoiceService{
 
     let i = new invoice(1, purchasedItems, formatteddate, invoiceTotal, invoiceTax, invoiceShipping, items.length, true);
     console.log(i);
-    this.invoiceHistory.push(i);
+    this.invoiceHistory.unshift(i);
 
 
   }
@@ -60,6 +62,25 @@ export class invoiceService{
 
   getPurchasedItemSelected(){
     return this.purchasedItemSelected;
+  }
+
+  deletefromInvoiceHistory(invoice: invoice){
+    this.invoiceHistory.splice(this.invoiceHistory.indexOf(invoice),1);
+  }
+
+
+  isReturned(){
+    let returned : boolean = false;
+    this.invoiceHistory.forEach( function(invoice){
+      invoice.purchasedItems.forEach(item => {
+        if(item.returnQ != item.purchaseQ){
+          returned = true;
+        }
+      });
+
+    });
+    return returned;
+
   }
 
 

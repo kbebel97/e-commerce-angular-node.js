@@ -1,77 +1,89 @@
-<div *ngIf="!returnInvoice" class="return-item" style="display: flex; flex-direction: row; background-color: yellow; color: black; padding: 3px;">
-  <!-- <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <div>
-      Transaction Date: {{invoice.date}}
-    </div>
-    <div>
-      Tax: ${{item.singleItemTax * item.quantity}}
-    </div>
-    <div>
-      Quantity: {{item.quantity}}
-    </div>
-    <div>
-      Shipping: ${{item.singleItemShippingFee * item.quantity}}
-    </div>
-    <div>
-      Total: ${{invoice.total * item.quantity}}
-    </div>
-  </div> -->
-  <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; align-items: flex-start; ">
-    <div>
-      Item: {{name}}
-    </div>
-    <div>
-      Tax: ${{tax | number : '.2-2'}}
-    </div>
-    <div>
-      Shipping: ${{shipping | number : '.2-2'}}
-    </div>
-    <div>
-      Item Price: ${{price | number : '.2-2'}}
-    </div>
-    <div>
-      Total: ${{total | number : '.2-2'}}
-    </div>
-    <div>
-
-    </div>
-  </div>
-  <div style="flex: 2; display: flex; flex-direction: column; justify-content: space-evenly;">
-      <div class="form-group" style="display: flex; flex-direction: row; align-items: center; margin: 0;">
-        <label style="flex: .5; text-align: center; margin: 0px;" for="power">Confirm Return Request:</label>
-        <div style="flex: .5; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center;">
-          <a class="btn material-icons" (click)="increaseItemQuantity()"style="flex: 1; background-color: yellow;">keyboard_arrow_up</a>
-          <span style="flex: .5;">{{quantity}}</span>
-          <a class="btn material-icons" (click)="decreaseItemQuantity()" style="flex: 1; background-color: yellow;" >keyboard_arrow_down</a>
-        </div>
-        <a class="btn btn-success" (click)="confirm()" style="margin-bottom: 2px; flex: 1; margin-right: 1px;">Confirm</a>
-        <a class="btn btn-danger" (click)="cancel()" style="margin-bottom: 2px; flex: 1; margin-left: 1px;">Cancel</a>
+<div *ngIf="!(item == undefined) && !(item.display) ">
+  <div style="display: flex; flex-direction: row; padding: 5px; align-items: center; background: white;">
+    <div class="invoice-column" style="flex: .5; align-items: flex-start;">
+      <div *ngIf="item.returnQ > 0" class="return-notification">Item Returned ({{item.returnQ}})</div>
+      <div class="label-value-item">
+        <div class="invoice-labels">Item: &nbsp;</div>
+        <div class="invoice-values">{{name}}</div>
       </div>
+      <div class="label-value-item">
+        <div class="invoice-labels">Seller: &nbsp;</div>
+        <div class="invoice-values"> {{seller}}</div>
+      </div>
+      <div class="label-value-item">
+        <div class="invoice-labels">Qty:  &nbsp; </div>
+        <div class="invoice-values">{{quantity}}</div>
+      </div>
+    </div>
+    <div class="invoice-column" style="flex: .5; align-items: flex-start;">
+      <div class="label-value-item">
+        <div class="invoice-labels">Item Tax:  &nbsp;  </div>
+        <div class="invoice-values">${{tax | number : '.2-2'}}</div>
+      </div>
+      <div class="label-value-item">
+        <div class="invoice-labels">Item Shipping:  &nbsp; </div>
+        <div class="invoice-values">${{shipping | number : '.2-2'}}</div>
+      </div>
+      <div class="label-value-item">
+        <div class="invoice-labels">Item Price:  &nbsp; </div>
+        <div class="invoice-values">${{price | number : '.2-2'}}</div>
+      </div>
+    </div>
+    <div class="invoice-column" style="flex: 1; align-items: flex-end;">
+      <div class="label-value-item">
+        <div class="invoice-labels">Total:  &nbsp; </div>
+        <div class="invoice-values">${{total | number : '.2-2'}}</div>
+      </div>
+    </div>
+    <div class="invoice-column" style="flex: .5; align-items: center;">
+      <a class="btn material-icons arrow-buttons" (click)="increaseItemQuantity()">keyboard_arrow_up</a>
+      <span style="flex: 1;">{{quantity}}</span>
+      <a class="btn material-icons arrow-buttons" (click)="decreaseItemQuantity()">keyboard_arrow_down</a>
+    </div>
+    <div style="flex: .5;">
+      <a class="btn confirm-button" (click)="confirm()" style="margin-bottom: 2px; flex: 1; margin-right: 1px;">Confirm</a>
+      <a class="btn cancel-button" (click)="cancel()" style="margin-bottom: 2px; flex: 1; margin-left: 1px;">Cancel</a>
+    </div>
 
+
+    <div >
+
+    </div>
   </div>
-
 </div>
 
 
 
-<div *ngIf="returnInvoice" class="return-all" style="display: flex; flex-direction: row; background-color: yellow;">
-  <div style="flex: 1;">
-    <div>
-      Transaction Date: {{invoice.date}}
-    </div>
-    <div>
-      Tax: ${{invoice.tax}}
-    </div>
-    <div>
-      Shipping: ${{invoice.shipping}}
-    </div>
-    <div>
-      Total: ${{invoice.total}}
-    </div>
-    <div>Helllllllllllllllllllllllllllllllllllooooooooooooooooooo</div>
-  </div>
-  <div style="flex: 4;">
-    Hello
-  </div>
+<div *ngIf="!(invoice.display)">
+  <div></div>
+  <div style="display: flex; flex-direction: row; padding: 5px; align-items: center; background: white;">
+      <div class="invoice-column" style="flex: 1; align-items: flex-start;">
+        <div class="label-value-item">
+          <div class="invoice-labels">Tax:  &nbsp; </div>
+          <div class="invoice-values">${{invoice.tax | number : '.2-2'}}</div>
+        </div>
+        <div class="label-value-item">
+          <div class="invoice-labels">Shipping:  &nbsp; </div>
+          <div class="invoice-values">${{invoice.shipping | number : '.2-2'}}</div>
+        </div>
+        <div class="label-value-item">
+          <div class="invoice-labels">Items:  &nbsp; </div>
+          <div class="invoice-values">{{invoice.purchasedItems.length}}</div>
+        </div>
+        <div class="label-value-item">
+          <div class="invoice-labels">Total:  &nbsp; </div>
+          <div class="invoice-values">${{invoice.total | number : '.2-2'}}</div>
+        </div>
+      </div>
 
+      <div class="invoice-column" style="flex: 2; align-items: flex-start;">
+        <div class="label-value-item">
+          <div class="invoice-labels">Confirm return:  &nbsp; </div>
+          <a class="btn confirm-button" (click)="confirm2()" style="margin-bottom: 2px; flex: 1; margin-right: 1px;">Confirm</a>
+          <a class="btn cancel-button" (click)="cancel2()" style="margin-bottom: 2px; flex: 1; margin-left: 1px;">Cancel</a>
+        </div>
+      </div>
+    <div >
+  </div>
+</div>
 </div>

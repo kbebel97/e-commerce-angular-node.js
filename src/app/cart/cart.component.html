@@ -1,39 +1,62 @@
 <div class="cartContainer">
   <div class="checkoutContainer">
-    <div style="margin-right: 1px;"class="total">Total: ${{cartTotal}}</div>
-    <a style="margin-left: 1px; margin-right: 1px;"class="btn btn-success" (click)="checkout()">Checkout</a>
-    <a style="margin-left: 1px;" class="btn btn-danger" (click)="clear()">Clear</a>
+    <div class="label-value" style="margin-right: 5px; display: flex; justify-content: center; border: black 3px solid; border-radius: 3px;" >
+      <div class="label">Total: &nbsp;</div>
+      <div class="value">${{cartTotal | number: '.2-2'}}</div>
+    </div>
+    <button class="confirm-button" (click)="checkout()" style="margin-right: 1px; margin-left: 1px">Checkout</button>
+    <button class="cancel-button" (click)="clear()" style="margin-left: 1px;">Clear</button>
   </div>
+
+  <!-- Structural directive to show list of items in cart if cart is not empty. Otherwise show empty cart message -->
   <div *ngIf="showlist" class="cardList">
     <ng-container *ngFor="let cartItem of cartItems; let i = index">
-      <div class="card flex-item" style="width: 18rem;">
-        <img class="card-img-top" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
+      <div class="card">
+        <img class="card-img" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
+        <div class="card-title large-font" style="margin: 5px;">
+          <div class="value" >{{cartItem.name}}</div>
+          <div class="value" >${{cartItem.individualPrice | number: '.2-2'}}</div>
+        </div>
+        <div id="info">
+          <div class="label-value">
+            <div class="label">qty: &nbsp;</div>
+            <div class="value">{{cartItem.qty}}</div>
+          </div>
+          <div class="label-value">
+            <div class="label">tax: &nbsp;</div>
+            <div class="value">${{cartItem.tax | number: '.2-2'}}</div>
+          </div>
+          <div class="label-value">
+            <div class="label">shipping: &nbsp;</div>
+            <div class="value">${{cartItem.shippingFee | number: '.2-2'}}</div>
+          </div>
+        </div>
         <div class="card-body">
-          <h4 class="card-title" style="height: 20px;">
-            <div class="name"> {{cartItem.name}} </div>
-            <div class="amount"> ${{cartItem.individualPrice}} </div>
-            <div class="qty">Qty: {{cartItem.qty}}</div>
-          </h4>
-          <div class="shipping-tax" style="display: flex; flex-direction: row; justify-content: space-around; align-items: center;">
-            <h6 class="shippingFee" style="height: 20px; margin-bottom: 5px;">+ shipping ${{cartItem.shippingFee}}</h6>
-            <h6 class="tax" style="height: 20px; margin-bottom: 5px;">+ tax ${{cartItem.tax}}</h6>
+          <div id="total" style="color: white;">
+            <div class="label-value">
+              <div class="label" >Total: &nbsp;</div>
+              <div class="value">${{cartItem.total | number : '.2-2'}}</div>
+            </div>
           </div>
-          <h6 class="total-1" style="height: 20px; margin-bottom: 5px;">Total ${{cartItem.total}}</h6>
-          <p style="height: 140px;" class="card-text">{{cartItem.description}}</p>
-          <a class="btn btn-success" (click)="buyItem(cartItem)" style="margin-bottom: 2px;">Purchase</a>
-          <div class="quantity" style="display: flex; flex-direction: row; width: 100%;">
-            <a class="btn btn-danger" (click)="increaseItemQuantity(cartItem)"  style="margin-bottom: 2px; flex: 1; margin-right: 1px;">+</a>
-            <a class="btn btn-danger" (click)="decreaseItemQuantity(cartItem)"  style="margin-bottom: 2px; flex: 1; margin-left: 1px;">-</a>
+          <!-- <h6 class="total">Total: ${{cartItem.total | number : '.2-2'}}</h6> -->
+          <p class="card-text">{{cartItem.description}}</p>
+          <a class="btn confirm-button" (click)="buyItem(cartItem)" style="margin-bottom: 2px;">Purchase</a>
+          <div id="quantity">
+            <a class="btn cancel-button" (click)="increaseItemQuantity(cartItem)"  style="margin-bottom: 2px; flex: 1; margin-right: 1px;">
+              <span class="material-icons">add</span>
+            </a>
+            <a class="btn cancel-button" (click)="decreaseItemQuantity(cartItem)"  style="margin-bottom: 2px; flex: 1; margin-left: 1px;">
+              <span class="material-icons">remove</span>
+            </a>
           </div>
-          <a class="btn btn-primary" (click)="showMore(cartItem)">Show more</a>
+          <a class="btn showmore-button" (click)="showMore(cartItem)">Show more</a>
         </div>
       </div>
     </ng-container>
   </div>
-  <div class="empty-cart" *ngIf="!showlist">
+  <div id="empty-cart" *ngIf="!showlist">
     <div>
       cart is empty
-
     </div>
   </div>
 </div>

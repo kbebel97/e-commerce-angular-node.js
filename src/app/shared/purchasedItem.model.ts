@@ -7,9 +7,9 @@ export class purchasedItem {
               public singleItemTotal: number,
               public singleItemTax: number,
               public singleItemShippingFee: number,
-              public quantity: number,
+              public purchaseQ: number,
+              public returnQ: number,
               public total: number,
-              public returned: boolean,
               public display: boolean
              ){
 
