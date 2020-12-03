@@ -7,15 +7,25 @@ export class returnService{
   invoice: invoice;
   purchasedItem: purchasedItem;
   componentSelected: string;
+  height : number;
 
-  invoicetoReturn(invoice: invoice){
+  setInvoice(invoice: invoice){
     this.invoice = invoice;
 
   }
 
-  purchasedItemtoReturn(purchasedItem: purchasedItem, invoice: invoice){
+  setItem(purchasedItem: purchasedItem, invoice: invoice){
     this.purchasedItem = purchasedItem;
     this.invoice = invoice;
+  }
+
+  setHeight(height : number){
+    this.height = height;
+    console.log(this.height);
+  }
+
+  getheight(){
+    return this.height;
   }
 
   getInvoice(){

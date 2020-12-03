@@ -24,11 +24,15 @@ export class ReturnComponent implements OnInit {
    shipping : number;
    price : number;
    total: number;
+   height: number;
 
   constructor(private returnService: returnService, private invoiceService: invoiceService) { }
 
+
+
   ngOnInit(): void {
-    // this.componentSelected = this.returnService.getComponentSelected();
+    this.height = this.returnService.getheight();
+
     if(this.returnService.getInvoice()!=null && this.returnService.getPurchasedItem()!=null){
       this.invoice = this.returnService.getInvoice();
       this.item = this.returnService.getPurchasedItem();
@@ -48,6 +52,10 @@ export class ReturnComponent implements OnInit {
       this.invoice = this.returnService.getInvoice();
       this.returnInvoice = true;
     }
+   }
+
+   getHeight(){
+     return this.height;
    }
 
 
