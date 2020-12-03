@@ -39,6 +39,15 @@
   justify-content: center;
 }
 
+.invoice-row{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  padding: 5px;
+  border-top: 2px solid black;
+
+}
+
 .return-notification{
   color: black;
   font-family: 'Oswald', sans-serif;

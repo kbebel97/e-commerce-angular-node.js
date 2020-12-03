@@ -4,12 +4,12 @@
 .invoice-container{
   display: flex;
   flex-direction: column;
-  border-top: 2px black solid;
+  /* border-top: 2px black solid; */
   border-bottom: 2px black solid;
 }
 
 
-.invoice-foot{
+.invoice-head{
   display: flex;
   flex-direction: row;
   background: black;
@@ -18,7 +18,7 @@
   height: 50px;
 }
 
-.invoice-foot-container{
+.invoice-head-container{
   display: flex;
   flex-direction: row;
 }
@@ -70,6 +70,10 @@
   }
   #center{
     width: 50%;
+  }
+
+  .media-head{
+    height: 80px;
   }
 
 }
