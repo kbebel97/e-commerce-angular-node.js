@@ -9,7 +9,9 @@ export class invoice {
               public tax: number,
               public shipping: number,
               public quantity: number,
-              public display: boolean
+              public display: boolean,
+              public height : number,
+              public isReturnable : boolean
              ){
 
   }

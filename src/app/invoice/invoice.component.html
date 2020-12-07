@@ -6,84 +6,152 @@
   <!-- Structural Directive to enter invoiceHistory -->
   <ng-container *ngFor="let invoice of invoiceHistory, let i = index">
     <!-- Structural Directives *ngIf and *ngFor to enter invoice purchased Items array only if the display property of the invoice is set to true. -->
-    <div *ngIf="invoice.display" #invoices >
-      <div class="invoice-head-container">
-        <div class="invoice-head large-font media-head" style="flex: 4; color: white;">
-          <div class="label-value media-label-value">
-            <div class="label">Invoice Total Tax: &nbsp;</div>
-            <div class="value" >${{invoice.tax | number : '.2-2'}}</div>
+    <div class="large-font" style="display: flex; flex-direction: column;" >
+      <div *ngIf="invoice.display" class="invoice-column media-row" #invoices>
+        <div class="invoice-head-container">
+          <div class="invoice-head large-font media-head" style="flex: 4; color: white;">
+            <div class="label-value media-label-value">
+              <div class="label">Invoice Total Tax: &nbsp;</div>
+              <div class="value" >${{invoice.tax | number : '.2-2'}}</div>
+            </div>
+            <div class="label-value media-label-value">
+              <div class="label media-label">Invoice Total Shipping: &nbsp;</div>
+              <div class="value">${{invoice.shipping | number : '.2-2'}}</div>
+            </div>
+            <div class="label-value media-label-value">
+              <div class="label">Invoice Total: &nbsp;</div>
+              <div class="value">${{invoice.total | number : '.2-2'}}</div>
+            </div>
+            <div class="label-value media-label-value">
+              <div class="label">Invoice Date: &nbsp;</div>
+              <div class="value">{{invoice.date}}</div>
+            </div>
           </div>
-          <div class="label-value media-label-value">
-            <div class="label media-label">Invoice Total Shipping: &nbsp;</div>
-            <div class="value">${{invoice.shipping | number : '.2-2'}}</div>
-          </div>
-          <div class="label-value media-label-value">
-            <div class="label">Invoice Total: &nbsp;</div>
-            <div class="value">${{invoice.total | number : '.2-2'}}</div>
-          </div>
-          <div class="label-value media-label-value">
-            <div class="label">Invoice Date: &nbsp;</div>
-            <div class="value">{{invoice.date}}</div>
+          <div style="background: black; display: flex; align-items: center; justify-content: center; flex: 1;">
+            <button *ngIf="isReturned(invoice)" class="btn return-all-button" (click)="returnAll(invoice)">Return All</button>
           </div>
         </div>
-        <div style="background: black; display: flex; align-items: center; justify-content: center; flex: 1;">
-          <button *ngIf="isReturned(invoice)" class="btn return-all-button" (click)="returnAll(invoice)">Return All</button>
-        </div>
+        <ng-container *ngFor="let item of invoice.purchasedItems; let i = index">
+          <div class="large-font" [ngStyle]="{backgroundColor: i % 2 !== 0 ? 'rgba(226, 248, 231, 0.97)' : 'rgba(190, 239, 200, 0.97)'}" style="display: flex; flex-direction: column;" >
+              <div [ngStyle]="{backgroundColor: item.display? 'transparent' : 'white', padding: '5px'}" class="invoice-row media-row" *ngIf="item.returnQ > 0" class="return-notification">Item Returned ({{item.returnQ}})</div>
+              <div class="invoice-row media-row" *ngIf="item.display">
+                <div class="invoice-column media-column" style="flex: 1; align-items: flex-start;">
+                  <div class="label-value media-label-value">
+                    <div class="label" >Item: &nbsp;</div>
+                    <div class="value">{{item.name}}</div>
+                  </div>
+                  <div class="label-value media-label-value">
+                    <div class="label">Seller: &nbsp;</div>
+                    <div class="value"> {{item.manufacturer}}</div>
+                  </div>
+                  <div class="label-value media-label-value">
+                    <div class="label">Qty:  &nbsp; </div>
+                    <div class="value">{{item.purchaseQ}}</div>
+                  </div>
+                </div>
+                <div class="invoice-column media-column" style="flex: 1; align-items: flex-start;">
+                  <div class="label-value media-label-value">
+                    <div class="label">Item Tax:  &nbsp;  </div>
+                    <div class="value">${{item.singleItemTax | number : '.2-2'}}</div>
+                  </div>
+                  <div class="label-value media-label-value">
+                    <div class="label">Item Shipping:  &nbsp; </div>
+                    <div class="value">${{item.singleItemShippingFee | number : '.2-2'}}</div>
+                  </div>
+                  <div class="label-value media-label-value">
+                    <div class="label">Item Price:  &nbsp; </div>
+                    <div class="value">${{item.singleItemTotal | number : '.2-2'}}</div>
+                  </div>
+                </div>
+                <div class="invoice-column" style="flex: 3; align-items: flex-end;">
+                  <div class="label-value media-label-value" id="center">
+                    <div class="label">Total:  &nbsp; </div>
+                    <div class="value">${{item.total | number : '.2-2'}}</div>
+                  </div>
+                </div>
+                <div class="invoice-column media-column" style="flex: 1; align-items: center;">
+                  <button *ngIf="item.returnQ != item.purchaseQ" class="btn return-button" (click)="returnItem(item, invoice)">Return Item</button>
+                </div>
+            </div>
+            <div class="invoice-row media-row" *ngIf="!item.display" [ngStyle]="{backgroundColor: !item.display ? 'white' : 'transparent'}">
+                <div class="invoice-column" style="flex: .5; align-items: flex-start;">
+                  <div class="label-value media-label-value">
+                    <div class="label">Item: &nbsp;</div>
+                    <div class="value">{{item.name}}</div>
+                  </div>
+                  <div class="label-value media-label-value">
+                    <div class="label">Seller: &nbsp;</div>
+                    <div class="value"> {{item.manufacturer}}</div>
+                  </div>
+                  <div class="label-value media-label-value">
+                    <div class="label">Qty:  &nbsp; </div>
+                    <div class="value">{{Quantity}}</div>
+                  </div>
+                </div>
+                <div class="invoice-column" style="flex: .5; align-items: flex-start;">
+                  <div class="label-value media-label-value">
+                    <div class="label">Item Tax:  &nbsp;  </div>
+                    <div class="value">${{item.singleItemTax * Quantity | number : '.2-2'}}</div>
+                  </div>
+                  <div class="label-value media-label-value">
+                    <div class="label">Item Shipping:  &nbsp; </div>
+                    <div class="value">${{item.singleItemShippingFee * Quantity | number : '.2-2'}}</div>
+                  </div>
+                  <div class="label-value media-label-value">
+                    <div class="label">Item Price:  &nbsp; </div>
+                    <div class="value">${{item.singleItemTotal * Quantity | number : '.2-2'}}</div>
+                  </div>
+                </div>
+                <div class="invoice-column" style="flex: 1; align-items: flex-end;">
+                  <div class="label-value" style="border: solid black 1px; background: yellow; border-radius: 2px;">
+                    <div class="label">Total:  &nbsp; </div>
+                    <div class="value">${{(item.singleItemTotal + item.singleItemShippingFee + item.singleItemTax) * Quantity | number : '.2-2'}}</div>
+                  </div>
+                </div>
+                <div class="invoice-column" style="flex: .5; align-items: center; justify-content: center;">
+                  <div>
+                    <a class="btn material-icons arrow-buttons" style="margin: 0; padding: 0; font-size: 0.60em;" (click)="increaseItemQuantity(item)">keyboard_arrow_up</a>
+                    <div style="flex: 1; text-align: center;">{{Quantity}}</div>
+                    <a class="btn material-icons arrow-buttons" style="margin: 0; padding: 0; font-size: 0.60em;" (click)="decreaseItemQuantity()">keyboard_arrow_down</a>
+                  </div>
+                </div>
+                <div class="invoice-column" style="flex: .5">
+                  <div>
+                    <a class="btn confirm-button" (click)="confirm(item)" style="margin-bottom: 2px; flex: 1; margin: 1px; width: 80px; text-align: center;">Confirm</a>
+                    <a class="btn cancel-button" (click)="cancel(item)" style="margin-bottom: 2px; flex: 1; margin: 1px; width: 80px; text-align: center;">Cancel</a>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </ng-container>
       </div>
-      <ng-container *ngFor="let item of invoice.purchasedItems; let i = index">
-        <div [ngStyle]="{backgroundColor: invoice.purchasedItems.indexOf(item) % 2 !== 0 ? 'rgba(226, 248, 231, 0.97)' : 'rgba(190, 239, 200, 0.97)'}" *ngIf="item.display" #items>
-          <div class="large-font" style="display: flex; flex-direction: row; padding: 5px; align-items: center;" #itemheight>
-            <div class="invoice-column media-column" style="flex: 1; align-items: flex-start;">
-              <div *ngIf="item.returnQ > 0" class="return-notification">Item Returned ({{item.returnQ}})</div>
-              <div class="label-value media-label-value">
-                <div class="label" >Item: &nbsp;</div>
-                <div class="value">{{item.name}}</div>
+      <div class="invoice-row" *ngIf="!invoice.display" [ngStyle]="{height : pixelheight + 'px', backgroundColor : 'white'}">
+            <div class="invoice-column" style="flex: 1; align-items: flex-start; justify-content: initial;">
+              <div class="label-value">
+                <div class="label">Tax:  &nbsp; </div>
+                <div class="value">${{invoice.tax | number : '.2-2'}}</div>
               </div>
-              <div class="label-value media-label-value">
-                <div class="label">Seller: &nbsp;</div>
-                <div class="value"> {{item.manufacturer}}</div>
+              <div class="label-value">
+                <div class="label">Shipping:  &nbsp; </div>
+                <div class="value">${{invoice.shipping | number : '.2-2'}}</div>
               </div>
-              <div class="label-value media-label-value">
-                <div class="label">Qty:  &nbsp; </div>
-                <div class="value">{{item.purchaseQ}}</div>
+              <div class="label-value">
+                <div class="label">Items:  &nbsp; </div>
+                <div class="value">{{invoice.purchasedItems.length}}</div>
               </div>
-            </div>
-            <div class="invoice-column media-column" style="flex: 1; align-items: flex-start;">
-              <div class="label-value media-label-value">
-                <div class="label">Item Tax:  &nbsp;  </div>
-                <div class="value">${{item.singleItemTax | number : '.2-2'}}</div>
-              </div>
-              <div class="label-value media-label-value">
-                <div class="label">Item Shipping:  &nbsp; </div>
-                <div class="value">${{item.singleItemShippingFee | number : '.2-2'}}</div>
-              </div>
-              <div class="label-value media-label-value">
-                <div class="label">Item Price:  &nbsp; </div>
-                <div class="value">${{item.singleItemTotal | number : '.2-2'}}</div>
-              </div>
-            </div>
-            <div class="invoice-column" style="flex: 3; align-items: flex-end;">
-              <div class="label-value media-label-value" id="center">
+              <div class="label-value">
                 <div class="label">Total:  &nbsp; </div>
-                <div class="value">${{item.total | number : '.2-2'}}</div>
+                <div class="value">${{invoice.total | number : '.2-2'}}</div>
               </div>
             </div>
-            <div class="invoice-column media-column" style="flex: 1; align-items: center;">
-              <button *ngIf="item.returnQ != item.purchaseQ" class="btn return-button" (click)="returnItem(item, invoice)">Return Item</button>
-            </div>
+            <div class="invoice-column" style="flex: 2; align-items: flex-start; justify-content: flex-start; margin-top: 40px;">
+                <div class="label-value">
+                  <div class="label">Confirm return:  &nbsp; </div>
+                    <a class="btn confirm-button" (click)="confirmInvoice(invoice)" style="margin-bottom: 2px; flex: 1; margin-right: 1px;">Confirm</a>
+                    <a class="btn cancel-button" (click)="cancelInvoice(invoice)" style="margin-bottom: 2px; flex: 1; margin-left: 1px;">Cancel</a>
+                  </div>
+              </div>
           </div>
-
-        </div>
-        <div *ngIf="!item.display">
-          <app-return></app-return>
-        </div>
-
-      </ng-container>
-
-
-    </div>
-    <div *ngIf="!invoice.display">
-      <app-return></app-return>
-    </div>
+      </div>
   </ng-container>
 </div>

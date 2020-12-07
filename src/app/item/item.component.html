@@ -1,37 +1,56 @@
-<div class="item-container">
-  <div class="item-header">
+<div id="item-container">
+  <div id="item-header">
     <div class="item-carousel">
       <app-carousel style="flex: 1;"></app-carousel>
     </div>
 
     <div class="item-general-info">
       <div class="heading">
-        <h1 style="margin-right: 10px;">{{item.name}}
+        <h1 class="value" style="margin-right: 10px;">{{item.name}}
         </h1>
         <div *ngFor="let dummy of ' '.repeat(item.rating).split(''), let x = index" class="material-icons" style="font-size:30px;">star</div>
         <div style="flex: 6; align-self: center; display: flex; align-items: flex-end; justify-content: flex-end;">
-          <a class="btn btn-primary" (click)="onaddtoCart(item)" style="align-self: center; margin-right: 2.5px;">Add to cart</a>
-          <a class="btn btn-primary" (click)="onBackclick()" style="align-self: center; margin-left: 2.5px;">Go Back</a>
+          <a class="btn confirm-button" (click)="onaddtoCart(item)" style="margin-right: 2.5px;">add to cart</a>
+          <a class="btn cancel-button" (click)="onBackclick()" style="margin-left: 2.5px;">go back</a>
 
 
         </div>
 
 
       </div>
-      <h2>${{item.total}}</h2>
-      <p style="overflow-y: scroll;">{{item.description}}</p>
+      <h2 class="value">${{item.total | number : '.2-2'}}</h2>
+      <p class="text" style="overflow-y: scroll;">{{item.description}}</p>
     </div>
   </div>
 
-  <div class="item-body">
-    <div *ngFor="let review of item.reviews" class="reviews">
-        <div class="name">{{review.name}}</div>
+  <div id="item-body">
+    <div *ngFor="let review of item.reviews; let i = index" class="reviews" [ngStyle]="{backgroundColor: i % 2 !== 0 ? 'rgba(226, 248, 231, 0.97)' : 'rgba(190, 239, 200, 0.97)'}">
+        <div class="name value">{{review.name}}</div>
         <div class="review-rating">
           <div *ngFor="let dummy of ' '.repeat(review.rating).split(''), let x = index" class="material-icons" style="font-size:30px;">star</div>
 
         </div>
-        <div class="description">{{review.comment}}</div>
+        <div class="description text">{{review.comment}}</div>
     </div>
+  </div>
+  <div class="reviews" id="item-foot">
+    <div style="grid-column: 1; color: white" class="name value" >Hello</div>
+    <div style="grid-column: 2/4; color: white; display: flex; flex-direction: row;" class="review-rating">
+      <!-- <div  class="material-icons" style="font-size:30px;">star</div>
+      <div  class="material-icons" style="font-size:30px;">star</div>
+      <div  class="material-icons" style="font-size:30px;">star</div>
+      <div  class="material-icons" style="font-size:30px;">star</div> -->
+      <div *ngFor="let dummy of ' '.repeat(5).split(''), let x = index" class="material-icons btn star-button" >star</div>
+
+    </div>
+    <div style="grid-column: 5 ; display: flex; flex-direction: column; padding-right: 5px;">
+      <div class="btn confirm-button" style="margin-bottom: 1px; color: white; border: white solid 1px">post</div>
+      <div class="btn cancel-button" style="margin-top: 1px; color: white; border: white solid 1px">clear</div>
+    </div>
+    <div style="grid-column: 6/-1; align-items: center; display: flex;" >
+      <textarea class="description text" style="height: 60px; width: 100%;"></textarea>
+    </div>
+
   </div>
 
 

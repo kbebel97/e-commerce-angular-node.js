@@ -23,12 +23,18 @@
   flex-direction: row;
 }
 
+.invoice-row{
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  height: 100%;
+}
+
 
 .invoice-column{
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  /* align-items: stretch; */
+  justify-content: space-evenly;
 }
 
 .return-notification{
@@ -62,7 +68,9 @@
   background-color: #37AE46;
 }
 
-
+.return-item-menu{
+  display: flex; flex-direction: row; padding: 5px; align-items: center; background: white;
+}
 
 @media (max-width: 1490px) {
   .media-label-value{
@@ -74,6 +82,11 @@
 
   .media-head{
     height: 80px;
+  }
+
+  .media-label-value{
+    display: flex;
+    flex-direction: column;
   }
 
 }

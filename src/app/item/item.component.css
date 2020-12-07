@@ -2,22 +2,32 @@
 
 
 
-.item-header{
+#item-header{
    display: flex;
    flex-direction: row;
    justify-content: space-evenly;
  }
 
- .item-body{
+ #item-body{
   display: flex;
   flex-direction: column;
   height: fit-content;
 
  }
 
+ #item-foot{
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  overflow-y: scroll;
+  border-top: 1px black solid;
+  background: black;
+ }
+
  .item-carousel{
    flex: 1;
    display: block;
+
 
  }
 
@@ -37,6 +47,16 @@
 
  }
 
+ .star-button{
+  font-size:30px;
+  padding: 0px;
+  color: gray;
+ }
+
+ .star-button:hover{
+ color: white;
+}
+
  .heading{
    display: flex;
    align-self: start;
@@ -53,12 +73,11 @@
 }
 
 .reviews{
-  background-color: rgb(255, 255, 255);
-  margin: 5px;
+  padding: 5px;
   display: grid;
-  justify-content: start;
+  /* justify-content: start; */
   align-items: center;
-  flex: 1;
+  /* flex: 1; */
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 
 }

@@ -10,7 +10,9 @@ export class purchasedItem {
               public purchaseQ: number,
               public returnQ: number,
               public total: number,
-              public display: boolean
+              public display: boolean,
+              public height: number,
+              public isReturned: boolean
              ){
 
   }

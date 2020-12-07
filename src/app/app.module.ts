@@ -20,8 +20,8 @@ import { cartService } from './cart/cart.service';
 import { catalogService } from './catalog/catalog.service';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { invoiceService } from './invoice/invoice.service';
-import { ReturnComponent } from './invoice/return/return.component';
-import { returnService } from './invoice/return/return.service';
+import {FormsModule } from '@Angular/forms';
+
 
 const appRoutes: Routes = [
   {path: 'item', component: ItemComponent},
@@ -42,16 +42,16 @@ const appRoutes: Routes = [
     DropdownDirective,
     CarouselComponent,
     InvoiceComponent,
-    CarouselInvoiceComponent,
-    ReturnComponent
+    CarouselInvoiceComponent
   ],
   imports: [
     FlexLayoutModule,
     BrowserModule,
+    FormsModule,
     NgbModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [catalogService, cartService, itemService, generalService, invoiceService, returnService],
+  providers: [catalogService, cartService, itemService, generalService, invoiceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

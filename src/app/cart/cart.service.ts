@@ -44,7 +44,8 @@ export class cartService{
                             item.total,
                             tax,
                             shipping,
-                            cartItemTotal);
+                            cartItemTotal,
+                            true);
       this.cartTotal += parseFloat(cartItemTotal.toFixed(2));
       this.cartItems.push(cI);
     }

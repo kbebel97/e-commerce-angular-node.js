@@ -30,14 +30,16 @@ export class invoiceService{
                              cartItem.qty,
                              0,
                              parseFloat((itemTotal).toFixed(2)),
-                             true);
+                             true,
+                             0,
+                             false);
                              console.log(pI);
         purchasedItems.push(pI);
     }
     let unformatteddate : Date = new Date();
     let formatteddate = (unformatteddate.getMonth() + 1) + "-" + unformatteddate.getDate() + "-" + unformatteddate.getFullYear();
 
-    let i = new invoice(1, purchasedItems, formatteddate, invoiceTotal, invoiceTax, invoiceShipping, items.length, true);
+    let i = new invoice(1, purchasedItems, formatteddate, invoiceTotal, invoiceTax, invoiceShipping, items.length, true, 0, true);
     console.log(i);
     this.invoiceHistory.unshift(i);
 

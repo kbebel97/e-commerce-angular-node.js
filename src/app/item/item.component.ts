@@ -12,6 +12,7 @@ import { Item } from '../shared/Item.model';
 })
 export class ItemComponent implements OnInit {
   item: Item;
+  numbers: number[];
 
   constructor(private catalogService: catalogService, private cartService: cartService, private activeRoute: ActivatedRoute, private router: Router) {
     console.log(this.activeRoute.snapshot.queryParams.id);
@@ -21,6 +22,8 @@ export class ItemComponent implements OnInit {
 
   ngOnInit(){
     const id = parseInt(this.activeRoute.snapshot.queryParams.id);
+    this.numbers = Array(5).map((x,i)=>i);
+    console.log(this.numbers);
     console.log(id);
     this.item = this.catalogService.getItem(id);
     console.log(this.item)

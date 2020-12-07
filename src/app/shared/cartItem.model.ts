@@ -10,7 +10,8 @@ export class cartItem{
               public individualPrice: number,
               public tax: number,
               public shippingFee: number,
-              public total: number
+              public total: number,
+              public display: boolean
               ){
 
 

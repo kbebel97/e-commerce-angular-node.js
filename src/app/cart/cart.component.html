@@ -10,8 +10,8 @@
 
   <!-- Structural directive to show list of items in cart if cart is not empty. Otherwise show empty cart message -->
   <div *ngIf="showlist" class="cardList">
-    <ng-container *ngFor="let cartItem of cartItems; let i = index">
-      <div class="card">
+    <ng-container *ngFor="let cartItem of cartItems; let i = index" class="card">
+      <div class="card" *ngIf="cartItem.display" #items >
         <img class="card-img" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
         <div class="card-title large-font" style="margin: 5px;">
           <div class="value" >{{cartItem.name}}</div>
@@ -52,6 +52,51 @@
           <a class="btn showmore-button" (click)="showMore(cartItem)">Show more</a>
         </div>
       </div>
+      <div class="card-2" *ngIf="!cartItem.display && paymentmenu" [ngStyle]="{height: pixelheight + 'px', background: 'white', padding: '5px'}" >
+        <div class="value" style=" flex: 1;font-size: xx-large; text-align: center;"> Payment</div>
+        <div class="label" style="flex: 2;">
+          <input style="width: 100%; margin-top: 2px;" type="text" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter Card # " />
+          <input style="width: 100%; margin-top: 2px;" type="text" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter Card Expiration Date: " />
+          <input style="width: 100%; margin-top: 2px;" type="text" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter Security Code: " />
+          <div style="display: flex; flex-direction: row; justify-content: flex-start;">
+            <div style="display: flex; justify-content: center; align-items: center;">             <input type="checkbox" [(ngModel)]="checkboxPayment" checked="checked">
+            </div>
+            <div class="label" style="margin-left: 2px;"> check this box to use default payment method</div>
+          </div>
+        </div>
+        <div class="value" style=" flex: 1;font-size: xx-large; text-align: center;"> Shipping</div>
+
+        <div class="label" style="flex: 2;">
+          <input style="width: 100%; margin-top: 2px;" type="text" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter Street Address: " />
+          <input style="width: 100%; margin-top: 2px;" type="text" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter Apt #: " />
+          <input style="width: 100%; margin-top: 2px;" type="text" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter Zip Code: " />
+          <input style="width: 100%; margin-top: 2px;" type="text" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter City: " />
+          <input style="width: 100%; margin-top: 2px;" type="text" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter State: " />
+          <div style="display: flex; flex-direction: row; justify-content: flex-start;">
+            <div style="display: flex; justify-content: center; align-items: center;"><input type="checkbox" [(ngModel)]="checkboxAddress" checked="checked">
+            </div>
+            <div class="label" style="margin-left: 2px;"> check this box to use default address </div>
+          </div>
+        </div>
+        <div style="flex: 3; align-items: center; display: flex; flex-direction: column; justify-content: flex-end;">
+          <div class="btn confirm-button" style="width: 100%; margin-bottom: 1px;">Confirm</div>
+          <div class="btn cancel-button" style="width: 100%; margin-top: 1px">Cancel</div>
+        </div>
+
+          <!-- <div>Hello</div>
+          <div style="display: grid; grid-template-columns: 49.5% 49.5%; column-gap: 1%; grid-template-rows: 32.5% 32.5% 32.5%; row-gap: 1.5%;" >
+          <input type="text"  style="grid-column: 1/3; max-height: fit-content;" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter Street Address" />
+          <input type="text"  style="grid-row: 2; grid-column: 1; max-height: fit-content;" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter Street Address" />
+          <input type="text"  style="grid-row: 2; grid-column: 2; max-height: fit-content;" #searchbar (keyup)="fetchSeries($event)" [(ngModel)]="searchInput" placeholder="Enter Street Address" />
+          </div>
+          <div>Hello</div>
+          <div>Hello</div> -->
+
+
+      </div>
+
+      <!-- <div class="card" *ngIf="paymentmenu">Hello</div> -->
+
     </ng-container>
   </div>
   <div id="empty-cart" *ngIf="!showlist">
@@ -63,3 +108,5 @@
 
 
 
+         <!-- div style="grid-row-start: 1; grid-row-end: -1" *ngFor="let show of searchResult">
+              <p style="margin: 0;"> {{ show.name }}</p>  -->
