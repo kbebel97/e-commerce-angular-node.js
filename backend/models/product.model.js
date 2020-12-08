@@ -5,6 +5,15 @@ module.exports = (sequelize, Sequelize) => {
         },
         description: {
           type: Sequelize.STRING
+        },
+        price: {
+            type: Sequelize.FLOAT
+        },
+        stock: {
+            type: Sequelize.INTEGER
+        },
+        imagePath: {
+            type: Sequelize.STRING
         }
       });
     return Product;

@@ -1,115 +1,113 @@
 const db = require('../models');
-const Product = db.products;
+const User = db.users;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Product
+// Create and Save a new User
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.name) {
+  if (!req.body.email) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
     return;
   }
 
-  // Create a Product
-  const product = {
-    name: req.body.name,
-    description: req.body.description,
-    price: req.body.price,
-    stock: req.body.stock,
-    imagePath: req.body.imagePath
+  // Create a User
+  const user = {
+    email: req.body.email,
+    password: req.body.password,
+    role: req.body.role
   };
 
-  // Save Product in the database
-  Product.create(product)
+  // Save User in the database
+  User.create(user)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Product."
+          err.message || "Some error occurred while creating the User."
       });
     });
 };
 
-// Retrieve all Products from the database.
+// Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-    Product.findAll()
+    User.findAll()
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while getting the Products."
+          err.message || "Some error occurred while getting the Users."
       });
     });
   
 };
 
-// Find a single Product with an id
+// Find a single User with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Product.findByPk(id)
+    User.findByPk(id)
       .then(data => {
         res.send(data);
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error retrieving Product with id=" + id
+          message: "Error retrieving User with id=" + id
         });
       });
 };
 
-// Update a Product by the id in the request
+// Update a User by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Product.update(req.body, {
+    User.update(req.body, {
       where: { id: id }
     })
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Product was updated successfully."
+            message: "User was updated successfully."
           });
         } else {
           res.send({
-            message: `Cannot update Product with id=${id}. Maybe Product was not found or req.body is empty!`
+            message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error updating Product with id=" + id
+          message: "Error updating User with id=" + id
         });
       });
 };
 
-// Delete a Product with the specified id in the request
+// Delete a User with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Product.destroy({
+    User.destroy({
       where: { id: id }
     })
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Product was deleted successfully!"
+            message: "User was deleted successfully!"
           });
         } else {
           res.send({
-            message: `Cannot delete Product with id=${id}. Maybe Product was not found!`
+            message: `Cannot delete User with id=${id}. Maybe User was not found!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Could not delete Product with id=" + id
+          message: "Could not delete User with id=" + id
         });
       });
 };

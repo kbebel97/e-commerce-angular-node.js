@@ -3,10 +3,10 @@ module.exports = function(app) {
 
     var router = require('express').Router();
 
-    // Create a new Test
+    // Create a new Product
     router.post("/", Product.create);
 
-    // Retrieve all Tests
+    // Retrieve all Products
     router.get("/", Product.findAll);
 
     // Retrieve a single Product with id
