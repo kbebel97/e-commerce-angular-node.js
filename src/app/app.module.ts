@@ -15,7 +15,7 @@ import { CarouselComponent } from './item/carousel/carousel.component';
 import { CarouselInvoiceComponent} from './invoice/carousel-invoice/carousel-invoice.component'
 import { RouterModule, Routes } from '@angular/router';
 import { generalService } from './service/general.service';
-import { itemService } from './item/item.service';
+// import { itemService } from './item/item.service';
 import { cartService } from './cart/cart.service';
 import { catalogService } from './catalog/catalog.service';
 import { InvoiceComponent } from './invoice/invoice.component';
@@ -51,7 +51,7 @@ const appRoutes: Routes = [
     NgbModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [catalogService, cartService, itemService, generalService, invoiceService],
+  providers: [catalogService, cartService, generalService, invoiceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

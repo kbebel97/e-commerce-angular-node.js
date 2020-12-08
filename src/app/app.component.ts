@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { cartService } from './cart/cart.service';
 import { catalogService } from './catalog/catalog.service';
-import { itemService } from './item/item.service';
+// import { itemService } from './item/item.service';
 import { Item } from './shared/Item.model';
 
 @Component({
@@ -18,7 +18,7 @@ export class AppComponent {
   loadedFeature = 'catalog';
   loadedNav = 'true';
   loadedItem: Item = null;
-  constructor(private catalogService: catalogService, private cartService: cartService, private itemService: itemService) { }
+  constructor(private catalogService: catalogService, private cartService: cartService) { }
 
 
 

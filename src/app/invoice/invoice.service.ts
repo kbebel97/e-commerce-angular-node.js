@@ -1,6 +1,6 @@
 import { cartItem } from '../shared/cartItem.model';
-import { purchasedItem } from '../shared/purchasedItem.model';
 import { invoice } from '../shared/invoice.model';
+import { purchasedItem } from '../shared/purchasedItem.model';
 
 export class invoiceService{
   private invoiceHistory = [];
