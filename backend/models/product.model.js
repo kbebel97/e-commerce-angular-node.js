@@ -18,3 +18,5 @@ module.exports = (sequelize, Sequelize) => {
       });
     return Product;
 }
+
+// needs link to review table
