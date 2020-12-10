@@ -62,6 +62,27 @@ exports.findOne = (req, res) => {
       });
 };
 
+// Find a single User by their email and password
+exports.findRegistered = (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  User.findAll({
+    where: {
+      email: email,
+      password: password
+    }
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error retrieving User with email=" + email
+      });
+    });
+};
+
 // Update a User by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
