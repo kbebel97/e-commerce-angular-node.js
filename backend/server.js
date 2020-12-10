@@ -11,9 +11,15 @@ const db = require('./models');
 db.sequelize.sync();
 
 require('./routes/product.routes.js')(app);
+require('./routes/review.routes.js')(app);
+
 require('./routes/user.routes.js')(app);
 require('./routes/profile.routes.js')(app);
 require('./routes/address.routes.js')(app);
+
+require('./routes/invoice.routes.js')(app);
+require('./routes/invoice-item.routes.js')(app);
+
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3080;

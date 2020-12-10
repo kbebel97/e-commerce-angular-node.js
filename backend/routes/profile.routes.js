@@ -3,19 +3,19 @@ module.exports = function(app) {
 
     var router = require('express').Router();
 
-    // Create a new Product
+    // Create a new Profile
     router.post("/", Profile.create);
 
-    // Retrieve all Products
+    // Retrieve all Profiles
     router.get("/", Profile.findAll);
 
-    // Retrieve a single Product with id
+    // Retrieve a single Profile with id
     router.get("/:id", Profile.findOne);
 
-    // Update a Product with id
+    // Update a Profile with id
     router.put("/:id", Profile.update);
 
-    // Delete a Product with id
+    // Delete a Profile with id
     router.delete("/:id", Profile.delete);
 
     app.use('/api/profiles', router);
