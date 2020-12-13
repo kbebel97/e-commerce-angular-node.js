@@ -34,6 +34,18 @@ exports.create = (req, res) => {
     });
 };
 
+// Upload a Profile image
+exports.uploadImage = (req, res, next) => {
+  try {
+    return res.status(201).json({
+      message: "File uploaded successfully",
+      filename: req.file.filename
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // Retrieve all Profiles from the database.
 exports.findAll = (req, res) => {
   Profile.findAll()

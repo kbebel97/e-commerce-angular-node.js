@@ -1,14 +1,10 @@
 module.exports = function(app) {
     const User = require('../controllers/user.controller.js');
-    const upload = require('../images/upload.js');
 
     var router = require('express').Router();
 
     // Create a new User
     router.post("/", User.create);
-
-    // Upload a User image
-    router.post("/images", upload.single('userImage'), User.uploadImage);
 
     // Retrieve all Users
     router.get("/", User.findAll);

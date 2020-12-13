@@ -1,10 +1,14 @@
 module.exports = function(app) {
     const Profile = require('../controllers/profile.controller.js');
+    const upload = require('../images/upload.js');
 
     var router = require('express').Router();
 
     // Create a new Profile
     router.post("/", Profile.create);
+
+    // Upload a Profile image
+    router.post("/images", upload.single('profileImage'), Profile.uploadImage);
 
     // Retrieve all Profiles
     router.get("/", Profile.findAll);
