@@ -32,6 +32,18 @@ exports.create = (req, res) => {
     });
 };
 
+// Upload a User image
+exports.uploadImage = (req, res, next) => {
+    try {
+      return res.status(201).json({
+        message: "File uploaded successfully",
+        filename: req.file.filename
+      });
+    } catch (error) {
+      console.error(error);
+    }
+}
+
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
     User.findAll()
