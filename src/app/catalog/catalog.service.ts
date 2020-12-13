@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Item } from '../shared/Item.model';
 import { Review } from '../shared/review.model';
 

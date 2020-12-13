@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { userInfo } from 'os';
 import { Item } from '../shared/Item.model';
 import { Review } from '../shared/review.model';
 import { User } from '../shared/user.model';

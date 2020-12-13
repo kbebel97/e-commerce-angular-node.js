@@ -1,12 +1,16 @@
 module.exports = function(app) {
     const Product = require('../controllers/product.controller.js');
+    const upload = require('../images/upload.js');
 
     var router = require('express').Router();
 
-    // Create a new Test
+    // Create a new Product
     router.post("/", Product.create);
 
-    // Retrieve all Tests
+    // Upload a Product image
+    router.post("/images", upload.single('productImage'), Product.uploadImage);
+
+    // Retrieve all Products
     router.get("/", Product.findAll);
 
     // Retrieve a single Product with id

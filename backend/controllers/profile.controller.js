@@ -1,40 +1,40 @@
 const db = require('../models');
-const Product = db.products;
+const Profile = db.profiles;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Product
+// Create and Save a new Profile
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.name) {
+  if (!req.body.user_id) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
     return;
   }
 
-  // Create a Product
-  const product = {
-    name: req.body.name,
-    description: req.body.description,
-    price: req.body.price,
-    stock: req.body.stock,
+  // Create a Profile
+  const profile = {
+    user_id: req.body.user_id,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    phoneNumber: req.body.phoneNumber,
     imagePath: req.body.imagePath
   };
 
-  // Save Product in the database
-  Product.create(product)
+  // Save Profile in the database
+  Profile.create(profile)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Product."
+          err.message || "Some error occurred while creating the Profile."
       });
     });
 };
 
-// Upload a Product image
+// Upload a Profile image
 exports.uploadImage = (req, res, next) => {
   try {
     return res.status(201).json({
@@ -46,82 +46,82 @@ exports.uploadImage = (req, res, next) => {
   }
 }
 
-// Retrieve all Products from the database.
+// Retrieve all Profiles from the database.
 exports.findAll = (req, res) => {
-    Product.findAll()
+  Profile.findAll()
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while getting the Products."
+          err.message || "Some error occurred while getting the Profiles."
       });
     });
   
 };
 
-// Find a single Product with an id
+// Find a single Profile with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Product.findByPk(id)
+    Profile.findByPk(id)
       .then(data => {
         res.send(data);
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error retrieving Product with id=" + id
+          message: "Error retrieving Profile with id=" + id
         });
       });
 };
 
-// Update a Product by the id in the request
+// Update a Profile by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Product.update(req.body, {
+    Profile.update(req.body, {
       where: { id: id }
     })
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Product was updated successfully."
+            message: "Profile was updated successfully."
           });
         } else {
           res.send({
-            message: `Cannot update Product with id=${id}. Maybe Product was not found or req.body is empty!`
+            message: `Cannot update Profile with id=${id}. Maybe Profile was not found or req.body is empty!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error updating Product with id=" + id
+          message: "Error updating Profile with id=" + id
         });
       });
 };
 
-// Delete a Product with the specified id in the request
+// Delete a Profile with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Product.destroy({
+    Profile.destroy({
       where: { id: id }
     })
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Product was deleted successfully!"
+            message: "Profile was deleted successfully!"
           });
         } else {
           res.send({
-            message: `Cannot delete Product with id=${id}. Maybe Product was not found!`
+            message: `Cannot delete Profile with id=${id}. Maybe Profile was not found!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Could not delete Product with id=" + id
+          message: "Could not delete Profile with id=" + id
         });
       });
 };

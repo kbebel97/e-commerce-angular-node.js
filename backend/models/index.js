@@ -20,6 +20,14 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.products = require("./product.model.js")(sequelize, Sequelize);
+db.products  = require("./product.model.js")(sequelize, Sequelize);
+db.reviews   = require("./review.model.js")(sequelize, Sequelize);
+db.users     = require("./user.model.js")(sequelize, Sequelize);
+db.profiles  = require("./profile.model.js")(sequelize, Sequelize);
+db.addresses = require("./address.model.js")(sequelize, Sequelize);
+db.invoices  = require("./invoice.model.js")(sequelize, Sequelize);
+db.invItems  = require("./invoice-item.model.js")(sequelize, Sequelize);
+db.carts     = require("./cart.model.js")(sequelize, Sequelize);
+db.carItems  = require("./cart-item.model.js")(sequelize, Sequelize);
 
 module.exports = db;
