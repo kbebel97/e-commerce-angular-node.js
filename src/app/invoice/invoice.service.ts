@@ -16,22 +16,16 @@ export class invoiceService{
 
     for(let cartItem of items){
       console.log(cartItem);
-      invoiceTax = parseFloat((invoiceTax + (cartItem.individualTax * cartItem.qty)).toFixed(2));
-      invoiceTotal = parseFloat((invoiceTotal + (cartItem.individualPrice + cartItem.individualTax + cartItem.indiviudalshippingFee) * cartItem.qty).toFixed(2));
-      invoiceShipping = parseFloat((invoiceShipping + (cartItem.indiviudalshippingFee * cartItem.qty)).toFixed(2));
-      let itemTotal =  (cartItem.individualPrice + cartItem.individualTax + cartItem.indiviudalshippingFee) * cartItem.qty;
-      let pI = new purchasedItem(cartItem.itemId,
-                             cartItem.name,
-                             cartItem.description,
-                             cartItem.manuFacturer,
-                             cartItem.individualPrice,
-                             cartItem.individualTax,
-                             cartItem.indiviudalshippingFee,
+      invoiceTax += cartItem.item.individualTax * cartItem.qty;
+      invoiceTotal += (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.indiviudalPrice) * cartItem.qty;
+      invoiceShipping += cartItem.item.individualShipping * cartItem.qty;
+      let itemTotal = (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.indiviudalPrice) * cartItem.qty;
+      let pI = new purchasedItem(this.invoiceHistory.length + 1,
+                             cartItem.item,
                              cartItem.qty,
                              0,
-                             parseFloat((itemTotal).toFixed(2)),
+                             itemTotal,
                              true,
-                             0,
                              false);
                              console.log(pI);
         purchasedItems.push(pI);

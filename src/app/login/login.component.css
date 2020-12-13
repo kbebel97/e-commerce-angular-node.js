@@ -1,0 +1,12 @@
+.display-message{
+ display: flex;
+ flex-direction: row;
+ justify-content: center;
+ align-items: center;
+ background: rgba(190, 239, 200, 0.97);
+ font-family: 'Oswald', sans-serif;
+ font-weight: 500;
+ height: 40px;
+ border: black 1px solid;
+ border-radius: 3px;
+}

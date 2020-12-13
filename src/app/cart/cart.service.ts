@@ -4,54 +4,24 @@ import { Item } from '../shared/Item.model';
 
 @Injectable()
 export class cartService{
-  private cartItems = [];
+  private cartItems : cartItem[] = [];
   private cartTotal = 0;
+
 
   pushtoCart(item: Item){
     let check: boolean = false;
-    // If cartItem quantity is greater than 1
-    // add to existing cart Item by adding one to quantity and adjusting shipping, tax and cartItemTotal
     for( let cartItem of this.cartItems){
-      if(cartItem.itemId === item.id){
+      if(cartItem.item.id === item.id){
+        cartItem.qty++;
         check = true;
-        let qty = cartItem.qty + 1;
-        let shippingFee = parseFloat((cartItem.shippingFee + (item.total * 1.2 - item.total)).toFixed(2));
-        let tax = parseFloat((cartItem.tax + (item.total * 1.1 - item.total)).toFixed(2));
-        let cartItemTotal = parseFloat((cartItem.total +  item.total + (item.total * 1.1 - item.total) + (item.total * 1.2 - item.total)).toFixed(2));
-        cartItem.qty = qty;
-        cartItem.shippingFee = shippingFee;
-        cartItem.tax = tax;
-        cartItem.total = cartItemTotal;
-        this.cartTotal += (item.total + (item.total * 1.2 - item.total) + (item.total * 1.1 - item.total));
-        console.log(cartItem);
+        this.cartTotal += cartItem.item.indiviudalPrice + cartItem.item.individualTax + cartItem.item.individualShipping;
       }
     }
-
-    // If cartItem quantity is 0
-    // create a new cartItem to display and add it to cartItems array
     if(check === false){
-      let tax = parseFloat((item.total * 1.1 - item.total).toFixed(2));
-      let shipping = parseFloat((item.total * 1.2 - item.total).toFixed(2));
-      let cartItemTotal = parseFloat((item.total + tax + shipping).toFixed(2));
-      let cI = new cartItem(Date.now() * item.id,
-                            item.id,
-                            item.name,
-                            item.description,
-                            1,
-                            item.manufacturer,
-                            parseFloat((item.total * 1.1 - item.total).toFixed(2)),
-                            parseFloat((item.total * 1.2 - item.total).toFixed(2)),
-                            item.total,
-                            tax,
-                            shipping,
-                            cartItemTotal,
-                            true);
-      this.cartTotal += parseFloat(cartItemTotal.toFixed(2));
+      let cI = new cartItem(this.cartItems.length + 1, 1, true, item);
+      this.cartTotal += item.indiviudalPrice + item.individualTax + item.individualShipping;
       this.cartItems.push(cI);
     }
-    console.log(this.cartItems);
-
-
   }
 
   setCartTotal(total: number){
@@ -81,6 +51,22 @@ export class cartService{
     }
 
   }
+
+  //Crud Operations
+
+    // pushtoCart(item : Item){
+    //   check if item already exists in cart table by searching by userId and itemId
+    //   , if it does, increase item qty
+    //   else add new entry to cart table.
+    // }
+
+    // deletefromCart(item : Item){
+    //   check quantity of cart item, if above 1, decrease qty field in entry,
+    //   otherwise remove item from cart entirely
+    // }
+
+
+
 
 
 }

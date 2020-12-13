@@ -45,6 +45,9 @@
 .label-value{
   display: flex;
   flex-direction: row;
+  padding-left: 5px;
+  padding-right: 5px;
+  align-items: center;
 }
 
 /* Card stylings */
@@ -74,10 +77,6 @@
   width: 20rem;
   background-color: transparent;
   border: black 3px solid;
-  /* display: flex;
-  height: 100%;
-  flex-direction: column;
-  justify-content: space-evenly; */
 }
 
 .card-2{
@@ -117,3 +116,24 @@
   width: 0px;
   background: transparent;
 }
+
+/* Header Styling */
+
+.header{
+  border-top: black solid 1px;
+  border-bottom: solid black 1px;
+  background: white;
+  color: black;
+  margin : 0;
+  height: 80px;
+  padding: 5px;
+  font-size: 3em;
+  display: flex;
+  flex-direction: row;
+  font-style: italic;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

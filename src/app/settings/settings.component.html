@@ -1,1 +1,202 @@
-<p>settings works!</p>
+
+<h1 class="header">
+  Profile
+</h1>
+<div id="settings-container">
+  <div class="setting-column" style="justify-content: flex-start;">
+    <div class="setting-item">
+      <h4 class="setting-item-header value">
+        <div>Additional Details</div>
+      </h4>
+      <div style="display: flex; flex-direction: column;">
+        <div style="padding: 5px;">
+          <div class="form-group" style="padding: 0; margin: 0; ">
+            <input type="file" id="file" (change)="handleFileInput($event.target.files)">
+          </div>
+          <div style="padding-bottom: 5px; padding-top: 5px; margin: 0; ">
+            <img style="height: 100px; width: 100px;" [src]="url" *ngIf="url">
+          </div>
+          <div class="label-value" style="padding: 0">
+            <div class="label"style="flex: 1;">First Name:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+          <div class="label-value" style="padding: 0">
+            <div class="label"style="flex: 1;">Last Name:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+    <div class="setting-item">
+      <h4 class="setting-item-header value">
+        <div>Edit Billing</div>
+      </h4>
+      <form style="display: flex; flex-direction: row; justify-content: space-evenly; height: 85px; text-align: center; align-items: center;" class="value">
+        <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
+          <div style="flex: 1; display: inline;" class="label">edit default payment method</div>
+          <input style="flex: 1;" type="radio" [checked]="paymentSetting == 1" (click)="paymentSetting = 1" name="edit default payment"/>
+        </div>
+        <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
+          <div style="flex: 1; margin-right: 1px; display: inline;" class="label">add new payment method</div>
+          <input  style="flex: 1" type="radio" [checked]="paymentSetting == 2" (click)="paymentSetting = 2" name="add new payment method"><br/>
+        </div>
+        <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
+          <div style="flex: 1;" class="label">change default payment</div>
+          <input style="flex: 1;" type="radio" [checked]="paymentSetting == 3" (click)="paymentSetting = 3" name="change default payment"/>
+        </div>
+      </form>
+      <div [ngSwitch]="paymentSetting">
+        <div *ngSwitchCase="1" class="setting-item-body" #billing >
+          <div class="label-value" style="padding: 0">
+            <div class="label"style="flex: 1;"> Card #:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+          <div class="label-value"  style="padding: 0">
+            <div class="label" style="flex: 1; ">Expiration Date:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+          <div class="label-value"  style="padding: 0">
+            <div class="label" style="flex: 1;">Security Code:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+        </div>
+        <div *ngSwitchCase="2" class="setting-item-body">
+          <div class="label-value" style="padding: 0">
+            <div class="label"style="flex: 1;">New Card #:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+          <div class="label-value" style="padding: 0">
+            <div class="label" style="flex: 1; ">New Card Expiration Date:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+          <div class="label-value"  style="padding: 0">
+            <div class="label" style="flex: 1;">New Card Security Code:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+        </div>
+        <div *ngSwitchCase="3" class="setting-item-body" [ngStyle]="{'height': billingHeight + 'px'}">
+            <div class="label-value" style="padding: 0">
+              <div class="label"style="flex: 1;">Select Default Card: </div>
+              <mat-form-field style="flex: 2;">
+                <mat-select [(value)]="selectedValue" class="value">
+                  <mat-option class="value" value={{card}} *ngFor="let card of cards; let i = index">{{card}}</mat-option>
+
+
+
+                </mat-select>
+              </mat-form-field>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="setting-column">
+      <div class="setting-item">
+        <h4 class="setting-item-header value">
+          <div>Edit Login</div>
+        </h4>
+        <div class="setting-item-body">
+          <div class="label-value" style="padding: 0">
+            <div class="label"style="flex: 1;">new username:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+          <div class="label-value" style="padding: 0">
+            <div class="label" style="flex: 1; ">new password:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+          <div class="label-value" style="padding: 0">
+            <div class="label" style="flex: 1;">confirm new password:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+          </div>
+        </div>
+      </div>
+      <div class="setting-item">
+        <h4 class="setting-item-header value">
+          <div>Edit Address</div>
+        </h4>
+        <form style="display: flex; flex-direction: row; justify-content: space-evenly; height: 85px; text-align: center; align-items: center;" class="value">
+          <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
+            <div style="flex: 1; display: inline;" class="label">edit default address</div>
+            <input style="flex: 1;" type="radio" [checked]="addressSetting == 1" (click)="addressSetting = 1" name="edit default payment"/>
+          </div>
+          <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
+            <div style="flex: 1; margin-right: 1px; display: inline;" class="label">add new address</div>
+            <input  style="flex: 1" type="radio" [checked]="addressSetting == 2" (click)="addressSetting = 2" name="add new payment method"><br/>
+          </div>
+        </form>
+        <div [ngSwitch]="addressSetting">
+          <div *ngSwitchCase="1" >
+            <div class="setting-item-body">
+              <div class="label-value" style="padding: 0">
+                <div class="label"style="flex: 1;">Address Line 1:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1; ">Address Line 2:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">City:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">State:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">Zip Code:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">Country:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+            </div>
+
+          </div>
+          <div *ngSwitchCase="2">
+            <div class="setting-item-body">
+              <div class="label-value" style="padding: 0">
+                <div class="label"style="flex: 1;">Address Line 1:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1; ">Address Line 2:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">City:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">State:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">Zip Code:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">Country:</div>
+                <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" "/>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+  </div>
+  <!-- <div class="setting-column"></div> -->
+
+
+</div>

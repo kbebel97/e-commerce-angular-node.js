@@ -3,12 +3,12 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  row-gap: 10px;
+  row-gap: 20px;
+  padding: 10px;
 }
 
 .catalogContainer{
-  padding: 5px;
-  border-top: 2px solid black ;
+  /* padding-bott: 5px; */
 }
 
 .card-img{

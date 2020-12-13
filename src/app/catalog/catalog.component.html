@@ -1,5 +1,8 @@
 
 <div class="catalogContainer">
+  <h1 class="header" style="justify-content: space-between;">
+   Catalog
+  </h1>
 
   <div class="cardList">
     <ng-container *ngFor="let item of catalogItems">
@@ -8,15 +11,15 @@
         <div class="card-body">
           <div class="card-title large-font">
             <div class="value">{{item.name}}</div>
-            <div class="value">${{item.total | number: '.2-2'}}</div>
+            <div class="value">${{item.indiviudalPrice | number: '.2-2'}}</div>
           </div>
           <p class="card-text">{{item.description}}</p>
           <a class="btn confirm-button" (click)="onSelected(item)" style="margin-bottom: 1px;">add to cart</a>
           <a class="btn cancel-button" (click)="onShowMore(item)" style="margin-top: 1px;">show more</a>
-
         </div>
       </div>
     </ng-container>
   </div>
 </div>
 
+<router-outlet></router-outlet>

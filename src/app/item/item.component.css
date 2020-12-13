@@ -31,16 +31,17 @@
 
  }
 
- .item-general-info{
+ #item-general-info{
    padding: 5px;
    flex: 1;
    display: flex;
    flex-direction: column;
    background: transparent;
    height: 300px;
+   border-bottom: black 2px solid;
  }
 
- .item-container{
+ #item-container{
    display: block;
    border-top: black solid 2px;
    border-bottom: black solid 2px;

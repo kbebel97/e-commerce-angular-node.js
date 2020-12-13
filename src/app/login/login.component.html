@@ -1,0 +1,70 @@
+<div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+
+  <div class="card" style="background: white;">
+    <h4 class="header">
+      <div>{{title}}</div>
+    </h4>
+    <form style="display: flex; flex-direction: row; justify-content: space-evenly; height: 85px; text-align: center; align-items: center;" class="value">
+      <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
+        <div style="flex: 1; display: inline;" class="label">Login</div>
+        <input style="flex: 1; margin-left: 5px;" type="radio" [checked]="option == 1" (click)="switchOption(1)" name="login"/>
+      </div>
+      <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
+        <div style="flex: 1; margin-right: 1px; display: inline;" class="label">Register</div>
+        <input  style="flex: 1; margin-left: 5px;" type="radio" [checked]="option == 2" (click)="switchOption(2)" name="register"><br/>
+      </div>
+    </form>
+    <div [ngSwitch]="option" style="padding: 5px;">
+      <div [ngSwitch]="displayMessage">
+        <div class="display-message" *ngSwitchCase="1">Account Successfully Created</div>
+        <div class="display-message" style="background: RGB(237, 92, 92)" *ngSwitchCase="2">Account Failed to be Created</div>
+        <div class="display-message" style="background: RGB(237, 92, 92)" *ngSwitchCase="3">Passwords do not match</div>
+        <div class="display-message" style="background: RGB(237, 92, 92)" *ngSwitchCase="4">User profile was not found</div>
+      </div>
+      <div *ngSwitchCase="1" style="display: flex; flex-direction: column;">
+        <div>
+          <div class="label-value" style="padding: 0">
+            <div class="label" style="flex: 1">Email</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" [(ngModel)]="email" placeholder="enter email"/>
+          </div>
+        </div>
+
+        <div>
+          <div class="label-value" style="padding: 0;">
+            <div class="label" style="flex: 1">Password</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" [(ngModel)]="password" placeholder="enter password"/>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: row; width: 100%; padding-top: 10px; padding-bottom: 5px; justify-content: space-evenly;">
+          <div class="btn confirm-button" style="width: 62px;" (click)="login()">Login</div>
+          <div  class="btn cancel-button" style="width: 62px;"(click)="clear()">Clear</div>
+        </div>
+      </div>
+      <div *ngSwitchCase="2" style="display: flex; flex-direction: column;">
+        <div>
+          <div class="label-value" style="padding: 0">
+            <div class="label" style="flex: 1">Email</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" [(ngModel)]="email" placeholder="enter email  "/>
+          </div>
+        </div>
+        <div>
+          <div class="label-value" style="padding: 0;">
+            <div class="label" style="flex: 1">Password</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" [(ngModel)]="password" placeholder="enter password "/>
+          </div>
+        </div>
+        <div>
+          <div class="label-value" style="padding: 0;">
+            <div class="label" style="flex: 1">Confirm Password</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" [(ngModel)]="confirmPassword" placeholder="confirm password"/>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: row; width: 100%; padding-top: 10px; padding-bottom: 5px; justify-content: space-evenly;">
+
+          <div class="btn confirm-button" style="width: 82px;" (click)="register()">Register</div>
+          <div  class="btn cancel-button" style="width: 82px;" (click)="clear()">Clear</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
