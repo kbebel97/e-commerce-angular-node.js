@@ -37,17 +37,23 @@ export class LoginComponent implements OnInit{
     }
   }
 
-  register(){
-    if(this.password == this.confirmPassword){
-      let user : User = this.generalService.register(this.email, this.password);
-      if(user != null){
-        this.displayMessage = 1;
-        this.option = 1;
-      } else{
-        this.displayMessage = 2;
-      }
-    } else {
-        this.displayMessage = 3;
+  // register(){
+  //   if(this.password == this.confirmPassword){
+  //     let user : User = this.generalService.register(this.email, this.password);
+  //     if(user != null){
+  //       this.displayMessage = 1;
+  //       this.option = 1;
+  //     } else{
+  //       this.displayMessage = 2;
+  //     }
+  //   } else {
+  //       this.displayMessage = 3;
+  //   }
+  // }
+
+  register() {
+    if(this.password == this.confirmPassword) {
+      this.generalService.register(this.email, this.password);
     }
   }
 

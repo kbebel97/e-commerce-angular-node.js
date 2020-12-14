@@ -63,6 +63,25 @@ exports.findOne = (req, res) => {
       });
 };
 
+// Find all Reviews by their Product ID
+exports.findByProduct = (req, res) => {
+  const product_id = req.params.id;
+
+  Review.findAll({
+    where: {
+      product_id: product_id
+    }
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error retrieving Reviews with product_id=" + product_id
+      });
+    });
+};
+
 // Update a Review by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;

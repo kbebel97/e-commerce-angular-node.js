@@ -23,6 +23,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { loginService } from './login/login.service';
+import { itemService } from './item/item.service';
 import { MenuComponent } from './menu/menu.component';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -52,7 +53,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     HttpClientModule,
   ],
-  providers: [catalogService, cartService, generalService, invoiceService, loginService],
+  providers: [catalogService, cartService, generalService, invoiceService, loginService, itemService],
   bootstrap: [AppComponent]
 })
 

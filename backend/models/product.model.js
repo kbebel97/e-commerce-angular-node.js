@@ -6,11 +6,20 @@ module.exports = (sequelize, Sequelize) => {
         description: {
           type: Sequelize.STRING
         },
-        price: {
+        individualPrice: {
             type: Sequelize.FLOAT
         },
-        stock: {
-            type: Sequelize.INTEGER
+        individualTax: {
+            type: Sequelize.FLOAT
+        },
+        individualShipping: {
+          type: Sequelize.FLOAT
+        },
+        manufacturer: {
+          type: Sequelize.STRING
+        },
+        rating: {
+          type: Sequelize.STRING
         },
         imagePath: {
             type: Sequelize.STRING

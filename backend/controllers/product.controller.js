@@ -16,8 +16,11 @@ exports.create = (req, res) => {
   const product = {
     name: req.body.name,
     description: req.body.description,
-    price: req.body.price,
-    stock: req.body.stock,
+    individualPrice: req.body.individualPrice,
+    individualTax: req.body.individualTax,
+    individualShipping: req.body.individualShipping,
+    manufacturer: req.body.manufacturer,
+    rating: req.body.rating,
     imagePath: req.body.imagePath
   };
 
