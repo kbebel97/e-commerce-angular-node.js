@@ -24,6 +24,7 @@ import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { loginService } from './login/login.service';
 import { MenuComponent } from './menu/menu.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { MenuComponent } from './menu/menu.component';
     NoopAnimationsModule,
     MatFormFieldModule,
     MatSelectModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [catalogService, cartService, generalService, invoiceService, loginService],
   bootstrap: [AppComponent]
