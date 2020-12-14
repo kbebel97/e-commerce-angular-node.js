@@ -1,0 +1,19 @@
+.container{
+  margin: 0;
+  padding: 0;
+}
+
+.router-link{
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: large;
+}
+
+#title{
+  /* font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: xx-large; */
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: xx-large;
+}

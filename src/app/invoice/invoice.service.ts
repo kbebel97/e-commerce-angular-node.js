@@ -79,6 +79,21 @@ export class invoiceService{
 
   }
 
+  //crud operations
+  // on component initilization, load all invoices based on userId
+
+  //* An invoice is composed on the follow attributes */
+  // public invoiceId: number,
+  // public purchasedItems: purchasedItem[],
+  // public date: string,
+  // public total: number,
+  // public tax: number,
+  // public shipping: number,
+  // public quantity: number,
+  // public display: boolean,
+  // public height : number,
+  // public isReturnable : boolean
+
 
 
 

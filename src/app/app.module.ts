@@ -23,6 +23,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { loginService } from './login/login.service';
+import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { loginService } from './login/login.service';
     CarouselComponent,
     InvoiceComponent,
     CarouselInvoiceComponent,
-    LoginComponent
+    LoginComponent,
+    MenuComponent
   ],
   imports: [
     FlexLayoutModule,

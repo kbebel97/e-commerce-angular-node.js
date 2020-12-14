@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit{
   login(){
     let user = this.generalService.login(this.email, this.password);
     if(user !=null)
-      this.router.navigate(['/catalog']);
+      this.router.navigate(['/menus/catalog']);
     else
       this.displayMessage = 4;
   }

@@ -49,7 +49,6 @@ export class cartService{
         break;
       }
     }
-
   }
 
   //Crud Operations
@@ -58,6 +57,11 @@ export class cartService{
     //   check if item already exists in cart table by searching by userId and itemId
     //   , if it does, increase item qty
     //   else add new entry to cart table.
+    // }
+
+    // FetchCart(){
+    // on component initializiation, fetch cart data
+    // Get all cart items by userId. Add these cart items to cartItem
     // }
 
     // deletefromCart(item : Item){
