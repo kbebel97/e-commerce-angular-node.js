@@ -40,6 +40,8 @@ export class CatalogComponent implements OnInit {
 
   onSelected(item: Item){
     this.cartService.pushtoCart(item);
+
+    // this.cartService.pushCart(item);
   }
 
   onShowMore(item: Item){

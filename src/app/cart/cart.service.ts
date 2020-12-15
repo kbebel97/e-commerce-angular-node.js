@@ -13,15 +13,21 @@ export class cartService{
     for( let cartItem of this.cartItems){
       if(cartItem.item.id === item.id){
         cartItem.qty++;
+        // Increase quantity in database
         check = true;
         this.cartTotal += cartItem.item.individualPrice + cartItem.item.individualTax + cartItem.item.individualShipping;
       }
     }
     if(check === false){
+      // Add new cart item to database
       let cI = new cartItem(this.cartItems.length + 1, 1, true, item);
       this.cartTotal += item.individualPrice + item.individualTax + item.individualShipping;
       this.cartItems.push(cI);
     }
+  }
+
+  pushCart(item: Item) {
+
   }
 
   setCartTotal(total: number){

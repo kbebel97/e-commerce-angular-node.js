@@ -21,7 +21,7 @@ userObservable : Observable<any>;
 constructor(
   private cartService : cartService, 
   private catalogService : catalogService, 
-  private invoiceService : invoiceService,
+  // private invoiceService : invoiceService,
   private http: HttpClient){
 
 }
@@ -30,9 +30,9 @@ setUser(user : User){
   this.userLoggedin = user;
 }
 
-getUser(): Observable<any>{
-  // return this.userLoggedin;
-  return this.userObservable;
+getUser(){
+  return this.userLoggedin;
+  // return this.userObservable;
 }
 
 // login(email : string, password : string) {
