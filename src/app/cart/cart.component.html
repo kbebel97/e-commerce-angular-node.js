@@ -32,7 +32,7 @@
         <img class="card-img" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
         <div class="card-title large-font" style="margin: 5px;">
           <div class="value" >{{cartItem.item.name}}</div>
-          <div class="value" >${{cartItem.item.indiviudalPrice * cartItem.qty | number: '.2-2'}}</div>
+          <div class="value" >${{cartItem.item.individualPrice * cartItem.qty | number: '.2-2'}}</div>
         </div>
         <div id="info">
           <div class="label-value">
@@ -52,7 +52,7 @@
           <div id="total" style="color: white;">
             <div class="label-value">
               <div class="label" >Total: &nbsp;</div>
-              <div class="value">${{((cartItem.item.indiviudalPrice + cartItem.item.individualShipping + cartItem.item.individualTax) * cartItem.qty) | number : '.2-2'}}</div>
+              <div class="value">${{((cartItem.item.individualPrice + cartItem.item.individualShipping + cartItem.item.individualTax) * cartItem.qty) | number : '.2-2'}}</div>
             </div>
           </div>
           <!-- <h6 class="total">Total: ${{cartItem.total | number : '.2-2'}}</h6> -->

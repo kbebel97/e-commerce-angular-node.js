@@ -11,7 +11,7 @@
         <div class="card-body">
           <div class="card-title large-font">
             <div class="value">{{item.name}}</div>
-            <div class="value">${{item.indiviudalPrice | number: '.2-2'}}</div>
+            <div class="value">${{item.individualPrice | number: '.2-2'}}</div>
           </div>
           <p class="card-text">{{item.description}}</p>
           <a class="btn confirm-button" (click)="onSelected(item)" style="margin-bottom: 1px;">add to cart</a>

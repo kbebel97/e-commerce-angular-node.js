@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Item } from '../shared/Item.model';
 import { Review } from '../shared/review.model';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class catalogService{
+
+  private rootURL = 'http://localhost:3080/api/products';
   //Dummy Date
    a = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
   private items: Item[] = [
@@ -39,6 +43,11 @@ export class catalogService{
       new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6)
   ];
 
+  constructor(
+    private http: HttpClient){
+  
+  }
+
   getItems(){
     return this.items.slice();
   }
@@ -54,11 +63,10 @@ export class catalogService{
 
   //Crud Operations
 
-  getCatalog(){
+  getCatalog(): Observable<any>{
     //Get entire catalog to display
     //for each item in catalog, use item ID to find all reviews attached to item.
     //Build each typescript item and place it in the typescript items[] array property attached to this component.
+    return this.http.get(this.rootURL);
   }
-
-
 }

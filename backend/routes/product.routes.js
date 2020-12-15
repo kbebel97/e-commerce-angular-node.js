@@ -1,5 +1,6 @@
 module.exports = function(app) {
     const Product = require('../controllers/product.controller.js');
+    const Review = require('../controllers/review.controller.js');
     const upload = require('../images/upload.js');
 
     var router = require('express').Router();
@@ -12,6 +13,9 @@ module.exports = function(app) {
 
     // Retrieve all Products
     router.get("/", Product.findAll);
+
+    // Retrieve all reviews for Product with id
+    router.get("/:id/reviews", Review.findByProduct);
 
     // Retrieve a single Product with id
     router.get("/:id", Product.findOne);

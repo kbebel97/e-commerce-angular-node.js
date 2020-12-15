@@ -1,16 +1,28 @@
 module.exports = (sequelize, Sequelize) => {
     var Product = sequelize.define('product', {
         name: {
-          type: Sequelize.STRING
+          type: Sequelize.STRING,
+          allowNull: false
         },
         description: {
+          type: Sequelize.STRING,
+          allowNull: false
+        },
+        individualPrice: {
+          type: Sequelize.FLOAT,
+          allowNull: false
+        },
+        individualTax: {
+          type: Sequelize.FLOAT
+        },
+        individualShipping: {
+          type: Sequelize.FLOAT
+        },
+        manufacturer: {
           type: Sequelize.STRING
         },
-        price: {
-            type: Sequelize.FLOAT
-        },
-        stock: {
-            type: Sequelize.INTEGER
+        rating: {
+          type: Sequelize.STRING
         },
         imagePath: {
             type: Sequelize.STRING

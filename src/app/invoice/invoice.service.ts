@@ -17,9 +17,9 @@ export class invoiceService{
     for(let cartItem of items){
       console.log(cartItem);
       invoiceTax += cartItem.item.individualTax * cartItem.qty;
-      invoiceTotal += (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.indiviudalPrice) * cartItem.qty;
+      invoiceTotal += (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice) * cartItem.qty;
       invoiceShipping += cartItem.item.individualShipping * cartItem.qty;
-      let itemTotal = (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.indiviudalPrice) * cartItem.qty;
+      let itemTotal = (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice) * cartItem.qty;
       let pI = new purchasedItem(this.invoiceHistory.length + 1,
                              cartItem.item,
                              cartItem.qty,

@@ -4,10 +4,12 @@
 module.exports = (sequelize, Sequelize) => {
     var InvoiceItem = sequelize.define('invoice_item', {
         invoice_id: {
-          type: Sequelize.INTEGER
+          type: Sequelize.INTEGER,
+          allowNull: false
         },
         product_id: {
-          type: Sequelize.INTEGER
+          type: Sequelize.INTEGER,
+          allowNull: false
         },
         purchaseQuantity: {
           type: Sequelize.INTEGER
