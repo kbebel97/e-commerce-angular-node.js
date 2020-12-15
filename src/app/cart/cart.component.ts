@@ -32,8 +32,8 @@ export class CartComponent implements OnInit, OnDestroy{
     console.log("initializing cart component");
     this.reset();
     this.cartItems = this.cartService.getCartItems();
-    this.cartTotal = parseFloat(this.cartService.getCartTotal().toFixed(2));
-    this.showList();
+    this.cartTotal = this.cartService.getCartTotal();
+    this.isListEmpty();
   }
 
   ngOnDestroy(){
@@ -41,13 +41,13 @@ export class CartComponent implements OnInit, OnDestroy{
   }
 
   checkout(){
-    this.cartTotal = 0;
+    this.cartTotal = this.cartService.getCartTotal();
     this.invoiceService.pushtoHistory(this.cartItems);
     this.cartService.clearCart();
-    this.showList();
+    this.isListEmpty();
   }
 
-  showList(){
+  isListEmpty(){
     if(this.cartItems.length == 0){
        this.showlist = false
        this.disabled = true;
@@ -62,7 +62,7 @@ export class CartComponent implements OnInit, OnDestroy{
   clear(){
     this.cartTotal = 0;
     this.cartService.clearCart();
-    this.showList();
+    this.isListEmpty();
   }
 
   paymentMenu(cartItem: cartItem){
@@ -80,12 +80,12 @@ export class CartComponent implements OnInit, OnDestroy{
     let items : cartItem[] = new Array;
     items.push(cartItem);
     this.invoiceService.pushtoHistory(items);
-    this.cartTotal -= (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.indiviudalPrice) * cartItem.qty;
+    this.cartTotal -= ((cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.indiviudalPrice) * cartItem.qty);
     this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
     this.cartService.setCartTotal(this.cartTotal);
     cartItem.display = true;
     this.paymentmenu = false;
-    this.showList();
+    this.isListEmpty();
   }
 
   cancelPurchase(cartItem : cartItem){
