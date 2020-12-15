@@ -102,13 +102,13 @@
                   </div>
                   <div class="label-value media-label-value">
                     <div class="label">Item Price:  &nbsp; </div>
-                    <div class="value">${{purchaseditemSelected.item.indiviudalPrice * Quantity | number : '.2-2'}}</div>
+                    <div class="value">${{purchaseditemSelected.item.individualPrice * Quantity | number : '.2-2'}}</div>
                   </div>
                 </div>
                 <div class="invoice-column" style="flex: 1; align-items: flex-end;">
                   <div class="label-value" style="border: solid black 1px; background: yellow; border-radius: 2px;">
                     <div class="label">Total:  &nbsp; </div>
-                    <div class="value">${{(purchaseditemSelected.item.indiviudalPrice + purchaseditemSelected.item.individualShipping + purchaseditemSelected.item.individualTax) * Quantity | number : '.2-2'}}</div>
+                    <div class="value">${{(purchaseditemSelected.item.individualPrice + purchaseditemSelected.item.individualShipping + purchaseditemSelected.item.individualTax) * Quantity | number : '.2-2'}}</div>
                   </div>
                 </div>
                 <div class="invoice-column" style="flex: .5; align-items: center; justify-content: center;">

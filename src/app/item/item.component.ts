@@ -3,6 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { cartService } from '../cart/cart.service';
 import { catalogService } from '../catalog/catalog.service';
 import { Item } from '../shared/Item.model';
+import {Location} from '@angular/common';
 import { itemService } from './item.service';
 
 @Component({
@@ -16,11 +17,12 @@ export class ItemComponent implements OnInit {
   numbers: number[];
 
   constructor(
-    private catalogService: catalogService, 
-    private cartService: cartService, 
+    private catalogService: catalogService,
+    private cartService: cartService,
     private itemService: itemService,
-    private activeRoute: ActivatedRoute, 
-    private router: Router) {
+    private activeRoute: ActivatedRoute,
+    private router: Router,
+    private _location: Location) {
     console.log(this.activeRoute.snapshot.queryParams.id);
 
 
@@ -58,7 +60,9 @@ export class ItemComponent implements OnInit {
   }
 
   onBackclick(){
-    this.router.navigate(['/']);
+    // this.router.navigate(['/menus/catalog']);
+    this._location.back();
+
   }
 
 }

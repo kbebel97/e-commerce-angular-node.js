@@ -34,6 +34,10 @@ export class cartService{
   }
 
   getCartTotal(){
+    this.cartTotal = 0;
+    for(let cartItem of this.cartItems){
+      this.cartTotal += (cartItem.item.individualTax + cartItem.item.individualPrice + cartItem.item.individualShipping) * cartItem.qty;
+    }
     return this.cartTotal;
   }
 
@@ -68,6 +72,12 @@ export class cartService{
     //   check quantity of cart item, if above 1, decrease qty field in entry,
     //   otherwise remove item from cart entirely
     // }
+
+    // clearCart(){
+    //  remove all cartItems from cart table based on userId and ItemId
+    //}
+
+
 
 
 
