@@ -4,10 +4,12 @@
 module.exports = (sequelize, Sequelize) => {
     var CartItem = sequelize.define('cart_item', {
         cart_id: {
-          type: Sequelize.INTEGER
+          type: Sequelize.INTEGER,
+          allowNull: false
         },
         product_id: {
-          type: Sequelize.INTEGER
+          type: Sequelize.INTEGER,
+          allowNull: false
         },
         quantity: {
           type: Sequelize.INTEGER

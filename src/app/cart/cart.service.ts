@@ -14,12 +14,12 @@ export class cartService{
       if(cartItem.item.id === item.id){
         cartItem.qty++;
         check = true;
-        this.cartTotal += cartItem.item.indiviudalPrice + cartItem.item.individualTax + cartItem.item.individualShipping;
+        this.cartTotal += cartItem.item.individualPrice + cartItem.item.individualTax + cartItem.item.individualShipping;
       }
     }
     if(check === false){
       let cI = new cartItem(this.cartItems.length + 1, 1, true, item);
-      this.cartTotal += item.indiviudalPrice + item.individualTax + item.individualShipping;
+      this.cartTotal += item.individualPrice + item.individualTax + item.individualShipping;
       this.cartItems.push(cI);
     }
   }

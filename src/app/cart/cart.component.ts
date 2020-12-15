@@ -80,7 +80,7 @@ export class CartComponent implements OnInit, OnDestroy{
     let items : cartItem[] = new Array;
     items.push(cartItem);
     this.invoiceService.pushtoHistory(items);
-    this.cartTotal -= (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.indiviudalPrice) * cartItem.qty;
+    this.cartTotal -= (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice) * cartItem.qty;
     this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
     this.cartService.setCartTotal(this.cartTotal);
     cartItem.display = true;
@@ -96,10 +96,10 @@ export class CartComponent implements OnInit, OnDestroy{
   decreaseItemQuantity(cartItem: cartItem){
     if(cartItem.qty > 1){
       cartItem.qty--;
-      this.cartTotal -= cartItem.item.individualTax + cartItem.item.individualShipping + cartItem.item.indiviudalPrice;
+      this.cartTotal -= cartItem.item.individualTax + cartItem.item.individualShipping + cartItem.item.individualPrice;
     }
     else{
-      this.cartTotal -= cartItem.item.individualTax + cartItem.item.individualShipping + cartItem.item.indiviudalPrice;
+      this.cartTotal -= cartItem.item.individualTax + cartItem.item.individualShipping + cartItem.item.individualPrice;
       this.cartService.setCartTotal(this.cartTotal);
       this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
       if(this.cartItems.length == 0)
@@ -110,7 +110,7 @@ export class CartComponent implements OnInit, OnDestroy{
 
   increaseItemQuantity(cartItem: cartItem){
     cartItem.qty++;
-    this.cartTotal += cartItem.item.individualTax + cartItem.item.individualShipping + cartItem.item.indiviudalPrice;
+    this.cartTotal += cartItem.item.individualTax + cartItem.item.individualShipping + cartItem.item.individualPrice;
     this.cartService.setCartTotal(this.cartTotal);
   }
 

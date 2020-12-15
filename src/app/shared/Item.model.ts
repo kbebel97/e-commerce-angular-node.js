@@ -4,7 +4,7 @@ export class Item {
   constructor(public id: number,
               public name: string,
               public description: string,
-              public indiviudalPrice: number,
+              public individualPrice: number,
               public individualTax: number,
               public individualShipping : number,
               public manufacturer: string,
