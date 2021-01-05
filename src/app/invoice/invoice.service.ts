@@ -24,7 +24,7 @@ export class invoiceService{
     private generalService : generalService,
     private http: HttpClient){}
 
-  saveInvoice(userId: number, invoice: invoice): Observable<any> {
+  saveInvoice(userId: number, invoice: invoice) {
     // Save both invoice and invoice items in this function
     const user = this.generalService.getUser();
 
@@ -36,38 +36,28 @@ export class invoiceService{
       "isReturnable": true
     }
 
-    this.savedInvoice = this.http.post(this.invoiceURL, invoiceParams, this.httpOptions);
-    let invoiceId;
-
-    // ISSUE
-    // invoiceId is not being saved/read properly
-    // Async issue?
-    this.savedInvoice.subscribe(id => {
-      console.log("SavedInvoice Subscribe:");
-      console.log(id);
-      invoiceId = id[0];
-      console.log(invoiceId);
-      console.log(JSON.parse(id));
-    })
-
-    for(let item of invoice.purchasedItems) {
-      console.log('checking what the item in Purchased Items is');
-      console.log(item);
-      console.log(invoiceId);
-      let itemParams = {
-        "invoice_id": invoiceId,
-        "product_id": item.id,
-        "purchaseQuantity": item.purchaseQ,
-        "returnQuantity": item.returnQ,
-        "total": item.total,
-        "display": true,
-        "isReturned": false
-      }
-
-      this.http.post(this.invoiceItemURL, itemParams, this.httpOptions);
-    }
-
-    return 
+    this.http.post(this.invoiceURL, invoiceParams, this.httpOptions).subscribe(id => {
+        console.log("SavedInvoice Subscribe:");
+        console.log(id);
+        this.savedInvoice = id;
+        let localInvoice = this.savedInvoice.id;
+        for(let item of invoice.purchasedItems) {
+          console.log('checking what the item in Purchased Items is');
+          console.log(item);
+          console.log(localInvoice);
+          let itemParams = {
+            "invoice_id": localInvoice,
+            "product_id": item.id,
+            "purchaseQuantity": item.purchaseQ,
+            "returnQuantity": item.returnQ,
+            "total": item.total,
+            "display": true,
+            "isReturned": false
+          }
+    
+          this.http.post(this.invoiceItemURL, itemParams, this.httpOptions).subscribe();
+        }
+      })
   }
 
   pushtoHistory(items: cartItem[]){
@@ -100,8 +90,7 @@ export class invoiceService{
     let formatteddate = (unformatteddate.getMonth() + 1) + "-" + unformatteddate.getDate() + "-" + unformatteddate.getFullYear();
 
     let i = new invoice(1, purchasedItems, formatteddate, invoiceTotal, invoiceTax, invoiceShipping, items.length, true, 0, true);
-    // TODO
-    // Code to send invoice to backend
+    // Send invoice to backend
     this.saveInvoice(1, i);
     console.log(i);
     this.invoiceHistory.unshift(i);
