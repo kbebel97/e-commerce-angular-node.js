@@ -25,32 +25,6 @@ export class invoiceService{
     let invoiceTax : number = 0;
     let invoiceShipping : number = 0;
     let purchasedItems = [];
-
-
-    // for(let cartItem of items){
-    //   console.log(cartItem);
-    //   invoiceTax += cartItem.item.individualTax * cartItem.qty;
-    //   invoiceTotal += (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice) * cartItem.qty;
-    //   invoiceShipping += cartItem.item.individualShipping * cartItem.qty;
-    //   let itemTotal = (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice) * cartItem.qty;
-    //   let pI = new purchasedItem(this.invoiceHistory.length + 1,
-    //                          cartItem.item,
-    //                          cartItem.qty,
-    //                          0,
-    //                          itemTotal,
-    //                          true,
-    //                          false);
-    //                          console.log(pI);
-    //     purchasedItems.push(pI);
-    // }
-    // let unformatteddate : Date = new Date();
-    // let formatteddate = (unformatteddate.getMonth() + 1) + "-" + unformatteddate.getDate() + "-" + unformatteddate.getFullYear();
-
-    // // let i = new invoice(1, purchasedItems, formatteddate, invoiceTotal, invoiceTax, invoiceShipping, items.length, true, 0, true);
-    // console.log(i);
-    // this.invoiceHistory.unshift(i);
-
-
   }
 
   addInvoice(cartItems : cartItem[], totalItems : number){

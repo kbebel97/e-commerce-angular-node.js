@@ -32,8 +32,17 @@ export class ItemComponent implements OnInit {
     const id = parseInt(this.activeRoute.snapshot.queryParams.id);
     this.numbers = Array(5).map((x,i)=>i);
     console.log(id);
-    this.item = this.itemService.getItem(id).subscribe();
+    this.itemService.getItem(id).subscribe(data => {
+      console.log(data);
+      this.item = data;
+      }
+    )
     console.log(this.item)
+
+    this.itemService.getReviews(id).subscribe(data => {
+      console.log(data);
+      this.item.reviews = data;
+    })
 
     this.activeRoute.queryParams
     .subscribe(
