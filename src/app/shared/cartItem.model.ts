@@ -1,14 +1,15 @@
 import { Item } from './Item.model';
 
-export class cartItem{
-  constructor(
-              public cartId: number,
-              public qty: number,
-              public display: boolean,
-              public item : Item
-              ){
+export interface cartItem{
+  // constructor(
+              itemId: number,
+              cartItemId: number,
+              qty: number,
+              display: boolean,
+              item : Item
+  //             ){
 
 
-  }
+  // }
 
 }

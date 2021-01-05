@@ -1,7 +1,9 @@
+import { stringify } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { generalService } from '../service/general.service';
-import { User } from '../shared/user.model';
+import { generalService } from 'src/app/service/general.service';
+import { User } from '../../shared/user.model';
+import { authService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +20,7 @@ export class LoginComponent implements OnInit{
   confirmPassword : string;
   displayMessage : number;
 
-  constructor( private router: Router, private generalService : generalService) { }
+  constructor( private router: Router, private generalService : generalService, private authService: authService) { }
   ngOnInit(){
     this.option = 1;
     this.displayMessage = 0;
@@ -53,11 +55,14 @@ export class LoginComponent implements OnInit{
 
   register() {
     if(this.password == this.confirmPassword) {
-      this.generalService.register(this.email, this.password);
+      this.authService.createUser(this.email, this.password);
+      // this.generalService.register(this.email, this.password);
     }
   }
 
   login(){
+
+
     let user = this.generalService.login(this.email, this.password);
     if(user !=null)
       this.router.navigate(['/menus/catalog']);

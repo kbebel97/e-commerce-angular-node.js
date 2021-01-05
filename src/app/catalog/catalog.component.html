@@ -5,8 +5,9 @@
   </h1>
 
   <div class="cardList">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
     <ng-container *ngFor="let item of catalogItems">
-      <div class="card">
+      <div class="card" *ngIf="!isLoading">
         <img class="card-img" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
         <div class="card-body">
           <div class="card-title large-font">
@@ -21,5 +22,6 @@
     </ng-container>
   </div>
 </div>
+<mat-paginator [length]="totalItems" [pageSize]="itemsPerPage" (page)="onChangedPage($event)" *ngIf="catalogItems.length>0"></mat-paginator>
 
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->

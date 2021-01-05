@@ -11,7 +11,7 @@
         <div class="value" style="text-align:center; font-size: xx-large;">${{cartTotal | number: '.2-2'}}</div>
       </div>
       <div class="label-value" style="height: 1em; justify-content: center; align-items: center; display: flex; flex-direction: row;">
-        <button style="text-align:center; font-size: xx-large;" class="confirm-button btn" [disabled]="disabled" (click)="checkout()" style="margin-right: 1px; margin-left: 1px">Checkout</button>
+        <button style="text-align:center; font-size: xx-large;" class="confirm-button btn" [disabled]="disabled" (click)="toggleCheckoutMenu()" style="margin-right: 1px; margin-left: 1px">Checkout</button>
         <button style="text-align:center; font-size: xx-large;" class="cancel-button btn" [disabled]="disabled" (click)="clear()" style="margin-left: 1px;">Clear</button>
       </div>
     </div>
@@ -26,8 +26,8 @@
   </div> -->
 
   <!-- Structural directive to show list of items in cart if cart is not empty. Otherwise show empty cart message -->
-  <div *ngIf="showlist" class="cardList">
-    <ng-container *ngFor="let cartItem of cartItems; let i = index" class="card">
+  <div *ngIf="showlist && !checkoutMenu" class="cardList">
+    <ng-container *ngFor="let cartItem of cartItems; let i = index">
       <div class="card" [hidden]="!cartItem.display" #items  >
         <img class="card-img" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
         <div class="card-title large-font" style="margin: 5px;">
@@ -69,7 +69,7 @@
           <a class="btn showmore-button" (click)="showMore(cartItem)">Show more</a>
         </div>
       </div>
-      <div class="card-2" [hidden]="cartItem.display" [ngStyle]="{height: pixelheight + 'px', background: 'white', padding: '5px'}" >
+      <div class="payment-card" [hidden]="cartItem.display" [ngStyle]="{height: pixelheight + 'px'}" >
         <div class="value" style=" flex: 1;font-size: xx-large; text-align: center;"> Payment</div>
         <div class="label" style="flex: 2;">
           <input style="width: 100%; margin-top: 2px;" type="text" #searchbar [(ngModel)]="searchInput" placeholder="Enter Card # " />
@@ -78,7 +78,7 @@
           <div style="display: flex; flex-direction: row; justify-content: flex-start;">
             <div style="display: flex; justify-content: center; align-items: center;">             <input type="checkbox" [(ngModel)]="checkboxPayment" checked="checked">
             </div>
-            <div class="label" style="margin-left: 2px;"> check this box to use default payment method</div>
+            <div class="label" style="margin-left: 2px;"> check this box to use default payment</div>
           </div>
         </div>
         <div class="value" style=" flex: 1;font-size: xx-large; text-align: center;"> Shipping</div>
@@ -96,6 +96,14 @@
           </div>
         </div>
         <div style="flex: 3; align-items: center; display: flex; flex-direction: column; justify-content: flex-end;">
+          <div class="label-value" style="width: 100%; height: 30px; margin-bottom: 2px; border-radius: 3px; border: black 1px solid; justify-content: center; background: black;">
+            <div class="label" style="color: white;">
+              Total: &nbsp;
+            </div>
+            <div class="value" style="color: white">
+              ${{((cartItem.item.individualPrice + cartItem.item.individualShipping + cartItem.item.individualTax) * cartItem.qty) | number : '.2-2'}}
+            </div>
+          </div>
           <div class="btn confirm-button"  style="width: 100%; margin-bottom: 1px;" (click)="confirmPurchase(cartItem)">Confirm</div>
           <div class="btn cancel-button" style="width: 100%; margin-top: 1px" (click)="cancelPurchase(cartItem)">Cancel</div>
         </div>
@@ -105,6 +113,65 @@
   <div id="empty-cart" *ngIf="!showlist">
     <div>
       cart is empty
+    </div>
+  </div>
+  <div *ngIf="checkoutMenu" style="display: flex; padding: 10px; align-items: center; justify-content: center;  ">
+    <div style="border: black 3px solid; border-radius: 4px;  width: 499px; display: flex; flex-direction: column; background: white">
+      <!-- <div style="flex: 1">
+      </div> -->
+      <div style="flex: 2; display: flex; flex-direction: row;">
+        <div style="flex: 1; margin: 2px;" >
+          <div class="value" style=" flex: 1; font-size: xx-large; text-align: center; color: black"> Address</div>
+          <div class="label" style="flex: 2;">
+            <input style="width: 100%; margin-top: 2px;" type="text" #searchbar  [(ngModel)]="searchInput" placeholder="Enter Street Address: " />
+            <input style="width: 100%; margin-top: 2px;" type="text" #searchbar  [(ngModel)]="searchInput" placeholder="Enter Apt #: " />
+            <input style="width: 100%; margin-top: 2px;" type="text" #searchbar  [(ngModel)]="searchInput" placeholder="Enter Zip Code: " />
+            <input style="width: 100%; margin-top: 2px;" type="text" #searchbar  [(ngModel)]="searchInput" placeholder="Enter City: " />
+            <input style="width: 100%; margin-top: 2px;" type="text" #searchbar  [(ngModel)]="searchInput" placeholder="Enter State: " />
+            <div style="display: flex; flex-direction: row; justify-content: flex-start;">
+              <div style="display: flex; justify-content: center; align-items: center;">
+                <input type="checkbox" [(ngModel)]="checkboxAddress" checked="checked">
+              </div>
+              <div class="label" style="margin-left: 2px; color: black"> check this box to use default address </div>
+            </div>
+          </div>
+        </div>
+        <div style="flex: 1; margin: 2px;">
+          <div class="value" style=" flex: 1;font-size: xx-large; text-align: center; color: black"> Payment</div>
+          <div class="label" style="flex: 2;">
+            <input style="width: 100%; margin-top: 2px;" type="text" #searchbar [(ngModel)]="searchInput" placeholder="Enter Card # " />
+            <input style="width: 100%; margin-top: 2px;" type="text" #searchbar [(ngModel)]="searchInput" placeholder="Enter Card Expiration Date: " />
+            <input style="width: 100%; margin-top: 2px;" type="text" #searchbar [(ngModel)]="searchInput" placeholder="Enter Security Code: " />
+            <div style="display: flex; flex-direction: row; justify-content: flex-start;">
+              <div style="display: flex; justify-content: center; align-items: center;">
+                <input type="checkbox" [(ngModel)]="checkboxPayment" checked="checked">
+              </div>
+              <div class="label" style="margin-left: 2px; color:black"> check this box to use default payment </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex: 1; flex-direction: row; margin: 2px;">
+        <div class="label-value" style="width: 100%; height: 30px; margin-bottom: 2px; border-radius: 3px; border: black 1px solid; justify-content: center; background: black;">
+          <div class="label" style="color: white;">
+            # of items: &nbsp;
+          </div>
+          <div class="value" style="color: white">
+            {{totalItems}}
+          </div>
+
+        </div>
+        <div class="label-value" style="width: 100%; height: 30px; margin-bottom: 2px; border-radius: 3px; border: black 1px solid; justify-content: center; background: black;">
+          <div class="label" style="color: white;">
+            Total: &nbsp;
+          </div>
+          <div class="value" style="color: white">
+            ${{ cartTotal | number : '.2-2'}}
+          </div>
+        </div>
+        <div class="btn confirm-button"  style="width: 100%; margin-bottom: 1px; color: black;" (click)="confirmCheckout()">Confirm</div>
+        <div class="btn cancel-button" style="width: 100%; margin-top: 1px; color: black" (click)="toggleCheckoutMenu()">Cancel</div>
+      </div>
     </div>
   </div>
 </div>

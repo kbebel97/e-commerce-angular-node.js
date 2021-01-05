@@ -20,12 +20,16 @@ import {FormsModule } from '@Angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
-import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
-import { loginService } from './login/login.service';
 import { itemService } from './item/item.service';
 import { MenuComponent } from './menu/menu.component';
 import { HttpClientModule } from '@angular/common/http';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {ReactiveFormsModule} from  '@Angular/forms';
+import { settingsService } from './settings/settings.service';
+import { MatPaginatorModule} from '@Angular/material/paginator';
+import { LoginComponent } from './auth/login/login.component';
+import { authService } from './auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -39,8 +43,9 @@ import { HttpClientModule } from '@angular/common/http';
     CarouselComponent,
     InvoiceComponent,
     CarouselInvoiceComponent,
+    MenuComponent,
     LoginComponent,
-    MenuComponent
+
   ],
   imports: [
     FlexLayoutModule,
@@ -52,8 +57,11 @@ import { HttpClientModule } from '@angular/common/http';
     MatSelectModule,
     AppRoutingModule,
     HttpClientModule,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    MatPaginatorModule
   ],
-  providers: [catalogService, cartService, generalService, invoiceService, loginService, itemService],
+  providers: [catalogService, cartService, generalService, invoiceService, authService, itemService, settingsService],
   bootstrap: [AppComponent]
 })
 

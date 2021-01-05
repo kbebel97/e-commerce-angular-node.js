@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { invoiceService } from '../invoice/invoice.service';
 import { cartItem } from '../shared/cartItem.model';
 import { cartService } from './cart.service';
@@ -15,7 +16,7 @@ export class CartComponent implements OnInit, OnDestroy{
   showlist: boolean;
   paymentmenu: boolean;
   pixelheight: number;
-  cartItems : cartItem[] = [];
+  cartItems = [];
   selectedItem : cartItem;
   @ViewChildren('items', {read: ElementRef}) items: QueryList<ElementRef>;
   searchInput = '';
@@ -25,26 +26,55 @@ export class CartComponent implements OnInit, OnDestroy{
   checkboxPayment: boolean;
   elementHeights : Array<any> = [];
   disabled : boolean = true;
+  isLoading: boolean = false;
+  itemsPerPage = 20;
+  cartitemsSub: Subscription;
+  totalItems : number;
+  checkoutMenu : boolean = false;
 
-  constructor(private cartService: cartService, private router: Router, private invoiceService: invoiceService, private cdr: ChangeDetectorRef) { }
+
+
+  constructor(private cartService: cartService, private router: Router, private invoiceService: invoiceService) { }
 
   ngOnInit(){
     console.log("initializing cart component");
-    this.reset();
-    this.cartItems = this.cartService.getCartItems();
-    this.cartTotal = this.cartService.getCartTotal();
-    this.isListEmpty();
+    this.isLoading = true;
+    this.cartService.getCartMongo(this.itemsPerPage, 1);
+    this.cartitemsSub = this.cartService.getItemUpdateListener()
+      .subscribe((cartData: {cartItems : cartItem[], ciCount: number}) => {
+        this.isLoading = false;
+        this.cartItems = cartData.cartItems;
+        this.totalItems = cartData.ciCount;
+        this.isListEmpty();
+        this.getCartTotal();
+        console.log("cart component initialized");
+      })
+  }
+
+  getCartTotal(){
+    this.cartTotal = 0;
+    console.log(this.cartItems);
+    for(let cartItem of this.cartItems){
+      this.cartTotal += (cartItem.item.individualTax + cartItem.item.individualPrice + cartItem.item.individualShipping) * cartItem.qty;
+    }
   }
 
   ngOnDestroy(){
     this.reset();
   }
 
+  toggleCheckoutMenu(){
+    this.checkoutMenu = !this.checkoutMenu;
+    this.disabled = !this.disabled;
+  }
+
   checkout(){
-    this.cartTotal = this.cartService.getCartTotal();
-    this.invoiceService.pushtoHistory(this.cartItems);
-    this.cartService.clearCart();
-    this.isListEmpty();
+    this.checkoutMenu = !this.checkoutMenu;
+    this.cartService
+    // this.getCartTotal();
+    // this.invoiceService.pushtoHistory(this.cartItems);
+    // this.cartService.clearCart();
+    // this.isListEmpty();
   }
 
   isListEmpty(){
@@ -66,11 +96,13 @@ export class CartComponent implements OnInit, OnDestroy{
 
   paymentMenu(cartItem: cartItem){
     this.reset();
-    console.log(this.cartItems.indexOf(cartItem));
     this.pixelheight = this.items.toArray()[this.cartItems.indexOf(cartItem)].nativeElement.offsetHeight;
-    console.log(this.pixelheight);
     this.selectedItem = cartItem;
     this.selectedItem.display = false;
+  }
+
+  confirmCheckout(){
+    this.cartService.addInvoice(this.cartItems, this.totalItems);
   }
 
 
@@ -95,9 +127,12 @@ export class CartComponent implements OnInit, OnDestroy{
   decreaseItemQuantity(cartItem: cartItem){
     if(cartItem.qty > 1){
       cartItem.qty--;
+      this.cartService.adjustQuantity(cartItem);
       this.cartTotal -= cartItem.item.individualTax + cartItem.item.individualShipping + cartItem.item.individualPrice;
-    }
-    else{
+    } else{
+      cartItem.qty--;
+      this.cartService.deleteItem(cartItem);
+      // this.cartService.adjustQuantity(cartItem);
       this.cartTotal -= cartItem.item.individualTax + cartItem.item.individualShipping + cartItem.item.individualPrice;
       this.cartService.setCartTotal(this.cartTotal);
       this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
@@ -109,6 +144,7 @@ export class CartComponent implements OnInit, OnDestroy{
 
   increaseItemQuantity(cartItem: cartItem){
     cartItem.qty++;
+    this.cartService.adjustQuantity(cartItem);
     this.cartTotal += cartItem.item.individualTax + cartItem.item.individualShipping + cartItem.item.individualPrice;
     this.cartService.setCartTotal(this.cartTotal);
   }

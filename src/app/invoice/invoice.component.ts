@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChildren, QueryList, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
-import { invoice } from '../shared/invoice.model';
+import { Subscription } from 'rxjs';
+import { Invoice } from '../shared/invoice.model';
 import { purchasedItem } from '../shared/purchasedItem.model';
 import { invoiceService } from './invoice.service';
 
@@ -12,11 +13,16 @@ import { invoiceService } from './invoice.service';
 })
 export class InvoiceComponent implements OnInit, OnDestroy{
   returnedall : boolean;
-  invoiceHistory : invoice[];
-  invoiceSelected: invoice;
+  invoiceHistory : Invoice[];
+  invoiceSelected: Invoice;
   purchaseditemSelected: purchasedItem;
   pixelheight: number = 0;
   Quantity: number = 0;
+  isLoading = false;
+  itemsPerPage = 20;
+  totalInvoices : number;
+  invoiceSub: Subscription;
+
   @ViewChildren('invoices') invoices: QueryList<ElementRef>;
   constructor(private invoiceService: invoiceService, private router: Router) {
 
@@ -26,6 +32,15 @@ export class InvoiceComponent implements OnInit, OnDestroy{
     this.pixelheight = 0;
     this.invoiceHistory = this.invoiceService.getPurchaseHistory();
     console.log("initializing invoice component");
+    this.isLoading = true;
+    this.invoiceService.getInvoices(this.itemsPerPage, 1);
+    this.invoiceSub = this.invoiceService.getInvoiceUpdateListener()
+      .subscribe((invoiceData: {invoices: Invoice[], invoiceCount: number}) => {
+        console.log(invoiceData);
+        this.isLoading = false;
+        this.invoiceHistory = invoiceData.invoices;
+        this.totalInvoices = invoiceData.invoiceCount;
+      })
   }
 
   ngOnDestroy(){
@@ -50,7 +65,7 @@ export class InvoiceComponent implements OnInit, OnDestroy{
     this.router.navigate(['/item', purchasedItem.item.name], {queryParams: {id: purchasedItem.item.id}});
   }
 
-  returnItem(purchasedItem: purchasedItem, invoice: invoice){
+  returnItem(purchasedItem: purchasedItem, invoice: Invoice){
     this.reset();
     this.purchaseditemSelected = purchasedItem;
     this.invoiceSelected = invoice;
@@ -58,7 +73,7 @@ export class InvoiceComponent implements OnInit, OnDestroy{
     this.purchaseditemSelected.display = false;
   }
 
-  returnAll(invoice: invoice){
+  returnAll(invoice: Invoice){
     this.reset();
     this.invoiceSelected = invoice;
     this.pixelheight = this.invoices.toArray()[this.invoiceHistory.indexOf(invoice)].nativeElement.offsetHeight;
@@ -85,14 +100,14 @@ export class InvoiceComponent implements OnInit, OnDestroy{
     item.display = true;
   }
 
-  confirmInvoice(invoice : invoice){
+  confirmInvoice(invoice : Invoice){
     invoice.purchasedItems.forEach(item => {
       item.returnQ = item.purchaseQ;
     });
     invoice.display = true;
   }
 
-  cancelInvoice(invoice : invoice){
+  cancelInvoice(invoice : Invoice){
     invoice.display = true;
   }
 

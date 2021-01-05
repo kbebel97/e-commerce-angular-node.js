@@ -2,50 +2,18 @@ import { Injectable } from '@angular/core';
 import { Item } from '../shared/Item.model';
 import { Review } from '../shared/review.model';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { cartService } from '../cart/cart.service';
 @Injectable()
 export class catalogService{
-
+  private items: Item[];
   private rootURL = 'http://localhost:3080/api/products';
-  //Dummy Date
-   a = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-  private items: Item[] = [
-    new Item(2, 'help','its orange', 4, 1, .50, 'sony',
-      [new Review('Kacper', 6, 'great'),
-      new Review('Kacper', 6, 'great'),
-      new Review('Kacper', 6, 'great'),
-      new Review('Kacper', 6, 'great'),
-      new Review('Kacper', 6, this.a),
-      new Review('Samslem', 6, this.a),
-      new Review('Kacper', 6, this.a),
-      new Review('Kacper', 6, this.a),
-      new Review('Kacper', 6, this.a)],6),
 
-    new Item(3, 'Carrot', this.a , 10000, 2000, 900,'sony',
-      [new Review('Kacper', 6, 'great. I can believe how good it was'),
-      new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6),
+  private itemsUpdated = new Subject<{items: Item[], itemCount: number}>();
 
-    new Item(4, 'Carrot','its orange, its delicious. Bugs bunny recommends it', 54, 8, 3,'sony',
-      [new Review('Kacper', 6, 'great. I can believe how good it was'),
-      new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6),
+  constructor(private http: HttpClient, private cartService: cartService){
 
-    new Item(5, 'Carrot','its orange, its delicious. Bugs bunny recommends it', 87, 7.99, 2.35,'sony',
-      [new Review('Kacper', 6, 'great. I can believe how good it was'),
-      new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6),
-
-    new Item(6, 'Carrot','its orange, its delicious. Bugs bunny recommends it', 92.99,6.85, 3.25 ,'sony',
-      [new Review('Kacper', 6, 'great. I can believe how good it was'),
-      new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6),
-
-    new Item(7, 'Carrot','its orange, its delicious. Bugs bunny recommends it', 92.99,6.85, 3.25,'sony',
-      [new Review('Kacper', 6, 'great. I can believe how good it was'),
-      new Review('Julia', 8, 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')], 6)
-  ];
-
-  constructor(
-    private http: HttpClient){
-  
   }
 
   getItems(){
@@ -69,4 +37,48 @@ export class catalogService{
     //Build each typescript item and place it in the typescript items[] array property attached to this component.
     return this.http.get(this.rootURL);
   }
+
+  getCatalogMongo(itemsPerPage: number, currentPage: number){
+    const queryParams = `?pagesize=${itemsPerPage}&page=${currentPage}`;
+    this.http
+    .get<{message: string, items: any, maxItems: number}>('http://localhost:3000/api/items' + queryParams)
+    .pipe(map((itemData) => {
+      return { items: itemData.items.map(item => {
+        return{
+          id: item._id,
+          name: item.name,
+          description: item.description,
+          individualPrice: item.individualPrice,
+          individualTax: item.individualTax,
+          individualShipping : item.individualShipping,
+          manufacturer: item.manufacturer,
+          reviews: item.reviews,
+          rating: item.rating
+        };
+      }), maxItems: itemData.maxItems};
+    }))
+    .subscribe((transformedItemData) => {
+      console.log(transformedItemData)
+      this.items = transformedItemData.items;
+      this.itemsUpdated.next({
+        items: [...this.items],
+        itemCount: transformedItemData.maxItems
+      });
+    });
+  }
+
+  getItemUpdateListener(){
+    return this.itemsUpdated.asObservable();
+  }
+
+  savetoCartMongo(item: Item){
+    this.cartService.savetoCartMongo(item);
+  }
+
+  deleteItemMongo(itemId: string){
+    return this.http
+      .delete("http://localhost:3000/api/items/" + itemId);
+  }
+
+
 }

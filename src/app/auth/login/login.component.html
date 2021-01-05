@@ -11,7 +11,8 @@
       </div>
       <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
         <div style="flex: 1; margin-right: 1px; display: inline;" class="label">Register</div>
-        <input  style="flex: 1; margin-left: 5px;" type="radio" [checked]="option == 2" (click)="switchOption(2)" name="register"><br/>
+        <input  style="flex: 1; margin-left: 5px;" type="radio" [checked]="option == 2" (click)="switchOption(2)" name="register">
+        <br/>
       </div>
     </form>
     <div [ngSwitch]="option" style="padding: 5px;">
@@ -23,16 +24,19 @@
       </div>
       <div *ngSwitchCase="1" style="display: flex; flex-direction: column;">
         <div>
+          <!-- <mat-error *ngIf="emailInput.invalid">Please enter a valid email</mat-error> -->
           <div class="label-value" style="padding: 0">
-            <div class="label" style="flex: 1">Email</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" [(ngModel)]="email" placeholder="enter email"/>
+            <div class="label" style="flex: 1">Email:</div>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="email" [(ngModel)]="email" placeholder="enter email"/>
+            <!-- <input matInput name="email" ngModel class="value" style="flex: 1.5; margin-top: 3px;" type="email" #emailInput="ngModel" placeholder="enter email" required email/> -->
           </div>
         </div>
-
         <div>
+          <!-- <mat-error *ngIf="passwordInput.invalid">Please enter a valid password</mat-error> -->
           <div class="label-value" style="padding: 0;">
-            <div class="label" style="flex: 1">Password</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" [(ngModel)]="password" placeholder="enter password"/>
+            <div class="label" style="flex: 1">Password:</div>
+            <!-- <input matInput name="password" ngModel class="value" style="flex: 1.5; margin-top: 3px;" type="password" #passwordInput="ngModel" placeholder="enter password" required/> -->
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="password" [(ngModel)]="password" placeholder="enter password"/>
           </div>
         </div>
         <div style="display: flex; flex-direction: row; width: 100%; padding-top: 10px; padding-bottom: 5px; justify-content: space-evenly;">
@@ -44,7 +48,7 @@
         <div>
           <div class="label-value" style="padding: 0">
             <div class="label" style="flex: 1">Email</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" [(ngModel)]="email" placeholder="enter email  "/>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="email" [(ngModel)]="email" placeholder="enter email  "/>
           </div>
         </div>
         <div>

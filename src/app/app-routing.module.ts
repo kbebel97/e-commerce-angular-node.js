@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core'
 import { Router, RouterModule, Routes } from '@angular/router'
+import { LoginComponent } from './auth/login/login.component';
 import { CartComponent } from './cart/cart.component';
 import { CatalogComponent } from './catalog/catalog.component';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { ItemComponent } from './item/item.component';
-import { LoginComponent } from './login/login.component';
 import { MenuComponent } from './menu/menu.component';
 // import { MenuComponent } from './menu/menu.component';
 import { SettingsComponent } from './settings/settings.component';

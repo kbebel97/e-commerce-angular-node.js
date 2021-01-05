@@ -1,10 +1,21 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Item } from '../shared/Item.model';
-import { Review } from '../shared/review.model';
-import { User } from '../shared/user.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AuthData } from './auth-data.model'
 
-@Injectable()
-export class loginService{
+
+@Injectable({providedIn: 'root'})
+export class authService{
+  constructor(private http: HttpClient){}
+
+  createUser(email: string, password: string){
+    const authData: AuthData = {email: email, password: password};
+    this.http.post("http://localhost:3000/api/user/signup", authData)
+      .subscribe( response => {
+        console.log(response);
+      })
+
+
+  }
 
   // *Crud Operation Here*
 

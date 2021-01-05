@@ -12,7 +12,6 @@
 
 .cartContainer{
   background-color: rgba(190, 239, 200, 0.97);
-  /* padding-top: 5px; */
   padding-bottom: 5px;
 }
 
@@ -22,6 +21,19 @@
   align-content: flex-start;
   background: rgba(190, 239, 200, 0.97);
 
+}
+
+.payment-card{
+  width: 20rem;
+  background-color: transparent;
+  border: black 3px solid;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background: white;
+  padding: 5px;
+  border-radius: 4px;
 }
 /* Empty cart message */
 #empty-cart{
@@ -76,3 +88,6 @@
 }
 
 
+.confirm-button:hover{
+  background-color: #5cb85c;
+}

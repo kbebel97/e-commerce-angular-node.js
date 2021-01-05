@@ -79,16 +79,6 @@
   border: black 3px solid;
 }
 
-.card-2{
-  width: 20rem;
-  background-color: transparent;
-  border: black 3px solid;
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-
 .card-text{
   margin-bottom: 10px;
   overflow-y: scroll;
