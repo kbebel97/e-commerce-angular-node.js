@@ -16,20 +16,24 @@ import { cartService } from './cart/cart.service';
 import { catalogService } from './catalog/catalog.service';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { invoiceService } from './invoice/invoice.service';
-import {FormsModule } from '@Angular/forms';
+import { FormsModule } from '@Angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
+import { MatFormFieldModule} from '@angular/material/form-field';
+import { MatSelectModule} from '@angular/material/select';
 import { AppRoutingModule } from './app-routing.module';
 import { itemService } from './item/item.service';
-import { MenuComponent } from './menu/menu.component';
 import { HttpClientModule } from '@angular/common/http';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {ReactiveFormsModule} from  '@Angular/forms';
-import { settingsService } from './settings/settings.service';
+import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ReactiveFormsModule} from  '@Angular/forms';
 import { MatPaginatorModule} from '@Angular/material/paginator';
 import { LoginComponent } from './auth/login/login.component';
 import { authService } from './auth/auth.service';
+import { MatProgressBarModule} from '@angular/material/progress-bar';
+import { MenuComponent } from './menu/menu.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { settingsService } from './settings/settings.service';
+
+
 
 @NgModule({
   declarations: [
@@ -59,7 +63,9 @@ import { authService } from './auth/auth.service';
     HttpClientModule,
     MatProgressSpinnerModule,
     ReactiveFormsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatProgressBarModule,
+    BrowserAnimationsModule
   ],
   providers: [catalogService, cartService, generalService, invoiceService, authService, itemService, settingsService],
   bootstrap: [AppComponent]

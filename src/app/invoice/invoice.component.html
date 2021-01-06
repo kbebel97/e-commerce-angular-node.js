@@ -1,8 +1,9 @@
 <h1 class="header">
   <div style="flex: 1; text-align: initial;">Invoices</div>
 </h1>
-<div class="emptyPurchases" *ngIf="!invoiceHistory?.length">
-  <div >No purchases have been made yet!</div>
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+<div *ngIf="!invoiceHistory?.length" class="empty-message">
+  <div class="label" >No purchases have been made yet!</div>
 </div>
 <!--  Structural Directive to determine of there is an invoice history to begin with. Otherwise display empty invoices message -->
 <div *ngIf="invoiceHistory?.length" class="invoice-container">

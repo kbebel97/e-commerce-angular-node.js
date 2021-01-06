@@ -4,7 +4,7 @@ import { Item } from '../shared/Item.model';
 import { catalogService } from './catalog.service';
 import { User } from '../shared/user.model';
 import { Subscription } from 'rxjs';
-import { PageEvent } from '@angular/material/paginator'
+import { PageEvent } from '@angular/material/paginator';
 
 
 @Component({
@@ -20,7 +20,7 @@ export class CatalogComponent implements OnInit {
   userLoggedIn: User;
   totalItems = 150;
   itemsPerPage = 20;
-  currentPage =1;
+  currentPage = 1;
   constructor(
     private catalogService: catalogService,
     private router: Router,

@@ -126,6 +126,17 @@ export class cartService{
     });
   }
 
+  deleteAll(){
+    this.http
+    .delete<{message: string}>('http://localhost:3000/api/cartitems').subscribe((result)=>{
+      console.log(result);
+    });
+  }
+
+  addOne(cartItem: cartItem){
+
+  }
+
 
   adjustQuantity(cartItem: cartItem){
     this.http

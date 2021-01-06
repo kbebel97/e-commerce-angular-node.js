@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { invoiceService } from '../invoice/invoice.service';
@@ -11,7 +12,7 @@ import { cartService } from './cart.service';
   styleUrls: ['./cart.component.css']
 
 })
-export class CartComponent implements OnInit, OnDestroy{
+export class CartComponent implements OnInit{
   cartTotal = 0;
   showlist: boolean;
   paymentmenu: boolean;
@@ -27,10 +28,11 @@ export class CartComponent implements OnInit, OnDestroy{
   elementHeights : Array<any> = [];
   disabled : boolean = true;
   isLoading: boolean = false;
-  itemsPerPage = 20;
   cartitemsSub: Subscription;
-  totalItems : number;
   checkoutMenu : boolean = false;
+  totalItems = 150;
+  itemsPerPage = 20;
+  currentPage = 1;
 
 
 
@@ -54,6 +56,7 @@ export class CartComponent implements OnInit, OnDestroy{
   removeCartItem(cartItem: cartItem){
     this.cartService.deleteItem(cartItem);
     this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
+    this.isListEmpty();
   }
 
   getCartTotal(){
@@ -64,22 +67,11 @@ export class CartComponent implements OnInit, OnDestroy{
     }
   }
 
-  ngOnDestroy(){
-    this.reset();
-  }
-
-  toggleCheckoutMenu(){
-    this.checkoutMenu = !this.checkoutMenu;
-    this.disabled = !this.disabled;
-  }
-
-  checkout(){
-    this.checkoutMenu = !this.checkoutMenu;
-    this.cartService
-    // this.getCartTotal();
-    // this.invoiceService.pushtoHistory(this.cartItems);
-    // this.cartService.clearCart();
-    // this.isListEmpty();
+  onChangedPage(pageData: PageEvent){
+    console.log(pageData);
+    this.isLoading = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.cartService.getCartMongo(this.itemsPerPage, this.currentPage);
   }
 
   isListEmpty(){
@@ -106,22 +98,24 @@ export class CartComponent implements OnInit, OnDestroy{
     this.selectedItem.display = false;
   }
 
+  toggleCheckoutMenu(){
+    this.checkoutMenu = !this.checkoutMenu;
+    this.disabled = !this.disabled;
+  }
+
   confirmCheckout(){
     this.cartService.addInvoice(this.cartItems, this.totalItems);
+    this.cartService.deleteAll();
+    this.checkoutMenu = !this.checkoutMenu;
+    this.cartItems.splice(0, this.cartItems.length);
+    this.isListEmpty();
   }
 
 
 
   confirmPurchase(cartItem : cartItem){
-    // let items : cartItem[] = new Array;
-    // items.push(cartItem);
-    // this.invoiceService.pushtoHistory(items);
-    // this.cartTotal -= ((cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice) * cartItem.qty);
-    // this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
-    // this.cartService.setCartTotal(this.cartTotal);
-    // cartItem.display = true;
-    // this.paymentmenu = false;
-    // this.isListEmpty();
+    this.cartService.addOne(cartItem);
+    this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
   }
 
   cancelPurchase(cartItem : cartItem){
@@ -145,6 +139,7 @@ export class CartComponent implements OnInit, OnDestroy{
         this.showlist = false;
     }
     this.cartService.setCartTotal(this.cartTotal);
+    this.isListEmpty();
   }
 
   increaseItemQuantity(cartItem: cartItem){

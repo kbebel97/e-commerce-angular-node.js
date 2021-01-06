@@ -16,6 +16,8 @@
       </div>
     </div>
   </h1>
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
   <!-- <div class="checkoutContainer">
     <div class="label-value" style="margin-right: 5px; display: flex; justify-content: center; border: black 3px solid; border-radius: 3px;" >
       <div class="label">Total: &nbsp;</div>
@@ -113,9 +115,9 @@
       </div>
     </ng-container>
   </div>
-  <div id="empty-cart" *ngIf="!showlist">
-    <div>
-      cart is empty
+  <div class="empty-message" *ngIf="!showlist">
+    <div class="label">
+      Cart is empty!
     </div>
   </div>
   <div *ngIf="checkoutMenu" style="display: flex; padding: 10px; align-items: center; justify-content: center;  ">
@@ -178,3 +180,4 @@
     </div>
   </div>
 </div>
+<mat-paginator style="background: rgba(190, 239, 200, 0.97); font-size: large" class="label" [length]="totalItems" [pageSize]="itemsPerPage" (page)="onChangedPage($event)" *ngIf="cartItems.length>0"></mat-paginator>

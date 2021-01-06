@@ -1,4 +1,5 @@
-/* Main Button stylings */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
 .confirm-button{
   color: black;
   font-family: 'Oswald', sans-serif;
@@ -123,6 +124,14 @@
   font-style: italic;
   font-family: 'Oswald', sans-serif;
   font-weight: 700;
+}
+
+/* Empty cart message */
+.empty-message{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
 }
 
 html, body { height: 100%; }

@@ -121,6 +121,13 @@ router.get("/:id", (req, res, next) => {
 //     res.status(200).json({message: "Update successful!"});
 //   });
 // });
+router.delete("", (req, res, next) => {
+  CartItem.remove().then(result => {
+    console.log(result);
+    res.status(200).json({message: "All items removed from cart!" });
+
+  })
+})
 
 router.delete("/:id", (req, res, next) => {
   CartItem.deleteOne({_id: req.params.id }).then(result => {
