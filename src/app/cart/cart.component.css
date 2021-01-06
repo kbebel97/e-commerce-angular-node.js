@@ -23,6 +23,41 @@
 
 }
 
+.card-img{
+  /* height: 150px; */
+}
+
+.container {
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+.container img {
+  width: 100%;
+  height: auto;
+}
+
+.container .btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(190, 239, 200, 0.97);;
+  color: black;
+  font-size: 10px;
+  border-right: black solid 1px;
+  border-bottom: black solid 1px;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+
+  cursor: pointer;
+  text-align: center;
+}
+
+.container .btn:hover {
+  background-color: #d9534f;
+}
+
 .payment-card{
   width: 20rem;
   background-color: transparent;

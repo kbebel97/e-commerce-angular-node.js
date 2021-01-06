@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChildren, QueryList, OnDestroy} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren, QueryList} from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Invoice } from '../shared/invoice.model';
@@ -11,7 +11,7 @@ import { invoiceService } from './invoice.service';
   templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.css']
 })
-export class InvoiceComponent implements OnInit, OnDestroy{
+export class InvoiceComponent implements OnInit{
   returnedall : boolean;
   invoiceHistory : Invoice[];
   invoiceSelected: Invoice;
@@ -24,48 +24,41 @@ export class InvoiceComponent implements OnInit, OnDestroy{
   invoiceSub: Subscription;
 
   @ViewChildren('invoices') invoices: QueryList<ElementRef>;
-  constructor(private invoiceService: invoiceService, private router: Router) {
-
-  }
+  constructor(private invoiceService: invoiceService, private router: Router) {}
 
   ngOnInit(){
     this.pixelheight = 0;
-    this.invoiceHistory = this.invoiceService.getPurchaseHistory();
     console.log("initializing invoice component");
     this.isLoading = true;
     this.invoiceService.getInvoices(this.itemsPerPage, 1);
     this.invoiceSub = this.invoiceService.getInvoiceUpdateListener()
       .subscribe((invoiceData: {invoices: Invoice[], invoiceCount: number}) => {
-        console.log(invoiceData);
         this.isLoading = false;
-        this.invoiceHistory = invoiceData.invoices;
+        let temp = invoiceData.invoices.slice().reverse();
+        this.invoiceHistory = temp;
         this.totalInvoices = invoiceData.invoiceCount;
-      })
+        console.log(this.invoiceHistory);
+    })
   }
 
-  ngOnDestroy(){
-    this.pixelheight = 0;
-    console.log("destroying invoice component");
-    this.reset();
-
-  }
-
-  isReturned(invoice){
-    let returned : boolean = false;
-      invoice.purchasedItems.forEach(item => {
-        if(item.returnQ != item.purchaseQ){
-          returned = true;
+  //Code runs to determine whether an Invoice
+  isInvoiceReturned(invoice){
+    let isInvoiceReturned : boolean = true;
+      invoice.purchasedItems.forEach(purchasedItem => {
+        if(purchasedItem.returnQ != purchasedItem.purchaseQ){
+          isInvoiceReturned = false;
         }
       });
-      return returned;
+      return isInvoiceReturned;
   }
 
-
+  //Navigates to item component to show one Item
   onShowMore(purchasedItem: purchasedItem){
     this.router.navigate(['/item', purchasedItem.item.name], {queryParams: {id: purchasedItem.item.id}});
   }
 
-  returnItem(purchasedItem: purchasedItem, invoice: Invoice){
+  //Triggers return Single Item Menu
+  returnSingleItemMenu(purchasedItem: purchasedItem, invoice: Invoice){
     this.reset();
     this.purchaseditemSelected = purchasedItem;
     this.invoiceSelected = invoice;
@@ -73,48 +66,54 @@ export class InvoiceComponent implements OnInit, OnDestroy{
     this.purchaseditemSelected.display = false;
   }
 
-  returnAll(invoice: Invoice){
+  // Updates purchased Item to show purchased Item has been returned
+  confirmReturnSingleItem(purchasedItem : purchasedItem, invoice: Invoice){
+    purchasedItem.returnQ = purchasedItem.returnQ + this.Quantity;
+    purchasedItem.display = true;
+    this.invoiceService.returnOne(invoice);
+
+
+  }
+  // Cancel initial call to return purchased Item
+  cancelReturnSingleItem(item : purchasedItem){
+    item.display = true;
+  }
+
+  //Triggers return Invoice Menu
+  returnAllMenu(invoice: Invoice){
     this.reset();
     this.invoiceSelected = invoice;
     this.pixelheight = this.invoices.toArray()[this.invoiceHistory.indexOf(invoice)].nativeElement.offsetHeight;
-    invoice.display = false;
+    invoice.display = !invoice.display;
   };
 
+  //Returns all items belonging to an Invoice
+  confirmReturnAll(invoice : Invoice){
+    this.invoiceService.returnAll(invoice);
+    invoice.purchasedItems.forEach(item => {
+      item.returnQ = item.purchaseQ;
+      });
+  }
+
+  // Cancel initial call to return all purchased Items
+  cancelReturnAll(invoice : Invoice){
+    invoice.display = true;
+  }
+
+
+  // Increase Item Quantity and Decrease Item Quantity change return quantity of a purchased Item
   increaseItemQuantity(item: purchasedItem){
     if(this.Quantity < item.purchaseQ - item.returnQ)
     this.Quantity++;
   }
-
   decreaseItemQuantity(){
     if(this.Quantity > 1)
       this.Quantity--;
   }
 
-  confirm(item : purchasedItem){
-    item.returnQ = item.returnQ + this.Quantity;
-    item.display = true;
-  }
-
-
-  cancel(item : purchasedItem){
-    item.display = true;
-  }
-
-  confirmInvoice(invoice : Invoice){
-    invoice.purchasedItems.forEach(item => {
-      item.returnQ = item.purchaseQ;
-    });
-    invoice.display = true;
-  }
-
-  cancelInvoice(invoice : Invoice){
-    invoice.display = true;
-  }
-
   reset(){
     if(this.purchaseditemSelected!=null)
       this.purchaseditemSelected.display = true;
-
     if(this.invoiceSelected!=null)
       this.invoiceSelected.display = true;
   }

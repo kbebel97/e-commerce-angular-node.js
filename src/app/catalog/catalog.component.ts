@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { cartService } from '../cart/cart.service';
 import { Item } from '../shared/Item.model';
 import { catalogService } from './catalog.service';
 import { User } from '../shared/user.model';
@@ -24,7 +23,6 @@ export class CatalogComponent implements OnInit {
   currentPage =1;
   constructor(
     private catalogService: catalogService,
-    private cartService: cartService,
     private router: Router,
     private activeRoute: ActivatedRoute) { }
 

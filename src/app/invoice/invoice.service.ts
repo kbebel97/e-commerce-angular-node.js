@@ -20,13 +20,6 @@ export class invoiceService{
 
   private invoicesUpdated = new Subject<{invoices: Invoice[], invoiceCount: number}>();
 
-  pushtoHistory(items: cartItem[]){
-    let invoiceTotal : number = 0;
-    let invoiceTax : number = 0;
-    let invoiceShipping : number = 0;
-    let purchasedItems = [];
-  }
-
   addInvoice(cartItems : cartItem[], totalItems : number){
     let invoiceTotal : number = 0;
     let invoiceTax : number = 0;
@@ -39,7 +32,6 @@ export class invoiceService{
       invoiceShipping += cartItem.item.individualShipping * cartItem.qty;
       let itemTotal = (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice) * cartItem.qty;
       let purchasedItem = {
-                            id : cartItem.itemId,
                             item: cartItem.item,
                             purchaseQ: cartItem.qty,
                             returnQ: 0,
@@ -52,7 +44,6 @@ export class invoiceService{
     let formatteddate = (unformatteddate.getMonth() + 1) + "-" + unformatteddate.getDate() + "-" + unformatteddate.getFullYear();
 
     let Invoice = {
-      invoiceId: null,
       date: formatteddate,
       total: invoiceTotal,
       tax: invoiceTax,
@@ -65,65 +56,114 @@ export class invoiceService{
     this.http
     .post<{message: string, invoice : any, count : number}>('http://localhost:3000/api/invoices', Invoice)
     .pipe(map((result) => {
-      return { purchasedItems: result.invoice.purchasedItems.map(purchasedItem => {
-        return{
-          id : purchasedItem.id,
-          item: purchasedItem.item,
-          purchaseQ: purchasedItem.qty,
-          returnQ: 0,
-          total: purchasedItem.total,
+      return { invoice : {
+          invoiceId : result.invoice._id+"",
+          date: result.invoice.date+"",
+          total: parseInt(result.invoice.total),
+          tax: parseInt(result.invoice.tax),
+          shipping: parseInt(result.invoice.shipping),
+          quantity: parseInt(result.invoice.quantity),
           display: true,
-          isReturned: false
-        };
-      }),
-      invoiceId : result.invoice.id,
-      date : result.invoice.date,
-      total: result.invoice.total,
-      tax: result.invoice.tax,
-      shipping: result.invoice.shipping,
-      quantity : result.invoice.totalItems,
-      display : true,
-      isReturned: false,
-      invoiceCount: result.count
+          isReturned: Boolean(JSON.parse(result.invoice.isReturned)),
+          purchasedItems: result.invoice.purchasedItems.map((purchasedItem) => {
+            return {
+              item : purchasedItem.item,
+              purchaseQ: purchasedItem.purchaseQ,
+              returnQ: purchasedItem.returnQ,
+              total: purchasedItem.total,
+              display: true,
+              isReturned: purchasedItem.isReturned
+            }
+          })
+        }, invoiceCount: result.count
+
       };
     }))
     .subscribe(result => {
-      let purchasedItems : purchasedItem[] = []
-      purchasedItems = result.purchasedItems;
-        let invoice = {
-          invoiceId : result.invoiceId+"",
-          date : result.date+"",
-          total: parseInt(result.total),
-          tax: parseInt(result.tax),
-          shipping: parseInt(result.shipping),
-          quantity : parseInt(result.quantity),
-          display : true,
-          isReturned: false,
-          purchasedItems: purchasedItems
-        }
-        this.invoiceHistory.push(invoice);
+        this.invoiceHistory.push(result.invoice);
         this.invoicesUpdated.next({ invoices: [...this.invoiceHistory], invoiceCount: result.invoiceCount});
     });
   }
+
+  returnAll(invoice: Invoice){
+    let purchasedItems = invoice.purchasedItems.map(purchasedItem => {
+      // console.log(purchasedItem.purchaseQ);
+      return{
+        item: purchasedItem.item,
+        purchaseQ: purchasedItem.purchaseQ,
+        returnQ: purchasedItem.purchaseQ,
+        total: purchasedItem.total,
+        isReturned: true
+      }
+    });
+    invoice.display = true;
+    // invoice.isReturned = true;
+
+    let transformedInvoice = {
+      invoiceId: invoice.invoiceId,
+      date: invoice.date,
+      total: invoice.total,
+      tax: invoice.tax,
+      shipping: invoice.shipping,
+      quantity: invoice.quantity,
+      isReturned: true,
+      purchasedItems: purchasedItems
+    }
+
+    this.http
+      .put<{message: string}>('http://localhost:3000/api/invoices', transformedInvoice).subscribe((result)=> {
+        console.log(result.message);
+      })
+  }
+
+  returnOne(invoice: Invoice){
+    let purchasedItems = invoice.purchasedItems.map(purchasedItem => {
+      return{
+        item: purchasedItem.item,
+        purchaseQ: purchasedItem.purchaseQ,
+        returnQ: purchasedItem.returnQ,
+        total: purchasedItem.total,
+        isReturned: true
+      }
+    });
+
+    let transformedInvoice = {
+      invoiceId: invoice.invoiceId,
+      date: invoice.date,
+      total: invoice.total,
+      tax: invoice.tax,
+      shipping: invoice.shipping,
+      quantity: invoice.quantity,
+      isReturned: true,
+      purchasedItems: purchasedItems
+    }
+
+    this.http
+      .put<{message: string}>('http://localhost:3000/api/invoices', transformedInvoice).subscribe((result)=> {
+        console.log(result.message);
+      })
+
+  }
+
+
 
   getInvoices(itemsPerPage: number, currentPage: number){
     const queryParams = `?pagesize=${itemsPerPage}&page=${currentPage}`;
     this.http
     .get<{message: string, invoices: any, invoiceCount: number}>('http://localhost:3000/api/invoices' + queryParams)
     .pipe(map((result) => {
-      return {invoices: result.invoices.purchasedItems.map(item => {
+      return {invoices: result.invoices.map(invoice => {
         return{
-          invoiceId: item._id,
-          date: item.date,
-          total: item.total,
-          tax: item.tax,
-          shipping: item.shipping,
-          quantity: item.quantity,
+          invoiceId: invoice._id,
+          date: invoice.date,
+          total: invoice.total,
+          tax: invoice.tax,
+          shipping: invoice.shipping,
+          quantity: invoice.quantity,
           display: true,
-          isReturned : item.isReturned,
-          purchasedItems: item.purchasedItems.map( purchasedItem => {
+          isReturned : invoice.isReturned,
+          purchasedItems: invoice.purchasedItems.map( purchasedItem => {
             return {
-            id: purchasedItem.id,
             item : purchasedItem.item,
             purchaseQ: purchasedItem.purchaseQ,
             returnQ: purchasedItem.returnQ,
@@ -137,7 +177,6 @@ export class invoiceService{
     };
     }))
     .subscribe((transformedInvoices) => {
-
       this.invoiceHistory = transformedInvoices.invoices;
       this.invoicesUpdated.next({invoices: [...this.invoiceHistory], invoiceCount: transformedInvoices.invoiceCount });
     });

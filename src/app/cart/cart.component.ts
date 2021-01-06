@@ -51,6 +51,11 @@ export class CartComponent implements OnInit, OnDestroy{
       })
   }
 
+  removeCartItem(cartItem: cartItem){
+    this.cartService.deleteItem(cartItem);
+    this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
+  }
+
   getCartTotal(){
     this.cartTotal = 0;
     console.log(this.cartItems);
@@ -108,15 +113,15 @@ export class CartComponent implements OnInit, OnDestroy{
 
 
   confirmPurchase(cartItem : cartItem){
-    let items : cartItem[] = new Array;
-    items.push(cartItem);
-    this.invoiceService.pushtoHistory(items);
-    this.cartTotal -= ((cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice) * cartItem.qty);
-    this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
-    this.cartService.setCartTotal(this.cartTotal);
-    cartItem.display = true;
-    this.paymentmenu = false;
-    this.isListEmpty();
+    // let items : cartItem[] = new Array;
+    // items.push(cartItem);
+    // this.invoiceService.pushtoHistory(items);
+    // this.cartTotal -= ((cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice) * cartItem.qty);
+    // this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
+    // this.cartService.setCartTotal(this.cartTotal);
+    // cartItem.display = true;
+    // this.paymentmenu = false;
+    // this.isListEmpty();
   }
 
   cancelPurchase(cartItem : cartItem){

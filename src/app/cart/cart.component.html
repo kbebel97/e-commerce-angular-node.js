@@ -29,7 +29,10 @@
   <div *ngIf="showlist && !checkoutMenu" class="cardList">
     <ng-container *ngFor="let cartItem of cartItems; let i = index">
       <div class="card" [hidden]="!cartItem.display" #items  >
-        <img class="card-img" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
+      <div class="container">
+        <img src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Snow" style="width:100%">
+        <button class="btn" (click)="removeCartItem(cartItem)">  <span class="material-icons">clear</span></button>
+      </div>
         <div class="card-title large-font" style="margin: 5px;">
           <div class="value" >{{cartItem.item.name}}</div>
           <div class="value" >${{cartItem.item.individualPrice * cartItem.qty | number: '.2-2'}}</div>

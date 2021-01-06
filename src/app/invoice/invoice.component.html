@@ -31,7 +31,7 @@
             </div>
           </div>
           <div style="background: black; display: flex; align-items: center; justify-content: center; flex: 1;">
-            <button *ngIf="isReturned(invoice)" class="btn return-all-button" (click)="returnAll(invoice)">Return All</button>
+            <button *ngIf="!isInvoiceReturned(invoice)" class="btn return-all-button" (click)="returnAllMenu(invoice)">Return All</button>
           </div>
         </div>
         <ng-container *ngFor="let purchasedItem of invoice.purchasedItems; let i = index">
@@ -73,7 +73,7 @@
                   </div>
                 </div>
                 <div class="invoice-column media-column" style="flex: 1; align-items: center;">
-                  <button *ngIf="purchasedItem.returnQ != purchasedItem.purchaseQ" class="btn return-button" (click)="returnItem(purchasedItem, invoice)">Return Item</button>
+                  <button *ngIf="purchasedItem.returnQ != purchasedItem.purchaseQ" class="btn return-button" (click)="returnSingleItemMenu(purchasedItem, invoice)">Return Item</button>
                 </div>
             </div>
             <div class="invoice-row media-row" *ngIf="!purchasedItem.display" [ngStyle]="{backgroundColor: !purchasedItem.display ? 'white' : 'transparent'}">
@@ -120,8 +120,8 @@
                 </div>
                 <div class="invoice-column" style="flex: .5">
                   <div>
-                    <a class="btn confirm-button" (click)="confirm(purchasedItem)" style="margin-bottom: 2px; flex: 1; margin: 1px; width: 80px; text-align: center;">Confirm</a>
-                    <a class="btn cancel-button" (click)="cancel(purchasedItem)" style="margin-bottom: 2px; flex: 1; margin: 1px; width: 80px; text-align: center;">Cancel</a>
+                    <a class="btn confirm-button" (click)="confirmReturnSingleItem(purchasedItem, invoice)" style="margin-bottom: 2px; flex: 1; margin: 1px; width: 80px; text-align: center;">Confirm</a>
+                    <a class="btn cancel-button" (click)="cancelReturnSingleItem(purchasedItem)" style="margin-bottom: 2px; flex: 1; margin: 1px; width: 80px; text-align: center;">Cancel</a>
                   </div>
                 </div>
             </div>
@@ -150,8 +150,8 @@
             <div class="invoice-column" style="flex: 2; align-items: flex-start; justify-content: flex-start; margin-top: 40px;">
                 <div class="label-value">
                   <div class="label">Confirm return:  &nbsp; </div>
-                    <a class="btn confirm-button" (click)="confirmInvoice(invoice)" style="margin-bottom: 2px; flex: 1; margin-right: 1px;">Confirm</a>
-                    <a class="btn cancel-button" (click)="cancelInvoice(invoice)" style="margin-bottom: 2px; flex: 1; margin-left: 1px;">Cancel</a>
+                    <a class="btn confirm-button" (click)="confirmReturnAll(invoice)" style="margin-bottom: 2px; flex: 1; margin-right: 1px;">Confirm</a>
+                    <a class="btn cancel-button" (click)="cancelReturnAll(invoice)" style="margin-bottom: 2px; flex: 1; margin-left: 1px;">Cancel</a>
                   </div>
               </div>
           </div>
