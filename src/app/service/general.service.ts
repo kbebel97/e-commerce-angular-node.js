@@ -61,7 +61,20 @@ login(email : string, password : string) {
   // returns user if successfully retrieved user email and password or null if unsuccessful.
   // 3rd parameter for user is called isAdmin. If true is selected, user is an admin, false if just regular user.
 
-  return new User(email, password, false);
+  let params = {
+    "email": email,
+    "password": password,
+    "role": "user"
+  }
+
+  this.userObservable = this.http.post(this.rootURL + "/login", params, this.httpOptions);
+  // console.log(this.userObservable.subscribe());
+
+  this.userObservable.subscribe(user => {
+    this.userLoggedin = user;
+  })
+
+  // return new User(email, password, false);
 }
 
 register(email : string, password : string){

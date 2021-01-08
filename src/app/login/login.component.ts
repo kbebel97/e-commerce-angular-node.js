@@ -58,7 +58,9 @@ export class LoginComponent implements OnInit{
   }
 
   login(){
-    let user = this.generalService.login(this.email, this.password);
+    // let user = this.generalService.login(this.email, this.password);
+    this.generalService.login(this.email, this.password);
+    let user = this.generalService.userLoggedin;
     if(user !=null)
       this.router.navigate(['/menus/catalog']);
     else
