@@ -10,31 +10,19 @@ import { invoiceService } from '../invoice/invoice.service';
 export class cartService{
   private cartItems : cartItem[] = [];
   private cartTotal = 0;
+  private showList: boolean;
 
   constructor(private http: HttpClient, private invoiceService: invoiceService){
   }
 
   private cartUpdated = new Subject<{cartItems : cartItem[], ciCount: number}>();
 
-  pushtoCart(item: Item){
-    let check: boolean = false;
-    for( let cartItem of this.cartItems){
-      if(cartItem.item.id === item.id){
-        cartItem.qty++;
-        check = true;
-        this.cartTotal += cartItem.item.individualPrice + cartItem.item.individualTax + cartItem.item.individualShipping;
-      }
-    }
-    if(check === false){
-      // let cI = new cartItem(this.cartItems.length + 1, 1, true, item);
-      // this.cartTotal += item.individualPrice + item.individualTax + item.individualShipping;
-      // this.cartItems.push(cI);
-    }
+  updateShowList(showList){
+    this.showList = showList;
   }
 
   setCartTotal(total: number){
     this.cartTotal = total;
-
   }
 
   getCartItems(){
@@ -46,30 +34,10 @@ export class cartService{
     this.cartTotal = 0;
   }
 
-  // deleteItem(item: cartItem){
-  //   for( let a of this.cartItems){
-  //     if(a.cartId === item.cartId){
-  //       this.cartItems.splice(this.cartItems.indexOf(a), 1);
-  //       break;
-  //     }
-  //   }
-  // }
-
   findOne(itemId : number){
-    // let item;
     return this.http.get<{ item: any }>(
       "http://localhost:3000/api/cartitems/" + itemId
     )
-    // .subscribe(responsedata => {
-
-    // })
-    // .subscribe((cartItem) => {
-    //   return {
-    //     cartId: cartItem._id,
-    //     itemId: cartItem.itemId,
-    //     qty: cartItem.qty
-    //   }
-    // })
   }
 
   savetoCartMongo(item: Item){
@@ -80,10 +48,10 @@ export class cartService{
           const id = responseData.cartItem._id;
           let cartItem = {
             cartItemId : id,
-            itemId : item.id,
             qty : responseData.cartItem.qty,
             display : true,
-            item: item
+            item: item,
+            creator: responseData.cartItem.creator
           }
           this.cartItems.push(cartItem);
           this.cartUpdated.next({ cartItems: [...this.cartItems], ciCount: responseData.count});
@@ -95,6 +63,13 @@ export class cartService{
     this.invoiceService.addInvoice(cartItems, totalItems);
   }
 
+  addSingleItemInvoice(cartItem: cartItem, totalItems: number){
+    let cartItems : cartItem[] = [];
+    console.log(cartItems);
+    cartItems.push(cartItem);
+    this.invoiceService.addInvoice(cartItems, 1);
+  }
+
   getCartMongo(itemsPerPage: number, currentPage: number){
     const queryParams = `?pagesize=${itemsPerPage}&page=${currentPage}`;
     this.http
@@ -103,16 +78,17 @@ export class cartService{
       return {cItems: cartitemData.cartitems.map(item => {
         return{
           cartItemId: item._id,
-          itemId: item.itemId,
           qty: item.qty,
           display: true,
-          item: item.item
+          item: item.item,
+          creator: item.creator
         };
       }), ciCount: cartitemData.ciCount
     }
       ;
     }))
     .subscribe((transformedItems) => {
+      console.log(transformedItems);
       this.cartItems = transformedItems.cItems;
       this.cartUpdated.next({cartItems: [...this.cartItems], ciCount: transformedItems.ciCount });
     });
@@ -133,11 +109,6 @@ export class cartService{
     });
   }
 
-  addOne(cartItem: cartItem){
-
-  }
-
-
   adjustQuantity(cartItem: cartItem){
     this.http
     .put<{message: string}>('http://localhost:3000/api/cartitems', cartItem).subscribe((i)=>{
@@ -145,39 +116,7 @@ export class cartService{
     });
   }
 
-
-
   getItemUpdateListener(){
     return this.cartUpdated.asObservable();
   }
-
-
-  //Crud Operations
-
-    // pushtoCart(item : Item){
-    //   check if item already exists in cart table by searching by userId and itemId
-    //   , if it does, increase item qty
-    //   else add new entry to cart table.
-    // }
-
-    // FetchCart(){
-    // on component initializiation, fetch cart data
-    // Get all cart items by userId. Add these cart items to cartItem
-    // }
-
-    // deletefromCart(item : Item){
-    //   check quantity of cart item, if above 1, decrease qty field in entry,
-    //   otherwise remove item from cart entirely
-    // }
-
-    // clearCart(){
-    //  remove all cartItems from cart table based on userId and ItemId
-    //}
-
-
-
-
-
-
-
 }

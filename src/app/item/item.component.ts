@@ -5,6 +5,8 @@ import { catalogService } from '../catalog/catalog.service';
 import { Item } from '../shared/Item.model';
 import {Location} from '@angular/common';
 import { itemService } from './item.service';
+import { Subscription } from 'rxjs';
+import { authService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-item',
@@ -14,7 +16,8 @@ import { itemService } from './item.service';
 })
 export class ItemComponent implements OnInit {
   item: any;
-  numbers: number[];
+  numbers: number[];  userIsAuthenticated : boolean;
+  private authListenerSubs: Subscription;
 
   constructor(
     private catalogService: catalogService,
@@ -22,8 +25,9 @@ export class ItemComponent implements OnInit {
     private itemService: itemService,
     private activeRoute: ActivatedRoute,
     private router: Router,
-    private _location: Location) {
-    console.log(this.activeRoute.snapshot.queryParams.id);
+    private _location: Location,
+    private authService: authService) {
+    // console.log(this.activeRoute.snapshot.queryParams.id);
 
 
    }
@@ -53,10 +57,15 @@ export class ItemComponent implements OnInit {
       }
     );
 
+    this.authListenerSubs =  this.authService.getAuthStatusListener().subscribe(isAuthenticated => {
+      console.log(isAuthenticated);
+      this.userIsAuthenticated = isAuthenticated;
+    });
+
   }
 
   onaddtoCart(item: Item){
-    this.cartService.pushtoCart(item);
+    // this.cartService.pushtoCart(item);
   }
 
   onBackclick(){

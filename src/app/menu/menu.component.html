@@ -1,14 +1,13 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
   <a class="navbar-brand" href="/menus/catalog" id="title">KDM</a>
-
+<!--
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" appDropdown>
     <span class="navbar-toggler-icon"></span>
-  </button>
+  </button> -->
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-
       <li class="nav-item"  routerLinkActive="active">
         <a class="nav-link router-link" [routerLink]="['/menus/catalog']" >Shop</a>
       </li>
@@ -21,17 +20,40 @@
       <li class="nav-item"  routerLinkActive="active">
         <a class="nav-link router-link" routerLink="/menus/settings">Profile</a>
       </li>
-    </ul>
+    </ul> -->
 
-    <form class="form-inline my-2 my-lg-0">
+    <!-- <form class="form-inline my-2 my-lg-0">
+
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="margin-right: 3px;">Search</button>
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    </form> -->
+    <!-- <div class="nav-item">
+      Hello
+    </div> -->
 
-  </div>
+  <!-- </div> -->
+    <!-- <div style="display: flex; flex-direction: row; justify-content: space-evenly;"> -->
+      <ul class="navbar-nav mr-auto nav-fill w-100">
+        <li class="nav-item"  routerLinkActive="active">
+          <a class="nav-link router-link" [routerLink]="['/menus/catalog']" style="display: flex; flex-direction: row; justify-content: center;"><span class="material-icons">store</span><div>Shop</div></a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link router-link" [routerLink]="['/menus/cart']" style="display: flex; flex-direction: row; justify-content: center;"><span class="material-icons">shopping_cart</span><div>Cart</div></a>
+        </li>
+        <li class="nav-item"  routerLinkActive="active">
+          <a class="nav-link router-link" routerLink="/menus/purchaseHistory" style="display: flex; flex-direction: row; justify-content: center;"><span class="material-icons">receipt</span><div>Invoices</div></a>
+        </li>
+        <li class="nav-item"  routerLinkActive="active">
+          <a class="nav-link router-link" routerLink="/menus/settings" style="display: flex; flex-direction: row; justify-content: center;"><span class="material-icons">account_box</span><div>Profile</div></a>
+        </li>
+        <li class="nav-item"  routerLinkActive="active" *ngIf="!userIsAuthenticated">
+          <a class="nav-link router-link" routerLink="/login" style="display: flex; flex-direction: row; justify-content: center;"><span class="material-icons">login</span><div>Login</div></a>
+        </li>
+        <li class="nav-item"  routerLinkActive="active" *ngIf="userIsAuthenticated">
+          <a class="nav-link btn" (click)="onLogout()" style="display: flex; flex-direction: row; justify-content: center; font-family: 'Oswald', sans-serif; font-weight: 300; font-size: 18px;
+          "><span class="material-icons rotate-45">login</span><div>Logout</div></a>
+        </li>
+      </ul>
+    <!-- </div> -->
 </nav>
 <router-outlet></router-outlet>
-
-
-<!-- <div>Hello</div> -->
-<!-- <router-outlet></router-outlet> -->

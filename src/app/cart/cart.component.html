@@ -1,7 +1,7 @@
 <div class="cartContainer">
   <h1 class="header" style="justify-content: space-between;">
     <div style="text-align: initial;">Cart</div>
-    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+    <div *ngIf="userIsAuthenticated && showlist" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
       <!-- <div class="label-value" style="display: flex; border: black 3px solid; border-radius: 3px; align-items: center; height: 1.5rem" >
         <div class="label" style="text-align:center;">Total: &nbsp;</div>
         <div class="value">${{cartTotal | number: '.2-2'}}</div>
@@ -11,24 +11,29 @@
         <div class="value" style="text-align:center; font-size: xx-large;">${{cartTotal | number: '.2-2'}}</div>
       </div>
       <div class="label-value" style="height: 1em; justify-content: center; align-items: center; display: flex; flex-direction: row;">
-        <button style="text-align:center; font-size: xx-large;" class="confirm-button btn" [disabled]="disabled" (click)="toggleCheckoutMenu()" style="margin-right: 1px; margin-left: 1px">Checkout</button>
-        <button style="text-align:center; font-size: xx-large;" class="cancel-button btn" [disabled]="disabled" (click)="clear()" style="margin-left: 1px;">Clear</button>
+        <button style="text-align:center; font-size: xx-large;" class="confirm-button btn" [disabled]="isCheckoutSelected || !showlist" (click)="toggleCheckoutMenu()" style="margin-right: 1px; margin-left: 1px">Checkout</button>
+        <button style="text-align:center; font-size: xx-large;" class="cancel-button btn" [disabled]="isCheckoutSelected || !showlist" (click)="clear()" style="margin-left: 1px;">Clear</button>
       </div>
     </div>
   </h1>
-  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-
-  <!-- <div class="checkoutContainer">
-    <div class="label-value" style="margin-right: 5px; display: flex; justify-content: center; border: black 3px solid; border-radius: 3px;" >
-      <div class="label">Total: &nbsp;</div>
-      <div class="value">${{cartTotal | number: '.2-2'}}</div>
+  <mat-progress-bar *ngIf="isLoading " mode="indeterminate"></mat-progress-bar>
+  <div class="empty-message" *ngIf="showlist && !userIsAuthenticated">
+    <div class="label btn confirm-button" (click)="goLogin()" style="font-size: large;">
+      Sign in or make an account to view cart!
     </div>
-    <button class="confirm-button" [disabled]="disabled" (click)="checkout()" style="margin-right: 1px; margin-left: 1px">Checkout</button>
-    <button class="cancel-button" [disabled]="disabled" (click)="clear()" style="margin-left: 1px;">Clear</button>
-  </div> -->
-
+  </div>
+  <div class="empty-message" *ngIf="!showlist && userIsAuthenticated">
+    <div class="label" style="font-size: large;">
+      Cart is empty!
+    </div>
+  </div>
+  <div class="empty-message" *ngIf="!showlist && !userIsAuthenticated">
+    <div class="label btn confirm-button" (click)="goLogin()" style="font-size: large;">
+      Sign in or make an account to view cart!
+    </div>
+  </div>
   <!-- Structural directive to show list of items in cart if cart is not empty. Otherwise show empty cart message -->
-  <div *ngIf="showlist && !checkoutMenu" class="cardList">
+  <div *ngIf="showlist && !isCheckoutSelected && userIsAuthenticated" class="cardList">
     <ng-container *ngFor="let cartItem of cartItems; let i = index">
       <div class="card" [hidden]="!cartItem.display" #items  >
       <div class="container">
@@ -115,12 +120,7 @@
       </div>
     </ng-container>
   </div>
-  <div class="empty-message" *ngIf="!showlist">
-    <div class="label">
-      Cart is empty!
-    </div>
-  </div>
-  <div *ngIf="checkoutMenu" style="display: flex; padding: 10px; align-items: center; justify-content: center;  ">
+  <div *ngIf="isCheckoutSelected" style="display: flex; padding: 10px; align-items: center; justify-content: center;  ">
     <div style="border: black 3px solid; border-radius: 4px;  width: 499px; display: flex; flex-direction: column; background: white">
       <!-- <div style="flex: 1">
       </div> -->
@@ -180,4 +180,4 @@
     </div>
   </div>
 </div>
-<mat-paginator style="background: rgba(190, 239, 200, 0.97); font-size: large" class="label" [length]="totalItems" [pageSize]="itemsPerPage" (page)="onChangedPage($event)" *ngIf="cartItems.length>0"></mat-paginator>
+<mat-paginator style="background: rgba(190, 239, 200, 0.97); font-size: large" class="label" [length]="totalItems" [pageSize]="itemsPerPage" (page)="onChangedPage($event)" *ngIf="userIsAuthenticated && showlist"></mat-paginator>

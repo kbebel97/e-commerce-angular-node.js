@@ -1,34 +1,9 @@
 const express = require("express");
 
 const Item = require("../models/item");
-
-
-const multer = require("multer");
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
-
-const MIMIE_TYPE_MAP = {
-  'image/png': 'png',
-  'image/jpeg': 'jpg',
-  'image/jpg': 'jpg'
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // backend/images is relative towards server.js file. Not the current file.
-    const isValid = MIMIE_TYPE_MAP[file.mimetype];
-    let error = new Error("Invalid mime type");
-    if(isValid){
-      error = null;
-    }
-    cb(null, "backend/images");
-  },
-  filename: (req, file, cb) => {
-    const name = file.originalname.toLowerCase().split(' ').join('-');
-    const ext = MIME_TYPE_MAP[file.mimetype];
-    cb(null, name + '-' + Date.now() + '.' + ext);
-  }
-})
 
 router.post("", (req, res, next) => {
   const item = new Item({
@@ -71,12 +46,6 @@ router.get("", (req, res, next) => {
         maxItems: count
       });
     })
-  // itemQuery.find().then(documents => {
-  //   res.status(200).json({
-  //     message: 'Items fetched successfully',
-  //     items: documents
-  //   });
-  // });
 })
 
 router.get(":id", (req, res, next) => {

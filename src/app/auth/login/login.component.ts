@@ -1,6 +1,7 @@
 import { stringify } from '@angular/compiler/src/util';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { generalService } from 'src/app/service/general.service';
 import { User } from '../../shared/user.model';
 import { authService } from '../auth.service';
@@ -12,19 +13,55 @@ import { authService } from '../auth.service';
 
 })
 
-export class LoginComponent implements OnInit{
-  option: number;
-  title: string;
+export class LoginComponent implements OnInit, OnDestroy{
+  option = 1;
+  title = 'Login';
   email : string;
   password : string;
   confirmPassword : string;
-  displayMessage : number;
+  displayMessage = 0;
+  userSub: Subscription;
+  userIsAuthenticated: boolean = false;
+  authListenerSubs: Subscription;
+  accountCreatedListener: Subscription;
+
 
   constructor( private router: Router, private generalService : generalService, private authService: authService) { }
   ngOnInit(){
-    this.option = 1;
     this.displayMessage = 0;
-    this.title = 'Login';
+    this.authListenerSubs = this.authService.getAuthStatusListener().subscribe((result) => {
+      if(result == false){
+        this.displayMessage = 4;
+      }
+      else
+        this.displayMessage = 0;
+    })
+
+    this.accountCreatedListener = this.authService.getCreatedStatusListener().subscribe((result) => {
+      if(!result)
+        this.displayMessage = 2;
+      else
+        this.displayMessage = 1;
+    })
+
+    // this.authListenerSubs =  this.authService.getAuthStatusListener().subscribe(isAuthenticated => {
+    //   console.log(this.userIsAuthenticated);
+    //   this.userIsAuthenticated = isAuthenticated;
+    //   console.log(this.userIsAuthenticated);
+    // });
+    // this.option = 1;
+    // this.displayMessage = 0;
+    // this.title = 'Login';
+
+  }
+
+  ngOnDestroy(){
+    this.authListenerSubs.unsubscribe();;
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    console.log(changes);
+
   }
 
 
@@ -38,6 +75,7 @@ export class LoginComponent implements OnInit{
       this.title = 'Register';
     }
   }
+
 
   // register(){
   //   if(this.password == this.confirmPassword){
@@ -56,18 +94,32 @@ export class LoginComponent implements OnInit{
   register() {
     if(this.password == this.confirmPassword) {
       this.authService.createUser(this.email, this.password);
-      // this.generalService.register(this.email, this.password);
-    }
+    } else this.displayMessage = 3;
   }
 
   login(){
+    this.authService.login(this.email, this.password);
 
+    // if(this.authService.getIsAuth() == false){
+    //   this.displayMessage = 4;
+    // }
+    // else {
+    //   this.router.navigate(['/menus/catalog']);
+    // }
+    // if(user != null)
+    //   this.router.navigate(['/menus/catalog']);
+    // else
+    //   this.displayMessage = 4;
+    // this.userSub = this.authService.getUserUpdateListener()
+    //   .subscribe((user: {user}) => {
+            // this.router.navigate(['/menus/catalog'])
 
-    let user = this.generalService.login(this.email, this.password);
-    if(user !=null)
-      this.router.navigate(['/menus/catalog']);
-    else
-      this.displayMessage = 4;
+        // this.cartItems = cartData.cartItems;
+        // this.totalItems = cartData.ciCount;
+        // this.isListEmpty();
+        // this.getCartTotal();
+        // console.log("cart component initialized");
+      // })
   }
 
   clear(){

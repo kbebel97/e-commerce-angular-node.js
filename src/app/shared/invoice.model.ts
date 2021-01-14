@@ -1,5 +1,6 @@
 import { purchasedItem } from './purchasedItem.model';
 export interface Invoice {
+              creator: string,
               invoiceId: string,
               date: string,
               total: number,

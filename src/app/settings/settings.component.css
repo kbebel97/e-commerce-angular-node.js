@@ -17,6 +17,16 @@
   border-radius: 3px;
 }
 
+.message{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: black 1px solid;
+  border-radius: 1px;
+  color: white;
+  font-family: 'Oswald', sans-serif;
+}
+
 .setting-item-header{
   display: flex;
   justify-content: center;

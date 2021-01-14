@@ -22,7 +22,7 @@ import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatSelectModule} from '@angular/material/select';
 import { AppRoutingModule } from './app-routing.module';
 import { itemService } from './item/item.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ReactiveFormsModule} from  '@Angular/forms';
 import { MatPaginatorModule} from '@Angular/material/paginator';
@@ -32,6 +32,7 @@ import { MatProgressBarModule} from '@angular/material/progress-bar';
 import { MenuComponent } from './menu/menu.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { settingsService } from './settings/settings.service';
+import { AuthInterceptor } from './auth/auth-interceptor';
 
 
 
@@ -67,7 +68,9 @@ import { settingsService } from './settings/settings.service';
     MatProgressBarModule,
     BrowserAnimationsModule
   ],
-  providers: [catalogService, cartService, generalService, invoiceService, authService, itemService, settingsService],
+  // Import services and interceptors. Set AuthInterceptor multi to true in order to implement multiple interceptors
+  providers:
+  [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, catalogService, cartService, generalService, invoiceService, authService, itemService, settingsService],
   bootstrap: [AppComponent]
 })
 

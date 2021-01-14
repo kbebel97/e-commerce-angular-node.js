@@ -1,6 +1,8 @@
 import { Component, OnInit, ElementRef, ViewChildren, QueryList} from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { authService } from '../auth/auth.service';
 import { Invoice } from '../shared/invoice.model';
 import { purchasedItem } from '../shared/purchasedItem.model';
 import { invoiceService } from './invoice.service';
@@ -22,24 +24,61 @@ export class InvoiceComponent implements OnInit{
   itemsPerPage = 20;
   totalInvoices : number;
   invoiceSub: Subscription;
+  userIsAuthenticated: boolean;
+  authStatusSub: Subscription;
+  displayMessage: string = "No purchases have been made yet!";
+  showInvoices = false;
+  currentPage = 1;
+
+  selectedInvoiceTax = 0;
+  selectedInvoiceTotal = 0;
+  selectedInvoiceShipping = 0;
+  selectedinvoiceQty = 0;
 
   @ViewChildren('invoices') invoices: QueryList<ElementRef>;
-  constructor(private invoiceService: invoiceService, private router: Router) {}
+  constructor(private invoiceService: invoiceService, private router: Router, private authService: authService) {}
 
   ngOnInit(){
     this.pixelheight = 0;
     console.log("initializing invoice component");
     this.isLoading = true;
-    this.invoiceService.getInvoices(this.itemsPerPage, 1);
+    this.invoiceService.getInvoices(this.itemsPerPage, this.currentPage);
     this.invoiceSub = this.invoiceService.getInvoiceUpdateListener()
       .subscribe((invoiceData: {invoices: Invoice[], invoiceCount: number}) => {
         this.isLoading = false;
+        this.totalInvoices = invoiceData.invoiceCount;
         let temp = invoiceData.invoices.slice().reverse();
         this.invoiceHistory = temp;
+        if(this.invoiceHistory.length > 0){
+          this.showInvoices = true;
+        }
         this.totalInvoices = invoiceData.invoiceCount;
         console.log(this.invoiceHistory);
     })
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    if(this.userIsAuthenticated == false){
+      this.isLoading = false;
+      this.displayMessage = "Sign in or make an account to view invoices!"
+    }
+    this.authStatusSub = this.authService
+    .getAuthStatusListener()
+    .subscribe( isAuthenticated => {
+      this.userIsAuthenticated = isAuthenticated;
+    })
   }
+
+  onChangedPage(pageData: PageEvent){
+    console.log(pageData);
+    this.isLoading = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.invoiceService.getInvoices(this.itemsPerPage, this.currentPage);
+  }
+
+
+  goLogin(){
+    this.router.navigate(['/login']);
+  }
+
 
   //Code runs to determine whether an Invoice
   isInvoiceReturned(invoice){
@@ -81,8 +120,24 @@ export class InvoiceComponent implements OnInit{
 
   //Triggers return Invoice Menu
   returnAllMenu(invoice: Invoice){
+    // this.tempinvoice = invoice;
     this.reset();
-    this.invoiceSelected = invoice;
+    this.selectedInvoiceTax = 0;
+    this.selectedInvoiceTotal = 0;
+    this.selectedInvoiceShipping = 0;
+    this.selectedinvoiceQty = 0;
+    for(let i = 0; i < invoice.purchasedItems.length; i++){
+      let qty : number = invoice.purchasedItems[i].purchaseQ - invoice.purchasedItems[i].returnQ;
+      if(qty > 0){
+        let purchasedItemTax = invoice.purchasedItems[i].item.individualTax * qty;
+        let purchasedItemtotal = invoice.purchasedItems[i].item.individualPrice * qty;
+        let purchasedItemShipping = invoice.purchasedItems[i].item.individualShipping * qty;
+        this.selectedInvoiceTax += purchasedItemTax;
+        this.selectedInvoiceShipping += purchasedItemShipping;
+        this.selectedInvoiceTotal += purchasedItemShipping + purchasedItemTax + purchasedItemtotal;
+        this.selectedinvoiceQty += 1;
+      };
+    }
     this.pixelheight = this.invoices.toArray()[this.invoiceHistory.indexOf(invoice)].nativeElement.offsetHeight;
     invoice.display = !invoice.display;
   };
@@ -92,6 +147,7 @@ export class InvoiceComponent implements OnInit{
     this.invoiceService.returnAll(invoice);
     invoice.purchasedItems.forEach(item => {
       item.returnQ = item.purchaseQ;
+      item.isReturned = true;
       });
   }
 

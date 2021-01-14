@@ -7,7 +7,8 @@ const invoiceSchema = mongoose.Schema({
   shipping: { type: Number, required: true},
   quantity: { type: Number, required: true},
   isReturned: { type: Boolean, required: true},
-  purchasedItems: { type: Array, required: true}
+  purchasedItems: { type: Array, required: true},
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
 });
 
 module.exports = mongoose.model('Invoice', invoiceSchema);

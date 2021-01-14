@@ -1,22 +1,9 @@
 const express = require("express");
-
 const Invoice = require("../models/invoice");
-
 const router = express.Router();
+const checkAuth = require("../middleware/check-auth");
 
-router.use('', (req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers",
-  "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS, PUT"
-  );
-  next();
-});
-
-router.post("", (req, res, next) => {
+router.post("", checkAuth, (req, res, next) => {
   let fetchedInvoice;
   const invoice = new Invoice({
     date: req.body.date,
@@ -25,7 +12,8 @@ router.post("", (req, res, next) => {
     shipping: req.body.shipping,
     quantity: req.body.quantity,
     isReturned: req.body.isReturned,
-    purchasedItems: req.body.purchasedItems
+    purchasedItems: req.body.purchasedItems,
+    creator: req.userData.userId
   });
   let query = invoice.save(invoice);
   query.then(result => {
@@ -34,15 +22,14 @@ router.post("", (req, res, next) => {
       })
       .then((count) => {
         res.status(200).json({message: "Update successful!", invoice : fetchedInvoice, count : count});
-
       });
     }
 );
 
-router.get("", (req, res, next) => {
+router.get("", checkAuth, (req, res, next) => {
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
-  const invoicesQuery = Invoice.find();
+  const invoicesQuery = Invoice.find({creator: req.userData.userId});
   let fetchedInvoices;
   if(pageSize && currentPage){
     invoicesQuery
@@ -53,7 +40,7 @@ router.get("", (req, res, next) => {
   invoicesQuery
     .then(documents => {
       fetchedInvoices = documents;
-      return Invoice.count();
+      return Invoice.count({creator: req.userData.userId });
     })
     .then(count => {
       res.status(200).json({
@@ -64,7 +51,7 @@ router.get("", (req, res, next) => {
     })
   })
 
-router.put("", (req, res, next) => {
+router.put("", checkAuth, (req, res, next) => {
      const invoice = new Invoice({
       _id: req.body.invoiceId,
       date: req.body.date,
@@ -73,9 +60,10 @@ router.put("", (req, res, next) => {
       shipping: req.body.shipping,
       quantity: req.body.quantity,
       isReturned: req.body.isReturned,
-      purchasedItems: req.body.purchasedItems
+      purchasedItems: req.body.purchasedItems,
+      creator: req.userData.userId
     })
-  Invoice.updateOne({ _id: req.body.invoiceId }, invoice).then(result => {
+  Invoice.updateOne({ _id: req.body.invoiceId, creator: req.userData.userId }, invoice).then(result => {
     console.log(result);
       res.status(200).json({message: "Update successful!"});
     });

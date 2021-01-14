@@ -10,19 +10,14 @@ import { MenuComponent } from './menu/menu.component';
 import { SettingsComponent } from './settings/settings.component';
 
 const appRoutes: Routes = [
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: '', redirectTo: '/menus/catalog', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
-  {path: 'item', component: ItemComponent},
-  {path: 'item/:item', component: ItemComponent},
-  {path: 'catalog', component: CatalogComponent},
-  {path: 'cart', component: CartComponent},
-  {path: 'purchaseHistory', component: InvoiceComponent},
-  {path: 'settings', component: SettingsComponent},
   {path: 'menus', component: MenuComponent, children: [
     {path: 'catalog', component: CatalogComponent},
     {path: 'cart', component: CartComponent},
     {path: 'purchaseHistory', component: InvoiceComponent},
-    {path: 'settings', component: SettingsComponent}
+    {path: 'settings', component: SettingsComponent},
+    {path: 'item', component: ItemComponent}
   ]}
   // {path: 'menus/:email', component: MenuComponent}
 ];

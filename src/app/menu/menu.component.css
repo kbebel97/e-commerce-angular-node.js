@@ -17,3 +17,11 @@
   font-weight: 700;
   font-size: xx-large;
 }
+
+.rotate-45 {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+}

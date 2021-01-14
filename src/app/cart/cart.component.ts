@@ -1,9 +1,11 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnChanges, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { authService } from '../auth/auth.service';
 import { invoiceService } from '../invoice/invoice.service';
 import { cartItem } from '../shared/cartItem.model';
+import { Invoice } from '../shared/invoice.model';
 import { cartService } from './cart.service';
 
 @Component({
@@ -29,15 +31,16 @@ export class CartComponent implements OnInit{
   disabled : boolean = true;
   isLoading: boolean = false;
   cartitemsSub: Subscription;
-  checkoutMenu : boolean = false;
+  isCheckoutSelected : boolean = false;
   totalItems = 150;
   itemsPerPage = 20;
   currentPage = 1;
+  userIsAuthenticated = false;
+  private authStatusSub : Subscription;
 
 
 
-  constructor(private cartService: cartService, private router: Router, private invoiceService: invoiceService) { }
-
+  constructor(private cartService: cartService, private router: Router, private invoiceService: invoiceService, private authService: authService) { }
   ngOnInit(){
     console.log("initializing cart component");
     this.isLoading = true;
@@ -51,10 +54,23 @@ export class CartComponent implements OnInit{
         this.getCartTotal();
         console.log("cart component initialized");
       })
+      this.userIsAuthenticated = this.authService.getIsAuth();
+      if(this.userIsAuthenticated == false){
+        this.isLoading = false;
+      }
+      this.authStatusSub = this.authService
+      .getAuthStatusListener()
+      .subscribe( isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
+      })
+
   }
+
+
 
   removeCartItem(cartItem: cartItem){
     this.cartService.deleteItem(cartItem);
+    this.cartTotal -= cartItem.qty * (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice);
     this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
     this.isListEmpty();
   }
@@ -78,16 +94,20 @@ export class CartComponent implements OnInit{
     if(this.cartItems.length == 0){
        this.showlist = false
        this.disabled = true;
+       this.cartService.updateShowList(this.showlist);
     }
     else{
       this.showlist = true;
       this.disabled = false;
+      this.cartService.updateShowList(this.showlist);
+
     }
   }
 
   clear(){
     this.cartTotal = 0;
-    this.cartService.clearCart();
+    this.cartService.deleteAll();
+    this.cartItems = [];
     this.isListEmpty();
   }
 
@@ -99,23 +119,32 @@ export class CartComponent implements OnInit{
   }
 
   toggleCheckoutMenu(){
-    this.checkoutMenu = !this.checkoutMenu;
+    this.isCheckoutSelected = !this.isCheckoutSelected;
     this.disabled = !this.disabled;
+    for(let cartItem of this.cartItems){
+      cartItem.display = true;
+    }
+
+  }
+
+  goLogin(){
+    this.router.navigate(['/login']);
   }
 
   confirmCheckout(){
     this.cartService.addInvoice(this.cartItems, this.totalItems);
     this.cartService.deleteAll();
-    this.checkoutMenu = !this.checkoutMenu;
+    this.isCheckoutSelected = !this.isCheckoutSelected;
     this.cartItems.splice(0, this.cartItems.length);
     this.isListEmpty();
   }
 
-
-
   confirmPurchase(cartItem : cartItem){
-    this.cartService.addOne(cartItem);
+    this.cartService.addSingleItemInvoice(cartItem, this.totalItems);
+    this.cartService.deleteItem(cartItem);
     this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
+    this.cartTotal -= cartItem.qty * (cartItem.item.individualShipping + cartItem.item.individualTax + cartItem.item.individualPrice);
+    this.isListEmpty();
   }
 
   cancelPurchase(cartItem : cartItem){
@@ -150,14 +179,11 @@ export class CartComponent implements OnInit{
   }
 
   showMore(cartItem: cartItem){
-    this.router.navigate(['/item', cartItem.item.name], {queryParams: {id: cartItem.item.id}});
+    this.router.navigate(['/menus/item']);
   }
 
   reset(){
     if(this.selectedItem!=null)
       this.selectedItem.display = true;
   }
-
-
-
 }

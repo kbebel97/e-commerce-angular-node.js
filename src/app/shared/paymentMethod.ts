@@ -1,8 +1,8 @@
 import { Review } from './review.model';
 
 export interface paymentMethod {
-     id: number,
-     cardNumber: number,
+     cardNumber: any,
      expirationDate: string,
      securityCode: string
+     primaryMethod: boolean
 }

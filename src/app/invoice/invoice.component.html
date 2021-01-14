@@ -1,12 +1,29 @@
 <h1 class="header">
   <div style="flex: 1; text-align: initial;">Invoices</div>
+  <div *ngIf="userIsAuthenticated && showInvoices" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+  </div>
 </h1>
 <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-<div *ngIf="!invoiceHistory?.length" class="empty-message">
-  <div class="label" >No purchases have been made yet!</div>
+<!-- <div *ngIf="!invoiceHistory?.length" class="empty-message">
+  <div class="label" style="font-size: large;" >{{displayMessage}}</div>
+</div> -->
+<div class="empty-message" *ngIf="showInvoices && !userIsAuthenticated">
+  <div class="label confirm-button btn" (click)="goLogin()" style="font-size: large;">
+    Sign in or make an account to view Invoices!
+  </div>
+</div>
+<div class="empty-message" *ngIf="!showInvoices && userIsAuthenticated">
+  <div class="label" style="font-size: large;">
+    No invoices yet!
+  </div>
+</div>
+<div class="empty-message" *ngIf="!showInvoices && !userIsAuthenticated">
+  <div class="label confirm-button btn" (click)="goLogin()" style="font-size: large;">
+    Sign in or make an account to view Invoices!
+  </div>
 </div>
 <!--  Structural Directive to determine of there is an invoice history to begin with. Otherwise display empty invoices message -->
-<div *ngIf="invoiceHistory?.length" class="invoice-container">
+<div *ngIf="userIsAuthenticated && showInvoices" class="invoice-container">
   <!-- Structural Directive to enter invoiceHistory -->
   <ng-container *ngFor="let invoice of invoiceHistory, let i = index">
     <!-- Structural Directives *ngIf and *ngFor to enter invoice purchased Items array only if the display property of the invoice is set to true. -->
@@ -133,19 +150,19 @@
             <div class="invoice-column large-font" style="flex: 1; align-items: flex-start; justify-content: initial;">
               <div class="label-value">
                 <div class="label">Tax:  &nbsp; </div>
-                <div class="value">${{invoice.tax | number : '.2-2'}}</div>
+                <div class="value">${{selectedInvoiceTax | number : '.2-2'}}</div>
               </div>
               <div class="label-value">
                 <div class="label">Shipping:  &nbsp; </div>
-                <div class="value">${{invoice.shipping | number : '.2-2'}}</div>
+                <div class="value">${{selectedInvoiceShipping | number : '.2-2'}}</div>
               </div>
               <div class="label-value">
                 <div class="label">Items:  &nbsp; </div>
-                <div class="value">{{invoice.purchasedItems.length}}</div>
+                <div class="value">{{selectedinvoiceQty}}</div>
               </div>
               <div class="label-value">
                 <div class="label">Total:  &nbsp; </div>
-                <div class="value">${{invoice.total | number : '.2-2'}}</div>
+                <div class="value">${{selectedInvoiceTotal | number : '.2-2'}}</div>
               </div>
             </div>
             <div class="invoice-column" style="flex: 2; align-items: flex-start; justify-content: flex-start; margin-top: 40px;">
@@ -159,4 +176,5 @@
       </div>
   </ng-container>
 </div>
+<mat-paginator style="background: rgba(190, 239, 200, 0.97); font-size: large" class="label" [length]="totalInvoices" [pageSize]="itemsPerPage" (page)="onChangedPage($event)" *ngIf="userIsAuthenticated && showInvoices"></mat-paginator>
 

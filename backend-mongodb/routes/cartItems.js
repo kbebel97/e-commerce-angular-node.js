@@ -3,32 +3,10 @@ const express = require("express");
 const CartItem = require("../models/cartItem");
 
 const router = express.Router();
+const checkAuth = require("../middleware/check-auth");
 
-router.use('', (req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers",
-  "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS, PUT"
-  );
-  next();
-});
-
-
-// router.get(":id", (req, res, next) => {
-//   Item.findById(req.params.id).then(item => {
-//     if(item){
-//       res.status(200).json(item);
-//     } else {
-//       res.status(404).json({ message: "Item not found!"})
-//     }
-//   })
-// })
-
-router.post("", (req, res, next) => {
-  const cartitemQuery = CartItem.findOne({itemId : req.body.id})
+router.post("", checkAuth, (req, res, next) => {
+  const cartitemQuery = CartItem.findOne({itemId : req.body.id, creator: req.userData.userId})
   let fetchedItem;
   // Chaining multiple queries. 1st query retrieves cartitem need to be updated, 2nd query increases cartitem quantity by one if it exists in db
   cartitemQuery
@@ -43,9 +21,10 @@ router.post("", (req, res, next) => {
           _id: fetchedItem._id,
           itemId: req.body.id,
           qty: parseInt(fetchedItem.qty) + 1,
-          item: req.body
+          item: req.body,
+          creator: req.userData.userId
         });
-        CartItem.updateOne({ itemId: req.body.id }, cartItem).then(result => {
+        CartItem.updateOne({ _id: fetchedItem._id, creator: req.userData.userId }, cartItem).then(result => {
           console.log(result);
           res.status(200).json({message: "Update successful!", cartItem : null, count : count});
         });
@@ -53,7 +32,8 @@ router.post("", (req, res, next) => {
         const cartItem = new CartItem({
           itemId: req.body.id,
           qty: 1,
-          item: req.body
+          item: req.body,
+          creator: req.userData.userId
         });
         cartItem.save().then((result) => {
           res.status(201).json({message: 'Item added successfully!', cartItem: result, count : count});
@@ -62,26 +42,26 @@ router.post("", (req, res, next) => {
     })
 });
 
-router.put("", (req, res, next) => {
+router.put("", checkAuth, (req, res, next) => {
   const cartItem = new CartItem({
     _id: req.body.cartItemId,
-    itemId: req.body.itemId,
     qty: req.body.qty,
-    item: req.body.item
+    item: req.body.item,
+    creator: req.userData.userId
   });
   console.log(cartItem);
-  CartItem.updateOne({ _id: req.body.cartItemId }, cartItem).then(result => {
+  CartItem.updateOne({ _id: req.body.cartItemId, creator: req.userData.userId}, cartItem).then(result => {
     console.log(result);
     res.status(200).json({message: "Update successful!"});
   });
 });
 
 
-router.get("", (req, res, next) => {
+router.get("", checkAuth, (req, res, next) => {
   let fetchedItem;
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
-  const cIQuery = CartItem.find();
+  const cIQuery = CartItem.find({creator : req.userData.userId});
   if(pageSize && currentPage){
   cIQuery
       .skip(pageSize * (currentPage - 1))
@@ -89,7 +69,7 @@ router.get("", (req, res, next) => {
   }
   cIQuery.then(result => {
     fetchedItem = result;
-    return CartItem.count();
+    return CartItem.count({creator: req.userData.userId});
   })
   .then((count) => {
     res.status(200).json({
@@ -110,27 +90,16 @@ router.get("/:id", (req, res, next) => {
   })
 })
 
-// router.put("", (req, res, next) => {
-//   const cartItem = new CartItem({
-//     _id: req.body.id,
-//     itemId: req.body.id,
-//     qty: req.body.qty,
-//     item: req.body.item
-//   });
-//   CartItem.updateOne({ _id: req.body.id }, cartItem).then(result => {
-//     res.status(200).json({message: "Update successful!"});
-//   });
-// });
-router.delete("", (req, res, next) => {
-  CartItem.remove().then(result => {
+router.delete("", checkAuth, (req, res, next) => {
+  CartItem.remove({creator: req.userData.userId}).then(result => {
     console.log(result);
     res.status(200).json({message: "All items removed from cart!" });
 
   })
 })
 
-router.delete("/:id", (req, res, next) => {
-  CartItem.deleteOne({_id: req.params.id }).then(result => {
+router.delete("/:id", checkAuth, (req, res, next) => {
+  CartItem.deleteOne({_id: req.params.id, creator: req.userData.userId }).then(result => {
     console.log(result);
     res.status(200).json({message: "Item removed from cart!" });
   });

@@ -57,6 +57,7 @@ export class invoiceService{
     .post<{message: string, invoice : any, count : number}>('http://localhost:3000/api/invoices', Invoice)
     .pipe(map((result) => {
       return { invoice : {
+          creator: result.invoice.creator,
           invoiceId : result.invoice._id+"",
           date: result.invoice.date+"",
           total: parseInt(result.invoice.total),
@@ -84,6 +85,7 @@ export class invoiceService{
         this.invoicesUpdated.next({ invoices: [...this.invoiceHistory], invoiceCount: result.invoiceCount});
     });
   }
+
 
   returnAll(invoice: Invoice){
     let purchasedItems = invoice.purchasedItems.map(purchasedItem => {
@@ -155,6 +157,7 @@ export class invoiceService{
       return {invoices: result.invoices.map(invoice => {
         return{
           invoiceId: invoice._id,
+          creator: invoice.creator,
           date: invoice.date,
           total: invoice.total,
           tax: invoice.tax,
