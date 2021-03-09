@@ -179,7 +179,7 @@ export class CartComponent implements OnInit{
   }
 
   showMore(cartItem: cartItem){
-    this.router.navigate(['/menus/item']);
+    this.router.navigate(['/item']);
   }
 
   reset(){

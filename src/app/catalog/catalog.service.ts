@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Item } from '../shared/Item.model';
-import { Review } from '../shared/review.model';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { cartService } from '../cart/cart.service';
@@ -19,16 +18,6 @@ export class catalogService{
   getItems(){
     return this.items.slice();
   }
-
-  getItem(numb: number){
-    for(let item of this.items){
-      if(item.id === numb){
-        return item;
-      }
-    }
-
-  }
-
   //Crud Operations
 
   getCatalog(): Observable<any>{
@@ -52,8 +41,8 @@ export class catalogService{
           individualTax: item.individualTax,
           individualShipping : item.individualShipping,
           manufacturer: item.manufacturer,
-          reviews: item.reviews,
-          rating: item.rating
+          rating: item.rating,
+          imagePaths: item.imagePaths
         };
       }), maxItems: itemData.maxItems};
     }))
@@ -67,6 +56,25 @@ export class catalogService{
     });
   }
 
+  saveCatalogItem(item: Item){
+    this.http
+      .post<{message: string, item: any}>('http://localhost:3000/api/items', item).subscribe((response)=> {
+        // let transformedItem: Item = {
+        //   id: response.item._id,
+        //   name: response.item.name,
+        //   description: response.item.description,
+        //   individualPrice: response.item.individualPrice,
+        //   individualTax: response.item.individualTax,
+        //   individualShipping: response.item.individualShipping,
+        //   manufacturer: response.item.manufacturer,
+        //   rating: response.item.rating,
+        //   imagePaths: response.item.imagePaths
+        // }
+        // return transformedItem;
+        // console.log(response.message);
+      });
+  }
+
   getItemUpdateListener(){
     return this.itemsUpdated.asObservable();
   }
@@ -76,8 +84,11 @@ export class catalogService{
   }
 
   deleteItemMongo(itemId: string){
-    return this.http
-      .delete("http://localhost:3000/api/items/" + itemId);
+    console.log(itemId);
+    this.http
+      .delete("http://localhost:3000/api/items/" + itemId).subscribe((result)=> {
+        console.log(result);
+      });
   }
 
 

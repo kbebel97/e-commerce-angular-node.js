@@ -10,5 +10,6 @@ export interface User{
     lastName: string,
     paymentMethods: paymentMethod[],
     shippingAddresses: shippingAddress[],
-    imagePath: string
+    imagePath: string;
+    isAdmin: boolean;
 }

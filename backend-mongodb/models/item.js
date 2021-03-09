@@ -7,8 +7,8 @@ const itemSchema = mongoose.Schema({
   individualTax: { type: Number, required: true},
   individualShipping : { type: Number, required: true},
   manufacturer: { type: String, required: true},
-  reviews: { type: Array, required: false},
-  rating: { type: Number, required: true}
+  rating: { type: Number, required: true},
+  imagePaths: {type: Array, required: false}
 });
 
 module.exports = mongoose.model('Item', itemSchema);

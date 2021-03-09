@@ -1,58 +1,72 @@
 <div id="item-container">
-  <div id="item-header">
-    <div class="item-carousel">
-      <app-carousel style="flex: 1;"></app-carousel>
-    </div>
-
-    <div id="item-general-info">
-      <div class="heading">
-        <h1 class="value" style="margin-right: 10px;">{{item.name}}
-        </h1>
-        <div *ngFor="let dummy of ' '.repeat(item.rating).split(''), let x = index" class="material-icons" style="font-size:30px;">star</div>
-        <div style="flex: 6; align-self: center; display: flex; align-items: flex-end; justify-content: flex-end;">
-          <a class="btn confirm-button" (click)="onaddtoCart(item)" style="margin-right: 2.5px;">add to cart</a>
-          <a class="btn cancel-button" (click)="onBackclick()" style="margin-left: 2.5px;">go back</a>
-
-
-        </div>
-
-
+    <div id="item-header" style="border-bottom: black 2px solid;">
+      <div class="item-carousel">
+        <app-carousel [photos]="item.imagePaths" style="flex: 1;"></app-carousel>
       </div>
-      <h2 class="value">${{item.individualPrice | number : '.2-2'}}</h2>
-      <p class="text" style="overflow-y: scroll;">{{item.description}}</p>
-    </div>
-  </div>
-
-  <div id="item-body">
-    <div *ngFor="let review of item.reviews; let i = index" class="reviews" [ngStyle]="{backgroundColor: i % 2 !== 0 ? 'rgba(226, 248, 231, 0.97)' : 'rgba(190, 239, 200, 0.97)'}">
-        <div class="name value">{{review.name}}</div>
-        <div class="review-rating">
-          <div *ngFor="let dummy of ' '.repeat(review.rating).split(''), let x = index" class="material-icons" style="font-size:30px;">star</div>
-
+      <div id="item-general-info" #headerheight>
+        <div class="heading">
+          <h1 class="value" style="margin-right: 10px;">{{item.name}}</h1>
+          <div *ngFor="let dummy of ' '.repeat(item.rating).split(''), let x = index" class="material-icons" style="font-size:30px;">star</div>
+          <div style="flex: 6; align-self: center; display: flex; align-items: flex-end; justify-content: flex-end;">
+            <a class="btn confirm-button" (click)="onaddtoCart()" style="margin-right: 2.5px;">add to cart</a>
+            <a class="btn cancel-button" (click)="onBackclick()" style="margin-left: 2.5px;">go back</a>
+          </div>
         </div>
-        <div class="description text">{{review.comment}}</div>
+        <h2 class="value">${{item.individualPrice | number : '.2-2'}}</h2>
+        <p class="text" style="overflow-y: scroll;">{{item.description}}</p>
+      </div>
+    </div>
+  <div *ngIf="!reviewsEmpty" style="flex: 3" id="review-height">
+    <div id="item-body">
+      <div *ngFor="let review of reviews; let i = index" class="reviews" style="display: flex; flex-direction: row; height: 100px; padding: 5px; column-gap: 5px; justify-content: center; align-items: center;" [ngStyle]="{backgroundColor: i % 2 !== 0 ? 'rgba(226, 248, 231, 0.97)' : 'rgba(190, 239, 200, 0.97)'}">
+          <div style="display: flex; flex: 1; justify-content: center;" class="name value" *ngIf="review.userName">
+            <div>{{review.userName}}</div>
+          </div>
+          <div style="display: flex; flex: 1; justify-content: center;" class="name value" *ngIf="!review.userName">
+            <div>{{review.email}}</div>
+          </div>
+          <div class="review-rating" style="flex: 1">
+            <div *ngFor="let dummy of ' '.repeat(review.rating).split(''), let x = index" class="material-icons" style="font-size:30px;">star</div>
+          </div>
+          <div class="description text" style="flex: 3.5">{{review.comment}}</div>
+      </div>
     </div>
   </div>
-  <div class="reviews" id="item-foot">
-    <div style="grid-column: 1; color: white" class="name value" >Hello</div>
-    <div style="grid-column: 2/4; color: white; display: flex; flex-direction: row;" class="review-rating">
-      <!-- <div  class="material-icons" style="font-size:30px;">star</div>
-      <div  class="material-icons" style="font-size:30px;">star</div>
-      <div  class="material-icons" style="font-size:30px;">star</div>
-      <div  class="material-icons" style="font-size:30px;">star</div> -->
-      <div *ngFor="let dummy of ' '.repeat(5).split(''), let x = index" class="material-icons btn star-button" >star</div>
-
-    </div>
-    <div style="grid-column: 5 ; display: flex; flex-direction: column; padding-right: 5px;">
-      <div class="btn confirm-button" style="margin-bottom: 1px; color: white; border: white solid 1px">post</div>
-      <div class="btn cancel-button" style="margin-top: 1px; color: white; border: white solid 1px">clear</div>
-    </div>
-    <div style="grid-column: 6/-1; align-items: center; display: flex;" >
-      <textarea class="description text" style="height: 60px; width: 100%;"></textarea>
-    </div>
-
+  <div *ngIf="reviewsEmpty" style="display: flex; justify-content: center; align-items: flex-start; flex: 3; margin-top: 50px;" class="text">
+    <div>No reviews posted yet!</div>
   </div>
-
-
+  <div id="item-foot">
+    <div [ngSwitch]="displayMessage" style="display: flex; justify-content: center; align-items: center; background: black; height: 50px;" [ngStyle]="{'display':isVisible ? 'flex' : 'none'}" class="label">
+      <div *ngSwitchCase="1" class="message" style="background-color: #5cb85c; font-size: large; color: white; border: 2px white solid; border-radius: 2px;">Added Review</div>
+      <div *ngSwitchCase="2" class="message" style="background-color: #5cb85c; font-size: large; color: white; border: 2px white solid; border-radius: 2px;">Updated Review</div>
+      <div *ngSwitchCase="3" class="message" style="background-color: #d9534f; font-size: large; color: white; border: 2px white solid; border-radius: 2px;">you have already placed a review for this item!</div>
+      <div *ngSwitchCase="4" class="message" style="background-color: #d9534f; font-size: large; color: white; border: 2px white solid; border-radius: 2px;">Review failed to update!</div>
+      <div *ngSwitchCase="5" class="message" style="background-color: #d9534f; font-size: large; color: white; border: 2px white solid; border-radius: 2px; ">You must select a rating!</div>
+    </div>
+      <div style="display: flex; flex-direction: row; height: 100px; padding: 5px; column-gap: 5px; justify-content: center; align-items: center; background-color: black">
+        <div style="flex: .75;">
+          <div style="color: white; justify-content: center; align-items: center; display: flex;" class="name value" *ngIf="user.userName">
+            <div>{{user.userName}}</div>
+          </div>
+          <div style="color: white; display: flex;" class="name value" *ngIf="!user.userName">
+            <div style="width: 152px; word-wrap: break-word;">{{user.email}}</div>
+          </div>
+        </div>
+        <div style="flex: 1">
+          <div style="grid-column: 3/4; color: white; display: flex; flex-direction: row; justify-content: center; align-items: center;" class="review-rating">
+            <div *ngFor="let dummy of ' '.repeat(5).split(''), let x = index" (click)="onRating(x)" class="material-icons star-button btn" style="padding: 0;" #stars >star</div>
+          </div>
+        </div>
+        <div style="flex: .5; display: flex; flex-direction: column;" >
+          <div class="btn confirm-button" style="margin-bottom: 1px; color: white; border: white solid 1px" (click)="onPost()">{{buttontext}}</div>
+          <div class="btn cancel-button" style="margin-top: 1px; color: white; border: white solid 1px" (click)="clear()">clear</div>
+        </div>
+        <div style="flex: 3">
+          <div style="grid-column: 6/-1; align-items: center; display: flex;" >
+            <textarea class="description text" style="height: 60px; width: 100%;"  placeholder="write a review!" [(ngModel)]="myComment"></textarea>
+          </div>
+        </div>
+      </div>
+  </div>
 </div>
 

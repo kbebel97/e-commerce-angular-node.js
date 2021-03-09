@@ -15,19 +15,98 @@ export class authService{
   private isAuthenticated = false;
   private authStatusListener = new Subject<boolean>();
   private accountCreatedStatusListener = new Subject<boolean>();
+  private isAdminListener = new Subject<boolean>();
+  private isAdminRegisteredListener = new Subject<boolean>();
   private token : string;
   private tokenTimer: NodeJS.Timer;
+  private adminEmails = ['kacperbebel97@gmail.com'];
   // private expiresInDuration: number;
 
   createUser(email: string, password: string){
     const authData: AuthData = {email: email, password: password};
     this.http.post("http://localhost:3000/api/user/signup", authData)
       .subscribe( response => {
-        this.accountCreatedStatusListener.next(true);
+        console.log(response);
+        // this.accountCreatedStatusListener.next(true);
+        this.http.post<{token: string, fetchedUser: any, expiresIn: number}>("http://localhost:3000/api/user/login", authData)
+        .subscribe( response => {
+          if(response.fetchedUser){
+            const token = response.token;
+            this.token = token;
+            if(token){
+              // Timer that is set beginning at the generation of a new key
+              const expiresInDuration = response.expiresIn;
+              this.setAuthTimer(expiresInDuration);
+              this.isAuthenticated = true;
+              const now = new Date();
+              // Create expiration date to logout in hour
+              const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+              console.log(expirationDate);
+              this.saveAuthData(token, expirationDate);
+              this.router.navigate(['/menus/catalog']);
+            }
+          }
+        }, error => {
+          this.authStatusListener.next(false);
+          this.accountCreatedStatusListener.next(false);
+        })
+
       }, error => {
         this.accountCreatedStatusListener.next(false);
       }
       )
+  }
+
+  createAdmin(email: string, password: string){
+    let adminCreated : boolean = false;
+    for(let i = 0; i < this.adminEmails.length; i++ ){
+      if(this.adminEmails[i]==email){
+        adminCreated = true;
+        const authData: AuthData = {email: email, password: password};
+        this.http.post("http://localhost:3000/api/user/adminsignup", authData)
+          .subscribe( response => {
+
+            // this.accountCreatedStatusListener.next(true);
+            this.http.post<{token: string, fetchedUser: any, expiresIn: number}>("http://localhost:3000/api/user/login", authData)
+            .subscribe( response => {
+              if(response.fetchedUser){
+                const token = response.token;
+                this.token = token;
+                if(token){
+                  // Timer that is set beginning at the generation of a new key
+                  const expiresInDuration = response.expiresIn;
+                  this.setAuthTimer(expiresInDuration);
+                  this.isAuthenticated = true;
+                  const now = new Date();
+                  // Create expiration date to logout in hour
+                  const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+                  console.log(expirationDate);
+                  this.saveAuthData(token, expirationDate);
+                  this.router.navigate(['/admin']);
+                }
+              }
+            }, error => {
+              this.authStatusListener.next(false);
+              this.accountCreatedStatusListener.next(false);
+            })
+
+          }, error => {
+            this.accountCreatedStatusListener.next(false);
+          }
+        );
+      }
+    }
+    if(!adminCreated){
+      this.isAdminRegisteredListener.next(false);
+    }
+  }
+
+  getisAdminListener(){
+    return this.isAdminListener.asObservable();
+  }
+
+  getisAdminRegisteredListener(){
+    return this.isAdminRegisteredListener.asObservable();
   }
 
 
@@ -45,6 +124,36 @@ export class authService{
 
   getAuthStatusListener(){
     return this.authStatusListener.asObservable();
+  }
+
+  loginasAdmin(email: string, password: string){
+    for(let i = 0; i < this.adminEmails.length; i++){
+      if(email == this.adminEmails[i]){
+        const authData: AuthData = {email: email, password: password};
+        this.http.post<{token: string, fetchedUser: any, expiresIn: number}>("http://localhost:3000/api/user/login", authData)
+          .subscribe( response => {
+            if(response.fetchedUser){
+              const token = response.token;
+              this.token = token;
+              if(token){
+                // Timer that is set beginning at the generation of a new key
+                const expiresInDuration = response.expiresIn;
+                this.setAuthTimer(expiresInDuration);
+                this.isAuthenticated = true;
+                const now = new Date();
+                // Create expiration date to logout in hour
+                const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+                console.log(expirationDate);
+                this.saveAuthData(token, expirationDate);
+                this.router.navigate(['/admin']);
+              }
+            }
+          }, error => {
+            this.authStatusListener.next(false);
+          })
+          return;
+      }
+    } this.isAdminListener.next(false);
   }
 
   login(email: string, password: string) {

@@ -1,15 +1,11 @@
-
 <div class="catalogContainer">
-  <h1 class="header" style="justify-content: space-between;">
-   Catalog
-  </h1>
+  <h1 class="header" style="justify-content: space-between;">Catalog</h1>
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-
-
   <div class="cardList">
     <ng-container *ngFor="let item of catalogItems">
       <div class="card" *ngIf="!isLoading">
-        <img class="card-img" src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Card image cap">
+        <img style="height: 200px;" *ngIf="item.imagePaths[0]" src={{item.imagePaths[0]}}>
+        <img style="height: 200px;" *ngIf="!item.imagePaths[0]" src="https://www.officespacesny.com/wp-content/themes/realestate-7/images/no-image.png">
         <div class="card-body">
           <div class="card-title large-font">
             <div class="value">{{item.name}}</div>
@@ -24,5 +20,3 @@
   </div>
 </div>
 <mat-paginator style="background: rgba(190, 239, 200, 0.97); font-size: large" class="label" [length]="totalItems" [pageSize]="itemsPerPage" (page)="onChangedPage($event)" *ngIf="catalogItems.length>0"></mat-paginator>
-
-<!-- <router-outlet></router-outlet> -->

@@ -9,14 +9,6 @@
   padding-right: 10px;
 }
 
-.catalogContainer{
-  /* padding-bott: 5px; */
-}
-
-.card-img{
-  height: 150px;
-}
-
 ::-webkit-scrollbar {
   width: 0px;
   background: transparent;

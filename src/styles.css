@@ -60,13 +60,6 @@
   justify-content: space-between;
 }
 
-
-.card-img{
-  height: 150px;
-}
-
-
-
 .card-body{
   display: flex;
   flex-direction: column;
@@ -78,6 +71,8 @@
   width: 20rem;
   background-color: transparent;
   border: black 3px solid;
+  box-shadow:  10px 10px 10px #6B6A6A;
+  margin: 4px;
 }
 
 .card-text{
@@ -133,6 +128,9 @@
   align-items: center;
   height: 300px;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

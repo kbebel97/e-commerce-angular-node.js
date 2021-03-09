@@ -3,10 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { paymentMethod } from "../shared/paymentMethod";
 import { Subject } from "rxjs";
 import { User } from "../shared/user.model";
-import { map } from "rxjs/operators";
-
-
-
 
 @Injectable()
 export class settingsService{
@@ -22,16 +18,13 @@ export class settingsService{
   private chargeCardadded = new Subject<boolean>();
   private defaultChargeCardEdited = new Subject<boolean>();
   private userUpdated = new Subject<{user: User}>();
-  private generalDataUpdated = new Subject<{imagePath : string, isUpdated : boolean}>();
-  private loginUpdated = new Subject<{boolean: boolean, hash: string}>();
+
+  private userdetailsUpdated = new Subject<{isUpdated : boolean}>();
+  private passwordUpdated = new Subject<{passwordUpdated: boolean, password: string}>();
+  private usernameUpdated = new Subject<{usernameUpdated: boolean, username: string}>();
 
   constructor(private http: HttpClient){
   }
-
-
-  addPaymentMethod(paymentInfo){
-  }
-
   getProfileMongo(){
     this.http
     .get<{message: string, user: any}>('http://localhost:3000/api/user')
@@ -45,7 +38,8 @@ export class settingsService{
         lastName: response.user.lastName,
         paymentMethods: response.user.paymentMethods,
         shippingAddresses: response.user.shippingAddresses,
-        imagePath: response.user.imagePath
+        imagePath: response.user.imagePath,
+        isAdmin: response.user.isAdmin
       }
       this.userUpdated.next({ user : transformedUser });
     });
@@ -55,19 +49,22 @@ export class settingsService{
     return this.userUpdated.asObservable();
   }
 
-  getGeneralDataUpdateListener(){
-    return this.generalDataUpdated.asObservable();
-  }
-
-  getImageUpdateListener(){
-    return this.generalDataUpdated.asObservable();
+  userdetailsUpdateListener(){
+    return this.userdetailsUpdated.asObservable();
   }
 
   saveGeneralData(profile: User, image: any){
     const generalData = new FormData();
-    if(image == null || typeof(image) == "string"){
+    if(image == null){
       generalData.append("Id", profile.Id);
       generalData.append("userName", profile.userName);
+      generalData.append("firstName", profile.firstName);
+      generalData.append("lastName", profile.lastName);
+      generalData.append("password", profile.password);
+    } else if(typeof(image) == "string"){
+      generalData.append("Id", profile.Id);
+      generalData.append("userName", profile.userName);
+      generalData.append("image", image);
       generalData.append("firstName", profile.firstName);
       generalData.append("lastName", profile.lastName);
       generalData.append("password", profile.password);
@@ -83,13 +80,11 @@ export class settingsService{
     .put<{ message: string; imagePath : any}>(
       "http://localhost:3000/api/user/generaldata", generalData
     )
-    .subscribe(responseData => {
-      if(responseData.imagePath){
-      this.generalDataUpdated.next({imagePath: responseData.imagePath, isUpdated : true})}
-      else console.log({message: responseData.imagePath})
-  }, err => {
-      this.generalDataUpdated.next({imagePath: null, isUpdated : false})
-  })
+    .subscribe(response => {
+        this.userdetailsUpdated.next({isUpdated : true})
+    }, error => {
+      this.userdetailsUpdated.next({isUpdated : false})
+    })
   }
 
   editDefaultChargeCard(profile: User){
@@ -161,7 +156,6 @@ export class settingsService{
     })
   }
 
-
   addNewAddress(profile: User){
     this.http
     .put<{ message: string }>(
@@ -175,18 +169,8 @@ export class settingsService{
     })
   }
 
-
-  saveLoginData(profile: User, newpassword, oldpassword){
-    const loginData = new FormData();
-    loginData.append("Id", profile.Id);
-    loginData.append("userName", profile.userName);
-    loginData.append("firstName", profile.firstName);
-    loginData.append("lastName", profile.lastName);
-    loginData.append("oldhashedpassword", profile.password);
-    loginData.append("newpassword", newpassword);
-    loginData.append("oldpassword", oldpassword);
-    console.log(profile.userName);
-    let a = {
+  updatePassword(profile: User, newpassword, oldpassword){
+    let user = {
       email: profile.email,
       oldpassword : oldpassword,
       newpassword : newpassword,
@@ -197,14 +181,35 @@ export class settingsService{
       Id: profile.Id
     }
     this.http
-    .put<{ message: string, hash: string }>(
-      "http://localhost:3000/api/user/logindata", a
+    .put<{ message: string, passwordUpdated: boolean, encryptedPassword: string }>(
+      "http://localhost:3000/api/user/updatepassword", user
     )
-    .subscribe(responseData => {
-        this.loginUpdated.next({boolean : true, hash: responseData.hash})}
+    .subscribe(response => {
+      this.passwordUpdated.next({passwordUpdated : true, password: response.encryptedPassword})}
     , error => {
-      this.loginUpdated.next({boolean: false, hash: null})
+      this.passwordUpdated.next({passwordUpdated: false, password: null})
     })
+  }
+
+  updateUserName(profile: User, unencryptedPassword: string){
+    let user = {
+      email: profile.email,
+      password: profile.password,
+      unencryptedPassword: unencryptedPassword,
+      lastName: profile.lastName,
+      firstName: profile.firstName,
+      userName: profile.userName,
+      Id: profile.Id
+    }
+    this.http
+      .put<{ message: string, username: string}>(
+        "http://localhost:3000/api/user/updateusername", user
+      )
+      .subscribe(response => {
+        this.usernameUpdated.next({usernameUpdated: true, username: response.username})
+      }, error => {
+        this.usernameUpdated.next({usernameUpdated: false, username: null})
+      })
   }
 
   getAddressSelected(){
@@ -235,8 +240,12 @@ export class settingsService{
     return this.chargeCardadded.asObservable();
   }
 
-  getLoginUpdateListener(){
-    return this.loginUpdated.asObservable();
+  passwordUpdatedListener(){
+    return this.passwordUpdated.asObservable();
+  }
+
+  usernameUpdatedListener(){
+    return this.usernameUpdated.asObservable();
   }
 
 }

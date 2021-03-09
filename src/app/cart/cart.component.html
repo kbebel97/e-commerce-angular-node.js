@@ -2,10 +2,6 @@
   <h1 class="header" style="justify-content: space-between;">
     <div style="text-align: initial;">Cart</div>
     <div *ngIf="userIsAuthenticated && showlist" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-      <!-- <div class="label-value" style="display: flex; border: black 3px solid; border-radius: 3px; align-items: center; height: 1.5rem" >
-        <div class="label" style="text-align:center;">Total: &nbsp;</div>
-        <div class="value">${{cartTotal | number: '.2-2'}}</div>
-      </div> -->
       <div class="label-value" style="justify-content: center; align-items: center;">
         <div class="label" style="text-align:center; font-size: xx-large;">Total: &nbsp;</div>
         <div class="value" style="text-align:center; font-size: xx-large;">${{cartTotal | number: '.2-2'}}</div>
@@ -37,7 +33,8 @@
     <ng-container *ngFor="let cartItem of cartItems; let i = index">
       <div class="card" [hidden]="!cartItem.display" #items  >
       <div class="container">
-        <img src="https://sm.pcmag.com/t/pcmag_in/news/a/amazon-fra/amazon-france-briefly-lists-ps5-price-and-release-date_b13v.1920.jpg" alt="Snow" style="width:100%">
+        <img *ngIf="cartItem.item.imagePaths[0]" src={{cartItem.item.imagePaths[0]}} style="height: 200px;">
+        <img *ngIf="!cartItem.item.imagePaths[0]" src="https://www.officespacesny.com/wp-content/themes/realestate-7/images/no-image.png" style="height: 200px;">
         <button class="btn" (click)="removeCartItem(cartItem)">  <span class="material-icons">clear</span></button>
       </div>
         <div class="card-title large-font" style="margin: 5px;">
@@ -65,7 +62,6 @@
               <div class="value">${{((cartItem.item.individualPrice + cartItem.item.individualShipping + cartItem.item.individualTax) * cartItem.qty) | number : '.2-2'}}</div>
             </div>
           </div>
-          <!-- <h6 class="total">Total: ${{cartItem.total | number : '.2-2'}}</h6> -->
           <p class="card-text">{{cartItem.item.description}}</p>
           <a class="btn confirm-button" (click)="paymentMenu(cartItem)" style="margin-bottom: 2px;">Purchase</a>
           <div id="quantity">
@@ -122,8 +118,6 @@
   </div>
   <div *ngIf="isCheckoutSelected" style="display: flex; padding: 10px; align-items: center; justify-content: center;  ">
     <div style="border: black 3px solid; border-radius: 4px;  width: 499px; display: flex; flex-direction: column; background: white">
-      <!-- <div style="flex: 1">
-      </div> -->
       <div style="flex: 2; display: flex; flex-direction: row;">
         <div style="flex: 1; margin: 2px;" >
           <div class="value" style=" flex: 1; font-size: xx-large; text-align: center; color: black"> Address</div>

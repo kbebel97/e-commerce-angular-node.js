@@ -1,6 +1,5 @@
-import { ThrowStmt } from '@angular/compiler';
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ɵConsole } from '@angular/core';
-import { Form, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { authService } from '../auth/auth.service';
@@ -10,6 +9,7 @@ import { User } from '../shared/user.model';
 import { mimeType } from './mime-type.validator';
 import { settingsService } from './settings.service';
 
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -18,24 +18,32 @@ import { settingsService } from './settings.service';
 export class SettingsComponent implements OnInit, AfterViewInit {
   @ViewChild('billing') billing: ElementRef;
   @ViewChild('address') address: ElementRef;
+  @ViewChild('login') login: ElementRef;
+  @ViewChild('ccNumber') ccNumberField: ElementRef;
+
 
   addressHeight : number;
   billingHeight : number;
+  loginHeight: number;
+
   editDefaultPaymentForm: FormGroup;
   addNewPaymentForm: FormGroup;
   selectPaymentForm: FormGroup;
-  loginForm: FormGroup;
+
+  passwordForm: FormGroup;
+  usernameForm: FormGroup;
+
   newAddressForm: FormGroup;
   EditAddressForm: FormGroup;
-  generalInfoForm: FormGroup;
+  userDetailsForm: FormGroup;
   selectAddressForm: FormGroup;
-
-  card2 : string;
 
   shippingAddresses : shippingAddress[] = [];
   chargeCards : paymentMethod[] = [];
   url;
+
   imgPreview: string;
+
   msg = "";
   value : string;
 
@@ -46,6 +54,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
   paymentSetting : number;
   addressSetting : number;
+  loginSetting: number;
   selectedValue : string;
   fileToUpload: File = null;
   userIsAuthenticated: boolean;
@@ -56,39 +65,39 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
 
   profile: User = {
-    Id: '',
-    email: '',
-    password: '',
-    userName: '',
-    firstName: '',
-    lastName: '',
+    Id: null,
+    email: null,
+    password: null,
+    userName: null,
+    firstName: null,
+    lastName: null,
     paymentMethods: [],
     shippingAddresses: [],
-    imagePath: ' '
+    imagePath: 'https://st4.depositphotos.com/17828278/24401/v/600/depositphotos_244011872-stock-illustration-image-vector-symbol-missing-available.jpg',
+    isAdmin: false
   }
 
   imageSubscription: Subscription;
 
   primaryChargeCard: paymentMethod = {
-    cardNumber: 0,
-    expirationDate: '',
-    securityCode: '',
+    cardNumber: null,
+    expirationDate: null,
+    securityCode: null,
     primaryMethod: true
   };
 
   primaryShippingAddress: shippingAddress = {
-    addressLine1: '',
-    addressLine2: '',
-    city: '',
-    state: '',
-    zipcode: '',
-    country: '',
+    addressLine1: null,
+    addressLine2: null,
+    city: null,
+    state: null,
+    zipcode: null,
+    country: null,
     primaryShippingAddress: true
   }
 
 
   constructor(private settingsService: settingsService, private authService: authService, private router: Router){}
-
 
 	selectFile(event) {
 		if(!event.target.files[0] || event.target.files[0].length == 0) {
@@ -112,6 +121,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 		}
   }
 
+
   handleFileInput(files: FileList) {
     var reader = new FileReader();
 
@@ -125,62 +135,176 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 }
 
   ngOnInit(): void {
-
-
+    this.paymentSetting = 1;
+    this.addressSetting = 1;
+    this.loginSetting = 1;
 
     this.settingsService.getDefaultAddressEdited().subscribe((response) => {
-      if(response)
-        this.displayMessageAddress = 3
-      else this.displayMessageAddress = 6;
-    })
-
-    this.settingsService.getAddressAddedListener().subscribe((response)=> {
-      if(response)
-        this.displayMessageAddress = 1;
-      else this.displayMessagePayment = 4;
+      if(response){
+        this.displayMessageAddress = 3;
+        this.delay(3000).then(any=>{
+          this.displayMessageAddress = 0;
+        })
+      }
+      else {
+        this.displayMessageAddress = 6;
+        this.delay(3000).then(any=>{
+        this.displayMessageAddress = 0;
+        })
+      };
     })
 
     this.settingsService.getAddressSelectedListener().subscribe((response)=> {
-      if(response)
+      if(response){
         this.displayMessageAddress = 2;
-      else this.displayMessageAddress = 5;
+        this.delay(3000).then(any=>{
+          this.displayMessageAddress = 0;
+        })
+      } else {
+        this.displayMessageAddress = 5;
+        this.delay(3000).then(any=>{
+        this.displayMessageAddress = 0;
+        })
+      };
     })
 
     this.settingsService.getDefaultChargeCardEditedListener().subscribe((response) => {
-      if(response)
+      if(response){
         this.displayMessagePayment = 2;
-      else this.displayMessagePayment = 5;
+        this.delay(3000).then(any=>{
+          this.displayMessagePayment = 0;
+        })
+      }
+      else {
+        this.displayMessagePayment = 5;
+        this.delay(3000).then(any=>{
+        this.displayMessagePayment = 0;
+        })
+      };
     })
 
     this.settingsService.getDefaultChargeCardSelectedListener().subscribe((response) => {
-      if(response)
+      if(response){
         this.displayMessagePayment = 3;
-      else this.displayMessagePayment = 6;
-    })
-
-    this.settingsService.getGeneralDataUpdateListener().subscribe((responseData: {imagePath :string, isUpdated : boolean}) => {
-      if(responseData.isUpdated){
-        this.displayMessageGeneral = 1;
-      } else this.displayMessageGeneral = 2;
-
-    })
-
-    this.settingsService.getLoginUpdateListener().subscribe((responseData : {boolean: boolean, hash: string}) => {
-      if(!responseData.boolean){
-        this.displayMessageLogin = 1;
-      } else{
-        this.displayMessageLogin = 2;
-        this.profile.password = responseData.hash;
+        this.delay(3000).then(any=>{
+          this.displayMessagePayment = 0;
+        })
+      }
+      else {
+        this.displayMessagePayment = 6;
+        this.delay(3000).then(any=>{
+          this.displayMessagePayment = 0;
+        })
       }
     })
 
-    this.loginForm = new FormGroup({
+    // this.settingsService.getGeneralDataUpdateListener().subscribe((responseData: {imagePath :string, isUpdated : boolean}) => {
+    //   if(responseData.isUpdated){
+    //     // this.imgPreview = responseData.imagePath;
+    //     this.displayMessageGeneral = 1;
+    //     this.delay(3000).then(any=>{
+    //       this.displayMessageGeneral = 0;
+    //     })
+    //   } else {this.displayMessageGeneral = 2;
+    //     this.delay(3000).then(any=>{
+    //       this.displayMessageGeneral = 0;
+    //     })
+    //   }
+    // })
+
+    this.settingsService.getAddressAddedListener().subscribe((response)=> {
+      if(response){
+        this.displayMessageAddress = 1;
+        this.newAddressForm.setValue({
+          'addressLine1' : null,
+          'addressLine2' : null,
+          'city' : null,
+          'state' : null,
+          'zipCode' : null,
+          'country' : null
+        });
+        this.delay(3000).then(any=>{
+          this.displayMessageAddress = 0;
+        })
+      }
+      else {
+        this.displayMessageAddress = 4;
+        this.delay(3000).then(any=>{
+        this.displayMessageAddress = 0;
+        })
+      };
+    })
+
+    this.settingsService.passwordUpdatedListener().subscribe((response : {passwordUpdated: boolean, password: string}) => {
+      if(!response.passwordUpdated){
+        this.displayMessageLogin = 1;
+        this.delay(3000).then(any=>{
+          this.displayMessageLogin = 0;
+        })
+      } else{
+        this.displayMessageLogin = 6;
+        this.profile.password = response.password;
+        this.passwordForm.setValue({
+          'email' : this.profile.email,
+          'oldPassword' : null,
+          'confirmoldPassword' : null,
+          'newPassword' : null,
+          'confirmnewPassword' : null
+      })
+      this.delay(3000).then(any=>{
+        this.displayMessageLogin = 0;
+        })
+      }
+    })
+
+    this.settingsService.usernameUpdatedListener().subscribe((response: {usernameUpdated: boolean, username: string}) => {
+      if(!response.usernameUpdated){
+        this.displayMessageLogin = 1;
+        this.delay(3000).then(any => {
+          this.displayMessageLogin = 0;
+        })
+      } else{
+        this.displayMessageLogin = 7;
+        this.profile.userName = response.username;
+        this.usernameForm.setValue({
+          'email' : this.profile.email,
+          'username' : this.isDataFetched(this.profile.userName),
+          'password': null,
+          'confirmpassword': null
+        })
+        this.delay(3000).then(any=>{
+          this.displayMessageLogin = 0;
+          })
+      }
+    })
+
+    this.settingsService.userdetailsUpdateListener().subscribe((response: {isUpdated : boolean}) => {
+      if(response.isUpdated){
+        this.displayMessageGeneral = 1;
+        this.delay(3000).then(any=>{
+          this.displayMessageGeneral = 0;
+        })
+      } else {
+          this.displayMessageGeneral = 2;
+          this.delay(3000).then(any=>{
+            this.displayMessageGeneral = 0;
+          })
+        }
+    })
+
+    this.passwordForm = new FormGroup({
       email : new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(25)]}),
-      userName : new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(15)]}),
       oldPassword : new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(15)]}),
       confirmoldPassword : new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(15)]}),
       newPassword : new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(15)]}),
       confirmnewPassword : new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(15)]})
+    });
+
+    this.usernameForm = new FormGroup({
+      email : new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(25)]}),
+      username: new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(15)]}),
+      password : new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(15)]}),
+      confirmpassword : new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(15)]}),
     });
 
     this.editDefaultPaymentForm = new FormGroup({
@@ -194,18 +318,18 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     });
 
     this.addNewPaymentForm = new FormGroup({
-      newcard : new FormControl(null, {validators: [Validators.required, Validators.minLength(16)]}),
-      newexpirationDate : new FormControl(null, {validators: [Validators.required, Validators.minLength(4)]}),
-      newsecurityCode : new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]})
+      card : new FormControl(null, {validators: [Validators.required, Validators.minLength(16)]}),
+      expirationDate : new FormControl(null, {validators: [Validators.required, Validators.minLength(4)]}),
+      securityCode : new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]})
     });
 
     this.EditAddressForm = new FormGroup({
-      addressLine1 : new FormControl(null, {validators: [Validators.required, Validators.maxLength(25)]}),
-      addressLine2 : new FormControl(null,{validators: [Validators. maxLength(25)]}),
-      city : new FormControl(null,{validators: [Validators.required, Validators. maxLength(25)]}),
-      state : new FormControl(null,{validators: [Validators.required, Validators.maxLength(25)]}),
-      zipCode : new FormControl(null,{validators: [Validators.required, Validators.maxLength(25)]}),
-      country : new FormControl(null,{validators: [Validators.required, Validators.maxLength(25)]})
+      addressLine1 : new FormControl(null),
+      addressLine2 : new FormControl(null),
+      city : new FormControl(null),
+      state : new FormControl(null),
+      zipCode : new FormControl(null),
+      country : new FormControl(null)
     });
 
     this.newAddressForm = new FormGroup({
@@ -221,66 +345,60 @@ export class SettingsComponent implements OnInit, AfterViewInit {
       selectedAddress : new FormControl(null, {validators: [Validators.required, Validators.maxLength(50)]}),
     });
 
-    this.generalInfoForm = new FormGroup({
-      firstName :  new FormControl(null,{validators: [Validators.required, Validators. maxLength(25)]}),
-      lastName :  new FormControl(null,{validators: [Validators.required, Validators. maxLength(25)]}),
+    this.userDetailsForm = new FormGroup({
+      firstName :  new FormControl(),
+      lastName :  new FormControl(),
       image : new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
     });
 
-    this.paymentSetting = 1;
-    this.addressSetting = 1;
-    this.isLoading = true;
     this.settingsService.getProfileMongo();
-    this.loginForm.controls['email'].disable();
+    this.passwordForm.controls['email'].disable();
+    this.usernameForm.controls['email'].disable();
     this.settingsSub = this.settingsService.getProfileUpdateListener()
       .subscribe((user : {user: User}) => {
-        this.isLoading = false;
+        if(user.user)
+          this.profile = user.user;
+
         if(user.user.imagePath){
-          this.imgPreview = user.user.imagePath;
-          this.profile.imagePath = user.user.imagePath;
-        }
-        if(user.user.userName){
-          this.profile.userName = user.user.userName;
+          this.imgPreview = this.profile.imagePath
+        } else this.imgPreview = "https://st4.depositphotos.com/17828278/24401/v/600/depositphotos_244011872-stock-illustration-image-vector-symbol-missing-available.jpg"
+
+        this.userDetailsForm.setValue({
+          'firstName' : this.isDataFetched(this.profile.firstName),
+          'lastName' : this.isDataFetched(this.profile.lastName),
+          'image' : this.isDataFetched(this.profile.imagePath)
+        })
+
+        this.usernameForm.setValue({
+          'email' : this.profile.email,
+          'username' : this.isDataFetched(this.profile.userName),
+          'password': null,
+          'confirmpassword': null
+        })
+
+        if(this.profile.shippingAddresses && this.profile.shippingAddresses.length > 0){
+          this.profile.shippingAddresses.forEach((shippingaddress) => {
+            if(shippingaddress.primaryShippingAddress){
+              this.primaryShippingAddress = shippingaddress;
+              this.EditAddressForm.setValue({
+                'addressLine1' : this.primaryShippingAddress.addressLine1,
+                'addressLine2' : this.primaryShippingAddress.addressLine2,
+                'city' : this.primaryShippingAddress.city,
+                'state' : this.primaryShippingAddress.state,
+                'zipCode' : this.primaryShippingAddress.zipcode,
+                'country' : this.primaryShippingAddress.country
+              })
+            }
+          })
+        } else {
+          this.EditAddressForm.disable();
         }
 
-        if(user.user.shippingAddresses){
-          if(user.user.shippingAddresses.length == 0){
-            this.EditAddressForm.controls['addressLine1'].disable();
-            this.EditAddressForm.controls['addressLine2'].disable();
-            this.EditAddressForm.controls['city'].disable();
-            this.EditAddressForm.controls['state'].disable();
-            this.EditAddressForm.controls['zipCode'].disable();
-            this.EditAddressForm.controls['country'].disable();
-          } else{
-            this.profile.shippingAddresses = user.user.shippingAddresses;
-            // this.shippingAddresses = user.user.shippingAddresses;
-            this.profile.shippingAddresses.forEach((shippingaddress) => {
-              this.shippingAddresses.push(shippingaddress);
-              if(shippingaddress.primaryShippingAddress){
-                this.primaryShippingAddress = shippingaddress;
-                this.EditAddressForm.setValue({
-                  'addressLine1' : this.primaryShippingAddress.addressLine1,
-                  'addressLine2' : this.primaryShippingAddress.addressLine2,
-                  'city' : this.primaryShippingAddress.city,
-                  'state' : this.primaryShippingAddress.state,
-                  'zipCode' : this.primaryShippingAddress.zipcode,
-                  'country' : this.primaryShippingAddress.country
-                });
-              }
-            })
-          }
-        }
-        if(user.user.paymentMethods){
-          if(user.user.paymentMethods.length == 0){
-            this.editDefaultPaymentForm.controls['card'].disable();
-            this.editDefaultPaymentForm.controls['expirationDate'].disable();
-            this.editDefaultPaymentForm.controls['securityCode'].disable();
-          } else {
-          this.profile.paymentMethods = user.user.paymentMethods;
+        if(this.profile.paymentMethods && this.profile.paymentMethods.length > 0){
           this.profile.paymentMethods.forEach((paymentMethod) => {
             if(paymentMethod.primaryMethod){
               this.primaryChargeCard = paymentMethod
-              var hashChargedCardNumber = paymentMethod.cardNumber.toString().replace(/\d(?=\d{4})/g, "*");
+              var hashChargedCardNumber = paymentMethod.cardNumber.toString().replace(/\d(?=\d{4})/g, "#");
               let hashedChargeCard : paymentMethod = {
                 cardNumber: hashChargedCardNumber,
                 expirationDate: paymentMethod.expirationDate,
@@ -294,7 +412,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
               });
               this.chargeCards.push(hashedChargeCard);
             } else {
-              var hashChargedCardNumber = paymentMethod.cardNumber.toString().replace(/\d(?=\d{4})/g, "*");
+              var hashChargedCardNumber = paymentMethod.cardNumber.toString().replace(/\d(?=\d{4})/g, "#");
               let hashedChargeCard : paymentMethod = {
                 cardNumber: hashChargedCardNumber,
                 expirationDate: paymentMethod.expirationDate,
@@ -303,70 +421,51 @@ export class SettingsComponent implements OnInit, AfterViewInit {
               }
               this.chargeCards.push(hashedChargeCard);
             }
-          }) }
-        }
-
-        if(user.user.firstName){
-          this.profile.firstName = user.user.firstName;
-        }
-        if(user.user.lastName){
-          this.profile.lastName = user.user.lastName;
-        }
-        this.profile.email = user.user.email;
-        this.profile.password = user.user.password;
-        this.profile.Id = user.user.Id;
-
-        this.addNewPaymentForm.setValue({
-          'newcard' : '',
-          'newexpirationDate' : '',
-          'newsecurityCode' : ''
-        })
+          })} else {
+            this.editDefaultPaymentForm.disable();
+          }
 
         this.settingsService.getChargeCardAddedListener().subscribe((response) => {
           if(response){
             this.displayMessagePayment = 1;
             this.addNewPaymentForm.setValue({
-              'newcard' : '',
-              'newexpirationDate' : '',
-              'newsecurityCode' : ''
+              'card' : null,
+              'expirationDate' : null,
+              'securityCode' : null
+            })
+            this.delay(3000).then(any=>{
+              this.displayMessagePayment = 0;
             })
           }
-          else this.displayMessagePayment = 4;
+          else {this.displayMessagePayment = 4;
+            this.delay(3000).then(any=>{
+              this.displayMessagePayment = 0;
+            })
+          }
         })
 
         this.selectPaymentForm.setValue({
           'selectedCard' : this.isDataFetched(this.primaryChargeCard.cardNumber)
         });
 
-        this.loginForm.setValue({
+        this.passwordForm.setValue({
           'email' : this.profile.email,
-          'userName' : this.profile.userName,
-          'oldPassword' : '',
-          'confirmoldPassword' : '',
-          'newPassword' : '',
-          'confirmnewPassword' : ''
+          'oldPassword' : null,
+          'confirmoldPassword' : null,
+          'newPassword' : null,
+          'confirmnewPassword' : null
         })
 
-        this.newAddressForm.setValue({
-          'addressLine1' : '',
-          'addressLine2' : '',
-          'city' : '',
-          'state' : '',
-          'zipCode' : '',
-          'country' : ''
-        })
-
-        this.generalInfoForm.setValue({
-          'firstName' :  this.profile.firstName,
-          'lastName' :  this.profile.lastName,
-          'image' : this.profile.imagePath
+        this.addNewPaymentForm.setValue({
+          'card' : null,
+          'expirationDate' : null,
+          'securityCode' : null
         })
     })
 
     this.userIsAuthenticated = this.authService.getIsAuth();
-    if(this.userIsAuthenticated == false){
+    if(!this.userIsAuthenticated){
       this.isLoading = false;
-      // this.displayMessage = "Create an account?"
     }
     this.authStatusSub = this.authService
     .getAuthStatusListener()
@@ -382,9 +481,12 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   }
 
   onImagePicked(event: Event){
+    //event.target as HTMLInputElement to ensure typescript knows HTML
     const file = (event.target as HTMLInputElement).files[0];
-    this.generalInfoForm.patchValue({image: file});
-    this.generalInfoForm.get('image').updateValueAndValidity();
+    //Stores file object in userDetailsForm
+    this.userDetailsForm.patchValue({image: file});
+    //Update value and validity tells angular you have changed the value and evaluates it
+    this.userDetailsForm.get('image').updateValueAndValidity();
     const reader = new FileReader();
     reader.onload = () => {
       this.imgPreview = reader.result as string;
@@ -394,41 +496,98 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  saveGeneralData(){
-    this.profile.firstName = this.generalInfoForm.value.firstName;
-    this.profile.lastName = this.generalInfoForm.value.lastName;
-      this.profile.imagePath = this.generalInfoForm.value.image;
-      this.settingsService.saveGeneralData(this.profile, this.generalInfoForm.value.image);
-      // this.imageSubscription = this.settingsService.getGeneralDataUpdateListener.subscribe((response : {imagePath :string, isUpdated : boolean}) => {
-      //   if(response.imagePath){
-      //     this.imgPreview = response.imagePath;
-      //   }
-      // })
-      this.settingsService.getGeneralDataUpdateListener().subscribe((responseData: {imagePath :string, isUpdated : boolean}) => {
-        if(responseData.isUpdated){
-          this.displayMessageGeneral = 1;
-          this.imgPreview = responseData.imagePath;
-        } else this.displayMessageGeneral = 2;
-
-      })
+  saveUserDetails(){
+    this.profile.firstName = this.userDetailsForm.value.firstName;
+    this.profile.lastName = this.userDetailsForm.value.lastName;
+    if(this.userDetailsForm.get('image').valid){
+      console.log(this.userDetailsForm.get('image').value);
+      this.settingsService.saveGeneralData(this.profile, this.userDetailsForm.value.image);
+    } else this.settingsService.saveGeneralData(this.profile, null);
   }
 
-  addNewChargeCard(){
+  clearUserDetails(){
+    this.userDetailsForm.setValue({
+      'firstName' :  '',
+      'lastName' :  '',
+      'image' : ''
+    });
+    this.profile.firstName = null;
+    this.profile.lastName = null;
+    this.profile.imagePath = null;
+  }
+
+  clearEditAddressForm(){
+    this.EditAddressForm.setValue({
+      'addressLine1' : '',
+      'addressLine2' : '',
+      'zipCode' : '',
+      'city' : '',
+      'state' : '',
+      'country' : ''
+    })
+  }
+
+  clearNewAddressForm(){
+    this.newAddressForm.setValue({
+      'addressLine1' : '',
+      'addressLine2' : '',
+      'zipCode' : '',
+      'city' : '',
+      'state' : '',
+      'country' : ''
+    })
+  }
+
+  clearPasswordForm(){
+    this.passwordForm.setValue({
+      'email' : this.profile.email,
+      'newPassword' : '',
+      'confirmnewPassword' : '',
+      'oldPassword' : '',
+      'confirmoldPassword' : ''
+    })
+  }
+
+    clearUserNameForm(){
+    this.usernameForm.setValue({
+      'email' : this.profile.email,
+      'username' : '',
+      'password' : '',
+      'confirmpassword' : ''
+    })
+  }
+
+  clearCard(){
+    this.editDefaultPaymentForm.setValue({
+      'card' : '',
+      'expirationDate' : '',
+      'securityCode' : ''
+    })
+  }
+
+  clearnewCard(){
+    this.editDefaultPaymentForm.setValue({
+      'card' : '',
+      'expirationDate' : '',
+      'securityCode' : ''
+    })
+  }
+
+
+  addCard(){
     if(this.addNewPaymentForm.valid){
       let chargeCard : paymentMethod = {
-        cardNumber: this.addNewPaymentForm.value.newcard,
-        expirationDate: this.addNewPaymentForm.value.newexpirationDate,
-        securityCode: this.addNewPaymentForm.value.newsecurityCode,
+        cardNumber: this.addNewPaymentForm.value.card,
+        expirationDate: this.addNewPaymentForm.value.expirationDate,
+        securityCode: this.addNewPaymentForm.value.securityCode,
         primaryMethod: false
       }
       if(this.profile.paymentMethods.length == 0){
-        this.editDefaultPaymentForm.controls['card'].enable();
-        this.editDefaultPaymentForm.controls['expirationDate'].enable();
-        this.editDefaultPaymentForm.controls['securityCode'].enable();
+        this.editDefaultPaymentForm.enable();
         chargeCard.primaryMethod = true;
         this.primaryChargeCard = chargeCard;
         this.profile.paymentMethods.push(chargeCard);
-        let hashChargedCardNumber = chargeCard.cardNumber.toString().replace(/\d(?=\d{4})/g, "*");
+        let hashChargedCardNumber = chargeCard.cardNumber.toString().replace(/\d(?=\d{4})/g, "#");
         let hashedChargeCard : paymentMethod = {
           cardNumber: hashChargedCardNumber,
           expirationDate: this.addNewPaymentForm.value.newexpirationDate,
@@ -436,8 +595,6 @@ export class SettingsComponent implements OnInit, AfterViewInit {
           primaryMethod: true
         }
         this.chargeCards.push(hashedChargeCard);
-        console.log(this.profile.paymentMethods);
-        console.log(this.chargeCards);
         this.editDefaultPaymentForm.setValue({
           'card': this.isDataFetched(this.primaryChargeCard.cardNumber),
           'expirationDate': this.isDataFetched(this.primaryChargeCard.expirationDate),
@@ -447,7 +604,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
       } else {
         this.profile.paymentMethods.push(chargeCard);
         console.log(this.profile.paymentMethods);
-        let hashChargedCardNumber = chargeCard.cardNumber.toString().replace(/\d(?=\d{4})/g, "*");
+        let hashChargedCardNumber = chargeCard.cardNumber.toString().replace(/\d(?=\d{4})/g, "#");
         let hashedChargeCard : paymentMethod = {
           cardNumber: hashChargedCardNumber,
           expirationDate: this.addNewPaymentForm.value.newexpirationDate,
@@ -460,12 +617,11 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  editDefaultChargeCard(){
+  editCard(){
     if(this.editDefaultPaymentForm.valid){
       let verified : boolean = true;
       for(let i = 0; i < this.editDefaultPaymentForm.value.card.length; i++){
-        console.log(this.editDefaultPaymentForm.value.card.charAt(i));
-        if(this.editDefaultPaymentForm.value.card.charAt(i)=='*')
+        if(this.editDefaultPaymentForm.value.card.charAt(i)=='#')
           verified = false;
       }
       if(verified){
@@ -479,7 +635,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         this.primaryChargeCard.securityCode = this.editDefaultPaymentForm.value.securityCode;
         this.primaryChargeCard.cardNumber = this.editDefaultPaymentForm.value.card;
         this.primaryChargeCard.expirationDate = this.editDefaultPaymentForm.value.expirationDate;
-        let hashPrimaryChargeCardNumber = this.primaryChargeCard.cardNumber.toString().replace(/\d(?=\d{4})/g, "*");
+        let hashPrimaryChargeCardNumber = this.primaryChargeCard.cardNumber.toString().replace(/\d(?=\d{4})/g, "#");
         let hashedChargeCard = {
           cardNumber: hashPrimaryChargeCardNumber,
           expirationDate: this.editDefaultPaymentForm.value.expirationDate,
@@ -489,44 +645,44 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         this.chargeCards.push(hashedChargeCard);
         this.profile.paymentMethods.push(this.primaryChargeCard);
         this.settingsService.editDefaultChargeCard(this.profile);
+      } else{
+          this.displayMessagePayment = 7;
+          this.delay(3000).then(any=>{
+            this.displayMessagePayment = 0;
+            })
+
       }
     }
   }
 
-  saveDefaultChargeCard(){
-    console.log(this.profile.paymentMethods);
-    console.log(this.chargeCards);
+  saveCard(){
     for(let i = 0; i < this.profile.paymentMethods.length; i++){
-      if(this.profile.paymentMethods[i].primaryMethod == true){
+      if(this.profile.paymentMethods[i].primaryMethod)
         this.profile.paymentMethods[i].primaryMethod = false;
-      }
     }
     for(let i = 0; i < this.chargeCards.length; i++){
-      if(this.chargeCards[i].primaryMethod == true){
+      if(this.chargeCards[i].primaryMethod)
         this.chargeCards[i].primaryMethod = false;
-      }
     }
     this.profile.paymentMethods[this.selectPaymentForm.value.selectedCard].primaryMethod = true;
     this.chargeCards[this.selectPaymentForm.value.selectedCard].primaryMethod = true;
     this.primaryChargeCard = this.profile.paymentMethods[this.selectPaymentForm.value.selectedCard];
     this.settingsService.selectdefaultChargeCard(this.profile);
     this.editDefaultPaymentForm.setValue({
-      'card':   this.chargeCards[this.selectPaymentForm.value.selectedCard].cardNumber,
+      'card': this.chargeCards[this.selectPaymentForm.value.selectedCard].cardNumber,
       'expirationDate': this.chargeCards[this.selectPaymentForm.value.selectedCard].expirationDate,
-      'securityCode' :   this.chargeCards[this.selectPaymentForm.value.selectedCard].securityCode
+      'securityCode' : this.chargeCards[this.selectPaymentForm.value.selectedCard].securityCode
     });
   }
 
   saveDefaultAddress(){
       for(let i = 0; i < this.profile.shippingAddresses.length; i++){
-        if(this.profile.shippingAddresses[i].primaryShippingAddress == true){
+        if(this.profile.shippingAddresses[i].primaryShippingAddress)
           this.profile.shippingAddresses[i].primaryShippingAddress = false;
-        }
       }
       for(let i = 0; i < this.shippingAddresses.length; i++){
-        if(this.shippingAddresses[i].primaryShippingAddress == true){
+        if(this.shippingAddresses[i].primaryShippingAddress)
           this.shippingAddresses[i].primaryShippingAddress = false;
-        }
       }
       this.profile.shippingAddresses[this.selectAddressForm.value.selectedAddress].primaryShippingAddress = true;
       this.settingsService.selectdefaultAddress(this.profile);
@@ -553,12 +709,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         primaryShippingAddress: false,
       }
       if(this.profile.shippingAddresses.length == 0){
-        this.EditAddressForm.controls['addressLine1'].enable();
-        this.EditAddressForm.controls['addressLine2'].enable();
-        this.EditAddressForm.controls['city'].enable();
-        this.EditAddressForm.controls['state'].enable();
-        this.EditAddressForm.controls['zipCode'].enable();
-        this.EditAddressForm.controls['country'].enable();
+        this.EditAddressForm.enable();
         newAddress.primaryShippingAddress = true;
         this.profile.shippingAddresses.push(newAddress);
         this.shippingAddresses.push(newAddress);
@@ -583,20 +734,10 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
   editDefaultAddress(){
     if(this.EditAddressForm.valid){
-
       let index;
       for(let i = 0; i < this.profile.shippingAddresses.length; i++){
-        if(this.profile.shippingAddresses[i].addressLine1 == this.primaryShippingAddress.addressLine1
-           &&
-          this.profile.shippingAddresses[i].addressLine2 == this.primaryShippingAddress.addressLine2 &&
-          this.profile.shippingAddresses[i].zipcode == this.primaryShippingAddress.zipcode &&
-          this.profile.shippingAddresses[i].country == this.primaryShippingAddress.country &&
-          this.profile.shippingAddresses[i].state == this.primaryShippingAddress.state &&
-          this.profile.shippingAddresses[i].city == this.primaryShippingAddress.city
-          ){
+        if(this.profile.shippingAddresses[i] == this.primaryShippingAddress)
           index = i;
-            console.log(this.profile.shippingAddresses[i]);
-        }
       }
       this.shippingAddresses.splice(index, 1);
       this.profile.shippingAddresses.splice(index, 1);
@@ -609,37 +750,60 @@ export class SettingsComponent implements OnInit, AfterViewInit {
       this.profile.shippingAddresses.push(this.primaryShippingAddress);
       this.shippingAddresses.push(this.primaryShippingAddress);
       this.settingsService.editdefaultAddress(this.profile);
-
-    }
-
-  }
-
-  saveLoginData(){
-    console.log(this.loginForm.value);
-    if(this.loginForm.value.newPassword == this.loginForm.value.confirmnewPassword &&
-       this.loginForm.value.oldPassword == this.loginForm.value.confirmoldPassword &&
-       this.loginForm.valid){
-        this.profile.userName = this.loginForm.value.userName;
-        console.log(this.profile.userName);
-        this.settingsService.saveLoginData(this.profile, this.loginForm.value.confirmnewPassword, this.loginForm.value.confirmoldPassword);
-    } else if(this.loginForm.value.newPassword != this.loginForm.value.confirmnewPassword || this.loginForm.value.oldPassword != this.loginForm.value.confirmoldPassword){
-      this.displayMessageLogin = 3;
-    } else if(this.loginForm.invalid){
-      this.displayMessageLogin = 4;
     }
   }
 
+  savePassword(){
+    if(this.passwordForm.value.newPassword == this.passwordForm.value.confirmnewPassword && this.passwordForm.value.oldPassword == this.passwordForm.value.confirmoldPassword && this.passwordForm.valid){
+      this.settingsService.updatePassword(this.profile, this.passwordForm.value.confirmnewPassword, this.passwordForm.value.confirmoldPassword);
+    } else if(this.passwordForm.value.newPassword != this.passwordForm.value.confirmnewPassword || this.passwordForm.value.oldPassword != this.passwordForm.value.confirmoldPassword){
+      this.displayMessageLogin = 2;
+      this.delay(3000).then(any=>{
+      this.displayMessageLogin = 0;
+      })
+    } else if(this.passwordForm.invalid){
+     this.displayMessageLogin = 3;
+     this.delay(3000).then(any=>{
+      this.displayMessageLogin = 0;
+      })
+    }
+  }
 
-
+  saveUserName(){
+    if(this.usernameForm.value.password == this.usernameForm.value.confirmpassword && this.usernameForm.valid){
+      this.profile.userName = this.usernameForm.value.username;
+      this.settingsService.updateUserName(this.profile, this.usernameForm.value.confirmpassword);
+    } else if(this.usernameForm.value.password != this.usernameForm.value.confirmpassword){
+        this.displayMessageLogin = 2;
+        this.delay(3000).then(any=>{
+        this.displayMessageLogin = 0;
+        })
+    } else if(this.usernameForm.value.password == null || this.usernameForm.value.password == '' || this.usernameForm.value.confirmpassword == null || this.usernameForm.value.confirmpassword == ''){
+        this.displayMessageLogin = 5;
+        this.delay(3000).then(any=>{
+        this.displayMessageLogin = 0;
+        })
+    } else if(this.usernameForm.invalid){
+        this.displayMessageLogin = 4;
+        this.delay(3000).then(any=>{
+        this.displayMessageLogin = 0;
+        })
+    }
+  }
 
   goLogin(){
     this.router.navigate(['/login']);
   }
 
-
   ngAfterViewInit(){
     this.billingHeight = this.billing.nativeElement.offsetHeight;
     this.addressHeight = this.address.nativeElement.offsetHeight;
+    this.loginHeight = this.login.nativeElement.offsetHeight;
+
+  }
+
+  async delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
 }

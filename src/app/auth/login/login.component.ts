@@ -1,9 +1,5 @@
-import { stringify } from '@angular/compiler/src/util';
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { generalService } from 'src/app/service/general.service';
-import { User } from '../../shared/user.model';
 import { authService } from '../auth.service';
 
 @Component({
@@ -14,6 +10,7 @@ import { authService } from '../auth.service';
 })
 
 export class LoginComponent implements OnInit, OnDestroy{
+  isVisible: boolean;
   option = 1;
   title = 'Login';
   email : string;
@@ -24,46 +21,69 @@ export class LoginComponent implements OnInit, OnDestroy{
   userIsAuthenticated: boolean = false;
   authListenerSubs: Subscription;
   accountCreatedListener: Subscription;
+  asAdmin: boolean;
 
 
-  constructor( private router: Router, private generalService : generalService, private authService: authService) { }
+  constructor( private authService: authService) { }
   ngOnInit(){
     this.displayMessage = 0;
     this.authListenerSubs = this.authService.getAuthStatusListener().subscribe((result) => {
       if(result == false){
         this.displayMessage = 4;
-      }
-      else
+        this.isVisible = true;
+        this.delay(3000).then(any=>{
+          this.isVisible = false;
+          this.displayMessage = 0;
+      })} else{
         this.displayMessage = 0;
+      }
+
+    })
+
+    this.authService.getisAdminListener().subscribe(result => {
+      if(!result){
+        this.isVisible = true;
+        this.displayMessage = 8;
+        this.delay(3000).then(any=>{
+        this.isVisible = false;
+        this.displayMessage = 0;
+        })
+      }
+    })
+
+    this.authService.getisAdminRegisteredListener().subscribe(result => {
+      if(!result){
+        this.isVisible = true;
+        this.displayMessage = 9;
+        this.delay(3000).then(any=>{
+        this.isVisible = false;
+        this.displayMessage = 0;
+        })
+      }
     })
 
     this.accountCreatedListener = this.authService.getCreatedStatusListener().subscribe((result) => {
-      if(!result)
+      if(!result){
+        this.isVisible = true;
         this.displayMessage = 2;
+        this.delay(3000).then(any=>{
+          this.isVisible = false;
+          this.displayMessage = 0;
+      })
+      }
       else
         this.displayMessage = 1;
     })
-
-    // this.authListenerSubs =  this.authService.getAuthStatusListener().subscribe(isAuthenticated => {
-    //   console.log(this.userIsAuthenticated);
-    //   this.userIsAuthenticated = isAuthenticated;
-    //   console.log(this.userIsAuthenticated);
-    // });
-    // this.option = 1;
-    // this.displayMessage = 0;
-    // this.title = 'Login';
-
   }
+
+  async delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
 
   ngOnDestroy(){
     this.authListenerSubs.unsubscribe();;
   }
-
-  ngOnChanges(changes: SimpleChanges){
-    console.log(changes);
-
-  }
-
 
   switchOption(i : number){
     if(i == 1){
@@ -76,50 +96,65 @@ export class LoginComponent implements OnInit, OnDestroy{
     }
   }
 
-
-  // register(){
-  //   if(this.password == this.confirmPassword){
-  //     let user : User = this.generalService.register(this.email, this.password);
-  //     if(user != null){
-  //       this.displayMessage = 1;
-  //       this.option = 1;
-  //     } else{
-  //       this.displayMessage = 2;
-  //     }
-  //   } else {
-  //       this.displayMessage = 3;
-  //   }
-  // }
-
   register() {
-    if(this.password == this.confirmPassword) {
-      this.authService.createUser(this.email, this.password);
-    } else this.displayMessage = 3;
+    if(this.password && this.confirmPassword && this.email){
+      if(this.password == this.confirmPassword && this.password.length >= 8 && this.password.length <= 15 && this.email.length > 3 && this.email.length < 320) {
+        this.email = this.email.toLowerCase();
+        if(!this.asAdmin)
+          this.authService.createUser(this.email, this.password);
+        else this.authService.createAdmin(this.email, this.password);
+      } else if(this.password != this.confirmPassword && this.password.length > 8 && this.email.length > 3 && this.email.length < 320){
+        this.displayMessage = 3;
+        this.isVisible = true;
+        this.delay(3000).then(any=>{
+          this.isVisible = false;
+          this.displayMessage = 0;
+      })} else if(this.password == this.confirmPassword && this.password.length < 8 && this.email.length > 3 && this.email.length < 320){
+        this.displayMessage = 5;
+        this.isVisible = true;
+        this.delay(3000).then(any=>{
+          this.isVisible = false;
+          this.displayMessage = 0;
+      })} else if(this.password == this.confirmPassword && this.password.length < 8 && this.email.length < 3){
+        this.displayMessage = 6;
+        this.isVisible = true;
+        this.delay(3000).then(any=>{
+          this.isVisible = false;
+          this.displayMessage = 0;
+      })} else if(this.password == this.confirmPassword && this.password.length < 8 && this.email.length > 320){
+        this.displayMessage = 7;
+        this.isVisible = true;
+        this.delay(3000).then(any=>{
+          this.isVisible = false;
+          this.displayMessage = 0;
+      })} else if(this.password != this.confirmPassword){
+        this.displayMessage = 3;
+        this.isVisible = true;
+        this.delay(3000).then(any=>{
+          this.isVisible = false;
+          this.displayMessage = 0;
+      })} else if(this.password.length > 15){
+        this.displayMessage = 5;
+        this.isVisible = true;
+        this.delay(3000).then(any=>{
+          this.isVisible = false;
+          this.displayMessage = 0;
+      })}
+    } else {
+      this.displayMessage = 1;
+      this.isVisible = true;
+      this.delay(3000).then(any=>{
+        this.isVisible = false;
+        this.displayMessage = 0;
+    })
+    }
   }
 
   login(){
-    this.authService.login(this.email, this.password);
-
-    // if(this.authService.getIsAuth() == false){
-    //   this.displayMessage = 4;
-    // }
-    // else {
-    //   this.router.navigate(['/menus/catalog']);
-    // }
-    // if(user != null)
-    //   this.router.navigate(['/menus/catalog']);
-    // else
-    //   this.displayMessage = 4;
-    // this.userSub = this.authService.getUserUpdateListener()
-    //   .subscribe((user: {user}) => {
-            // this.router.navigate(['/menus/catalog'])
-
-        // this.cartItems = cartData.cartItems;
-        // this.totalItems = cartData.ciCount;
-        // this.isListEmpty();
-        // this.getCartTotal();
-        // console.log("cart component initialized");
-      // })
+    if(!this.asAdmin)
+      this.authService.login(this.email, this.password);
+    else
+      this.authService.loginasAdmin(this.email, this.password);
   }
 
   clear(){

@@ -1,52 +1,45 @@
-
 <h1 class="header">
   Profile
 </h1>
-<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+<!-- <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar> -->
 <div *ngIf="userIsAuthenticated" id="settings-container">
   <div class="setting-column" style="justify-content: flex-start;">
     <div class="setting-item">
-      <h4 class="setting-item-header value">
-        <div>Additional Details</div>
-      </h4>
-      <div [ngSwitch]="displayMessageGeneral">
-        <div *ngSwitchCase="1" class="message" style="background-color: #5cb85c">Successfully added payment method</div>
-        <div *ngSwitchCase="2" class="message" style="background-color: #d9534f">Failed to edit default payment</div>
-      </div>
+      <h4 class="setting-item-header value">Additional Details</h4>
       <div style="display: flex; flex-direction: column;">
-        <form [formGroup]="generalInfoForm" style="padding: 5px;" (ngSubmit)="saveGeneralData()">
-          <div class="form-group" style="padding: 0; margin: 0; display: flex; padding-top: 10px; padding-bottom: 10px;">
-            <button class="confirm-button" type="button" (click)="filePicker.click()">Select Profile Picture</button>
-            <input type="file" id="file" #filePicker (change)="onImagePicked($event)">
+        <form [formGroup]="userDetailsForm" style="padding: 5px;">
+          <div [ngSwitch]="displayMessageGeneral">
+              <div *ngSwitchCase="1" class="message" style="background: #5cb85c">Saved user details! </div>
+              <div *ngSwitchCase="2" class="message" style="background: #d9534f">Failed to save user details!</div>
           </div>
-          <div style="padding-bottom: 5px; padding-top: 5px; margin: 0; " *ngIf="imgPreview !== '' && imgPreview && generalInfoForm.get('image').valid" >
-            <img style="height: 100px; width: 100px;" [src]="imgPreview" >
+          <div style="padding: 0; margin: 0; display: flex; padding-top: 10px; padding-bottom: 10px;">
+            <button class="confirm-button btn" type="button" (click)="filePicker.click()">Select Profile Picture</button>
+            <input type="file" #filePicker (change)="onImagePicked($event)">
           </div>
-          <div style="padding-bottom: 5px; padding-top: 5px; margin: 0; " *ngIf="imgPreview !== '' && !imgPreview">
-            <img style="height: 100px; width: 100px;" src="https://st4.depositphotos.com/17828278/24401/v/600/depositphotos_244011872-stock-illustration-image-vector-symbol-missing-available.jpg" >
+          <div class="image-container" *ngIf="imgPreview !== '' && imgPreview && userDetailsForm.get('image').valid" >
+            <img class="image" [src]="imgPreview">
           </div>
-          <div class="label-value" style="padding: 0">
+          <div class="image-container" *ngIf="imgPreview == '' || !imgPreview || userDetailsForm.get('image').invalid">
+            <img class="image" style="border: none;" src="https://st4.depositphotos.com/17828278/24401/v/600/depositphotos_244011872-stock-illustration-image-vector-symbol-missing-available.jpg" >
+          </div>
+          <div class="label-value" style="padding: 0;">
             <div class="label"style="flex: 1;">First Name:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="firstName" placeholder=" "/>
-            <mat-error *ngIf="generalInfoForm.get('firstName').invalid"></mat-error>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="firstName"/>
           </div>
           <div class="label-value" style="padding: 0">
             <div class="label"style="flex: 1;">Last Name:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="lastName" placeholder=" "/>
-            <mat-error *ngIf="generalInfoForm.get('lastName').invalid"></mat-error>
-          </div>
-          <div style="display: flex; flex-direction: row; column-gap: 3px; margin-top: 5px;">
-            <button style="flex: 1" class="confirm-button" style="width: 100%;" type="submit">save</button>
-            <button style="flex: 1" class="cancel-button" style="width: 100%;">clear</button>
+            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="lastName"/>
           </div>
         </form>
+        <div style="display: flex; flex-direction: row; column-gap: 3px; padding-left: 5px; padding-right: 5px; padding-bottom: 5px;">
+          <button style="flex: 1" class="confirm-button btn" style="width: 100%;" (click)="saveUserDetails()">save</button>
+          <button style="flex: 1" class="cancel-button btn" style="width: 100%;" (click)="clearUserDetails()">clear</button>
+        </div>
       </div>
     </div>
     <div class="setting-item">
-      <h4 class="setting-item-header value">
-        <div>Edit Billing</div>
-      </h4>
-      <form style="display: flex; flex-direction: row; justify-content: space-evenly; height: 85px; text-align: center; align-items: center;" class="value">
+      <h4 class="setting-item-header value">Edit Billing</h4>
+      <form class="value radio-button">
         <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
           <div style="flex: 1; display: inline;" class="label">edit default payment method</div>
           <input style="flex: 1;" type="radio" [checked]="paymentSetting == 1" (click)="paymentSetting = 1" name="edit default payment"/>
@@ -60,60 +53,69 @@
           <input style="flex: 1;" type="radio" [checked]="paymentSetting == 3" (click)="paymentSetting = 3" name="change default payment"/>
         </div>
       </form>
-      <div [ngSwitch]="displayMessagePayment">
-        <div *ngSwitchCase="1" class="message" style="background-color: #5cb85c">Successfully added payment method</div>
-        <div *ngSwitchCase="2" class="message" style="background-color: #5cb85c">Successfully edited default payment</div>
-        <div *ngSwitchCase="3" class="message" style="background-color: #5cb85c">Successfully updated default payment</div>
-        <div *ngSwitchCase="4" class="message" style="background-color: #d9534f">Failed to add payment method</div>
-        <div *ngSwitchCase="5" class="message" style="background-color: #d9534f">Failed to edit default payment</div>
-        <div *ngSwitchCase="6" class="message" style="background-color: #d9534f">Failed to update default payment</div>
+      <div [ngSwitch]="displayMessagePayment" style="padding: 5px;">
+        <div *ngSwitchCase="1" class="message" style="background: #5cb85c">Successfully added payment method</div>
+        <div *ngSwitchCase="2" class="message" style="background: #5cb85c">Successfully edited default payment</div>
+        <div *ngSwitchCase="3" class="message" style="background: #5cb85c">Successfully updated default payment</div>
+        <div *ngSwitchCase="4" class="message" style="background: #d9534f">Failed to add payment method</div>
+        <div *ngSwitchCase="5" class="message" style="background: #d9534f">Failed to edit default payment</div>
+        <div *ngSwitchCase="6" class="message" style="background: #d9534f">Failed to update default payment</div>
+        <div *ngSwitchCase="7" class="message" style="background: #d9534f">Invalid format</div>
       </div>
       <div [ngSwitch]="paymentSetting">
-        <form [formGroup]="editDefaultPaymentForm" *ngSwitchCase="1" class="setting-item-body" #billing (ngSubmit)="editDefaultChargeCard()">
-          <div class="label-value" style="padding: 0">
-            <div class="label"style="flex: 1;"> Card #:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="card" placeholder=" "/>
-            <mat-error *ngIf="editDefaultPaymentForm.get('card').invalid"></mat-error>
-          </div>
-          <div class="label-value"  style="padding: 0">
-            <div class="label" style="flex: 1; ">Expiration Date:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" formControlName="expirationDate" type="text" placeholder=" "/>
-            <mat-error *ngIf="editDefaultPaymentForm.get('expirationDate').invalid"></mat-error>
-          </div>
-          <div class="label-value"  style="padding: 0">
-            <div class="label" style="flex: 1;">Security Code:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" formControlName="securityCode" type="text" placeholder=" "/>
-            <mat-error *ngIf="editDefaultPaymentForm.get('securityCode').invalid"></mat-error>
-          </div>
-          <div style="display: flex; flex-direction: row; column-gap: 3px; margin-top: 5px;">
-            <button style="flex: 1" class="confirm-button" style="width: 100%;" type="submit">save</button>
-            <button style="flex: 1" class="cancel-button" style="width: 100%;">clear</button>
-          </div>
-        </form>
+        <div *ngSwitchCase="1" #billing>
 
-        <form [formGroup]="addNewPaymentForm" *ngSwitchCase="2" class="setting-item-body" (ngSubmit)="addNewChargeCard()">
-          <div class="label-value" style="padding: 0">
-            <div class="label"style="flex: 1;">New Card #:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" formControlName="newcard" type="text" placeholder=" "/>
-            <mat-error *ngIf="addNewPaymentForm.get('newcard').invalid"></mat-error>
+          <form [formGroup]="editDefaultPaymentForm" class="setting-item-body">
+            <div class="label-value" style="padding: 0">
+              <div class="label" style="flex: 1;"> Card #:</div>
+              <div style="flex: 1.5" class="card_number" id="card_container">
+                <input class="value input" style="width: 100%; text-align: center;" id="card" placeholder="#### #### #### ####" style="width: 100%;" type="text" formControlName="card" ccNumber/>
+              </div>
+            </div>
+            <div class="label-value"  style="padding: 0">
+              <div class="label" style="flex: 1; ">Expiration Date:</div>
+              <div style="flex: 1.5; display: flex; justify-content: space-between; column-gap: 2px;" class="expiry_date">
+                <input class="value input" style="width: 100%; text-align: center;" formControlName="expirationDate" type="text" placeholder="MM/YYYY" ccExp/>
+              </div>
+            </div>
+            <div class="label-value"  style="padding: 0">
+              <div class="label" style="flex: 1;">Security Code:</div>
+              <div style="flex: 1.5; display: flex;" class="cvv">
+                <input class="value input" style="width: 100%; text-align: center;" formControlName="securityCode" type="text" placeholder="ccCVC" ccCVC/>
+                <div class="cvv-img" style="display: flex; justify-content: center; align-items: center;"><div>?</div>
+                  <div class="img">
+                    <img src="https://images.myhelcim.com/img/pub/cvv-152064008867.jpg">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div style="display: flex; flex-direction: row; column-gap: 3px; padding-left: 5px; padding-right: 5px; padding-bottom: 5px;">
+            <button style="flex: 1" class="confirm-button btn" style="width: 100%;" (click)="editCard()">save</button>
+            <button style="flex: 1" class="cancel-button btn" style="width: 100%;"(click)="clearCard()">clear</button>
           </div>
-          <div class="label-value" style="padding: 0">
-            <div class="label" style="flex: 1; ">New Card Expiration Date:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" formControlName="newexpirationDate" type="text" placeholder=" "/>
-            <mat-error *ngIf="addNewPaymentForm.get('newexpirationDate').invalid"></mat-error>
+        </div>
+        <div *ngSwitchCase="2" >
+          <form [formGroup]="addNewPaymentForm" class="setting-item-body">
+            <div class="label-value" style="padding: 0">
+              <div class="label"style="flex: 1;">New Card #:</div>
+              <input class="value input" formControlName="card" type="tel" ccNumber/>
+            </div>
+            <div class="label-value" style="padding: 0">
+              <div class="label" style="flex: 1; ">New Card Expiration Date:</div>
+              <input class="value input" formControlName="expirationDate" type="text" ccExp/>
+            </div>
+            <div class="label-value"  style="padding: 0">
+              <div class="label" style="flex: 1;">New Card Security Code:</div>
+              <input class="value input"  formControlName="securityCode" type="text" ccCVC/>
+            </div>
+          </form>
+          <div style="display: flex; flex-direction: row; column-gap: 3px; padding-left: 5px; padding-right: 5px; padding-bottom: 5px;">
+            <button style="flex: 1" class="confirm-button btn" style="width: 100%;" (click)="addCard()">save</button>
+            <button style="flex: 1" class="cancel-button btn" style="width: 100%;" (click)="clearnewCard()">clear</button>
           </div>
-          <div class="label-value"  style="padding: 0">
-            <div class="label" style="flex: 1;">New Card Security Code:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" formControlName="newsecurityCode" type="text" placeholder=" "/>
-            <mat-error *ngIf="addNewPaymentForm.get('newsecurityCode').invalid"></mat-error>
-          </div>
-          <div style="display: flex; flex-direction: row; column-gap: 3px; margin-top: 5px;">
-            <button style="flex: 1" class="confirm-button" style="width: 100%;" type="submit">save</button>
-            <button style="flex: 1" class="cancel-button" style="width: 100%;">clear</button>
-          </div>
-        </form>
-
-        <form [formGroup]="selectPaymentForm" *ngSwitchCase="3" class="setting-item-body" style="justify-content: space-between;" [ngStyle]="{'height': billingHeight + 'px'}" (ngSubmit)="saveDefaultChargeCard(value)">
+        </div>
+        <form [formGroup]="selectPaymentForm" *ngSwitchCase="3" class="setting-item-body" style="justify-content: space-between;" [ngStyle]="{'height': billingHeight + 'px'}" (ngSubmit)="saveCard(value)">
           <div class="label-value" style="padding: 0">
             <div class="label"style="flex: 1;">Select Default Card: </div>
             <mat-form-field style="flex: 2;">
@@ -128,7 +130,7 @@
             </mat-form-field>
           </div>
           <div style="display: flex; flex-direction: row; margin-top: 3px;">
-            <button style="flex: 1" class="confirm-button" style="width: 100%;" type="submit">save</button>
+            <button style="flex: 1" class="confirm-button btn" style="width: 100%;" type="submit">save</button>
           </div>
         </form>
       </div>
@@ -136,62 +138,93 @@
   </div>
   <div class="setting-column" style="justify-content: start;">
     <div class="setting-item">
-      <form [formGroup]="loginForm" class="setting-item-body" (ngSubmit)="saveLoginData()">
-        <h4 class="setting-item-header value">
-          <div>Edit Login</div>
-        </h4>
-          <!-- <div class="error-message" *ngIf="displayMessageBool">{{displayMessage}} </div> -->
-          <div [ngSwitch]="displayMessageLogin">
-            <div *ngSwitchCase="1" class="message" style="background-color: #d9534f">Wrong password</div>
-            <div *ngSwitchCase="2" class="message" style="background-color: #5cb85c">Successfully updated login</div>
-            <div *ngSwitchCase="3" class="message" style="background-color: #d9534f">Passwords do not match</div>
-            <div *ngSwitchCase="4" class="message" style="background-color: #d9534f">User name and password must be between 8 and 15 characters</div>
-          </div>
-          <div class="label-value" style="padding: 0">
-            <div class="label"style="flex: 1;">email:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px; background-color: #F0ECEB" type="text" formControlName="email" placeholder=" "/>
-            <mat-error *ngIf="loginForm.get('email').invalid"></mat-error>
-          </div>
-          <div class="label-value" style="padding: 0">
-            <div class="label"style="flex: 1;">username:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="userName" placeholder=" "/>
-            <mat-error *ngIf="loginForm.get('userName').invalid"></mat-error>
-          </div>
-          <div class="label-value" style="padding: 0">
-            <div class="label" style="flex: 1; ">new password:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text"  formControlName="newPassword" placeholder=" "/>
-            <mat-error *ngIf="loginForm.get('oldPassword').invalid"></mat-error>
-          </div>
-          <div class="label-value" style="padding: 0">
-            <div class="label" style="flex: 1;">confirm new password:</div>
-            <input class="value" style="flex: 1.5; margin-top: 3px;" type="text"  formControlName="confirmnewPassword" placeholder=" "/>
-            <mat-error *ngIf="loginForm.get('confirmoldPassword').invalid"></mat-error>
-          </div>
-          <div style="background-color: black; padding-bottom: 4px; padding-left: 2px; padding-right: 2px;">
-            <div class="label-value" style="padding: 0">
-              <div class="label" style="flex: 1; color: white">Enter password:</div>
-              <input class="value" style="flex: 1.5; margin-top: 3px;" type="text"  formControlName="oldPassword" placeholder=" "/>
-              <mat-error *ngIf="loginForm.get('newPassword').invalid"></mat-error>
-            </div>
-            <div class="label-value" style="padding: 0">
-              <div class="label" style="flex: 1; color: white">confirm password:</div>
-              <input class="value" style="flex: 1.5; margin-top: 3px;" type="text"  formControlName="confirmoldPassword" placeholder=" "/>
-              <mat-error *ngIf="loginForm.get('confirmnewPassword').invalid"></mat-error>
-            </div>
-          </div>
-        <div style="display: flex; flex-direction: row; column-gap: 3px; margin-top: 5px;">
-          <button style="flex: 1" class="confirm-button" style="width: 100%;" type="submit">save</button>
-          <button style="flex: 1" class="cancel-button" style="width: 100%;">clear</button>
+      <h4 class="setting-item-header value">Edit Login</h4>
+      <div [ngSwitch]="displayMessageLogin" style="padding: 5px;">
+        <div *ngSwitchCase="1" class="message" style="background: #d9534f">Wrong password</div>
+        <div *ngSwitchCase="2" class="message" style="background: #d9534f">Passwords do not match</div>
+        <div *ngSwitchCase="3" class="message" style="background: #d9534f">Password must be between 8 and 15 characters</div>
+        <div *ngSwitchCase="4" class="message" style="background: #d9534f">Username must be between 8 and 15 characters</div>
+        <div *ngSwitchCase="5" class="message" style="background: #d9534f">Password must be entered</div>
+        <div *ngSwitchCase="6" class="message" style="background: #5cb85c">Successfully updated password</div>
+        <div *ngSwitchCase="7" class="message" style="background: #5cb85c">Successfully updated username</div>
+      </div>
+      <form class="radio-button">
+        <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
+          <div style="flex: 1; display: inline;" class="label">update password</div>
+          <input style="flex: 1;" type="radio" [checked]="loginSetting == 1" (click)="loginSetting = 1" name="edit default payment"/>
+        </div>
+        <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
+          <div style="flex: 1; margin-right: 1px; display: inline;" class="label">update username</div>
+          <input  style="flex: 1" type="radio" [checked]="loginSetting == 2" (click)="loginSetting = 2" name="add new payment method"><br/>
         </div>
       </form>
+      <div [ngSwitch]="loginSetting">
+        <div *ngSwitchCase="1" #login>
+          <form [formGroup]="passwordForm" class="setting-item-body">
+            <div class="label-value" style="padding: 0">
+              <div class="label"style="flex: 1;">Email:</div>
+              <input class="value input" type="text" formControlName="email"/>
+            </div>
+            <div class="label-value" style="padding: 0">
+              <div class="label" style="flex: 1; ">New password:</div>
+              <input class="value input" type="password"  formControlName="newPassword"/>
+            </div>
+            <div class="label-value" style="padding-bottom: 5px; padding-left: 0; padding-right: 0; padding-top: 0;">
+              <div class="label" style="flex: 1;">Confirm new password:</div>
+              <input class="value input" type="password"  formControlName="confirmnewPassword"/>
+            </div>
+            <div class="confirm-password">
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">Enter password:</div>
+                <input class="value input" type="password"  formControlName="oldPassword"/>
+              </div>
+              <div class="label-value" style="padding: 0">
+                <div class="label" style="flex: 1;">Confirm password:</div>
+                <input class="value input" type="password"  formControlName="confirmoldPassword"/>
+              </div>
+            </div>
+          </form>
+          <div style="display: flex; flex-direction: row; column-gap: 3px; padding-right: 5px; padding-left: 5px; padding-bottom: 5px;">
+            <button style="flex: 1" class="confirm-button btn" style="width: 100%;" (click)="savePassword()">save</button>
+            <button style="flex: 1" class="cancel-button btn" style="width: 100%;" (click)="clearPasswordForm()">clear</button>
+          </div>
+        </div>
+        <div *ngSwitchCase="2" style="display: flex; flex-direction: column; justify-content: space-between;" [ngStyle]="{'height': loginHeight + 'px'}">
+          <form [formGroup]="usernameForm" class="setting-item-body" style="display: flex; flex-direction: column; justify-content: space-between;" [ngStyle]="{'height': loginHeight + 'px'}">
+            <div>
+              <div class="label-value" style="padding: 0">
+                <div class="label"style="flex: 1;">Email:</div>
+                <input class="value input" type="text" formControlName="email"/>
+              </div>
+              <div class="label-value" style="padding-bottom: 5px; padding-left: 0; padding-right: 0; padding-top: 0;">
+                <div class="label"style="flex: 1;">Username:</div>
+                <input class="value input" type="text" formControlName="username"/>
+              </div>
+            </div>
+            <div>
+              <div class="confirm-password">
+                <div class="label-value" style="padding: 0">
+                  <div class="label" style="flex: 1;">Enter password:</div>
+                  <input class="value input" type="password"  formControlName="password"/>
+                </div>
+                <div class="label-value" style="padding: 0">
+                  <div class="label" style="flex: 1;">Confirm password:</div>
+                  <input class="value input" type="password"  formControlName="confirmpassword"/>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div style="display: flex; flex-direction: row; column-gap: 3px; padding-bottom: 5px; padding-right: 5px; padding-left: 5px;">
+            <button style="flex: 1" class="confirm-button btn" style="width: 100%;" (click)="saveUserName()">save</button>
+            <button style="flex: 1" class="cancel-button btn" style="width: 100%;" (click)="clearUserNameForm()">clear</button>
+          </div>
+        </div>
+      </div>
     </div>
-
       <div class="setting-item">
+        <h4 class="setting-item-header value">Edit Address</h4>
         <div class="setting-item-body">
-          <h4 class="setting-item-header value">
-            <div>Edit Address</div>
-          </h4>
-          <form style="display: flex; flex-direction: row; justify-content: space-evenly; height: 85px; text-align: center; align-items: center;">
+          <form class="radio-button">
             <div style="display:flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
               <div style="flex: 1; display: inline;" class="label">edit default address</div>
               <input style="flex: 1;" type="radio" [checked]="addressSetting == 1" (click)="addressSetting = 1" name="edit default payment"/>
@@ -214,79 +247,71 @@
             <div *ngSwitchCase="6" class="message" style="background-color: #d9534f">Failed to update default shipping address</div>
           </div>
           <div [ngSwitch]="addressSetting">
-            <form [formGroup]="EditAddressForm" *ngSwitchCase="1" #address (ngSubmit)="editDefaultAddress()" >
+            <div  *ngSwitchCase="1" #address>
+              <form [formGroup]="EditAddressForm">
                 <div class="label-value" style="padding: 0">
                   <div class="label"style="flex: 1;">Address Line 1:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="addressLine1" placeholder=" "/>
-                  <mat-error *ngIf="EditAddressForm.get('addressLine1').invalid"></mat-error>
+                  <input class="value input" formControlName="addressLine1" type="text"/>
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1; ">Address Line 2:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="addressLine2" placeholder=" "/>
-                  <mat-error *ngIf="EditAddressForm.get('addressLine2').invalid"></mat-error>
+                  <input class="value input" formControlName="addressLine2" type="text" />
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1;">City:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" formControlName="city" type="text" placeholder=" "/>
-                  <mat-error *ngIf="EditAddressForm.get('city').invalid"></mat-error>
+                  <input class="value input" formControlName="city" type="text"/>
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1;">State:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" formControlName="state" type="text" placeholder=" "/>
-                  <mat-error *ngIf="EditAddressForm.get('state').invalid"></mat-error>
+                  <input class="value input" formControlName="state" type="text"/>
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1;">Zip Code:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" formControlName="zipCode" type="text" placeholder=" "/>
-                  <mat-error *ngIf="EditAddressForm.get('zipCode').invalid"></mat-error>
+                  <input class="value input" formControlName="zipCode" type="text"/>
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1;">Country:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" " formControlName="country"/>
-                  <mat-error *ngIf="EditAddressForm.get('country').invalid"></mat-error>
+                  <input class="value input" formControlName="country" type="text"/>
                 </div>
-                <div style="display: flex; flex-direction: row; column-gap: 3px; margin-top: 5px;">
-                  <button style="flex: 1" class="confirm-button" style="width: 100%;" type="submit">save</button>
-                  <button style="flex: 1" class="cancel-button" style="width: 100%;">clear</button>
-                </div>
-            </form>
-            <form [formGroup]="newAddressForm" *ngSwitchCase="2" (ngSubmit)="saveNewAddress()">
+              </form>
+              <div style="display: flex; flex-direction: row; column-gap: 3px; margin-top: 5px;">
+                <button style="flex: 1" class="confirm-button btn" style="width: 100%;" (click)="editDefaultAddress()">save</button>
+                <button style="flex: 1" class="cancel-button btn" style="width: 100%;" (click)="clearEditAddressForm()">clear</button>
+              </div>
+            </div>
+            <div *ngSwitchCase="2">
+              <form [formGroup]="newAddressForm">
                 <div class="label-value" style="padding: 0">
                   <div class="label"style="flex: 1;">Address Line 1:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="addressLine1" placeholder=" "/>
-                  <mat-error *ngIf="newAddressForm.get('addressLine1').invalid"></mat-error>
+                  <input class="value input" type="text" formControlName="addressLine1"/>
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1; ">Address Line 2:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="addressLine2" placeholder=" "/>
-                  <mat-error *ngIf="newAddressForm.get('addressLine2').invalid"></mat-error>
+                  <input class="value input" type="text" formControlName="addressLine2"/>
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1;">City:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="city" placeholder=" "/>
-                  <mat-error *ngIf="newAddressForm.get('city').invalid"></mat-error>
+                  <input class="value input" type="text" formControlName="city"/>
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1;">State:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="state" placeholder=" "/>
-                  <mat-error *ngIf="newAddressForm.get('state').invalid"></mat-error>
+                  <input class="value input" type="text" formControlName="state"/>
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1;">Zip Code:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" formControlName="zipCode" placeholder=" "/>
-                  <mat-error *ngIf="newAddressForm.get('zipCode').invalid"></mat-error>
+                  <input class="value input" type="text" formControlName="zipCode"/>
                 </div>
                 <div class="label-value" style="padding: 0">
                   <div class="label" style="flex: 1;">Country:</div>
-                  <input class="value" style="flex: 1.5; margin-top: 3px;" type="text" placeholder=" " formControlName="country"/>
-                  <mat-error *ngIf="newAddressForm.get('country').invalid"></mat-error>
+                  <input class="value input" type="text" formControlName="country"/>
                 </div>
-                <div style="display: flex; flex-direction: row; column-gap: 3px; margin-top: 5px;">
-                  <button style="flex: 1" class="confirm-button" style="width: 100%;" type="submit">save</button>
-                  <button style="flex: 1" class="cancel-button" style="width: 100%;">clear</button>
-                </div>
-            </form>
-            <form [formGroup]="selectAddressForm" *ngSwitchCase="3" class="setting-item-body" style="justify-content: space-between;" [ngStyle]="{'height': addressHeight + 'px'}" (ngSubmit)="saveDefaultAddress()">
+              </form>
+              <div style="display: flex; flex-direction: row; column-gap: 3px; margin-top: 5px;">
+                <button style="flex: 1" class="confirm-button btn" style="width: 100%;" (click)="saveNewAddress()">save</button>
+                <button style="flex: 1" class="cancel-button btn" style="width: 100%;" (click)="clearNewAddressForm()">clear</button>
+              </div>
+            </div>
+            <form [formGroup]="selectAddressForm" *ngSwitchCase="3" class="setting-item-body" style="justify-content: space-between; padding: 0px" [ngStyle]="{'height': addressHeight + 'px'}" (ngSubmit)="saveDefaultAddress()">
               <div class="label-value" style="padding: 0">
                 <div class="label"style="flex: 1;">Select Default Address: </div>
                 <mat-form-field style="flex: 2;">
@@ -298,12 +323,11 @@
                 </mat-form-field>
               </div>
               <div style="display: flex; flex-direction: row; margin-top: 3px;">
-                <button style="flex: 1" class="confirm-button" style="width: 100%;" type="submit">save</button>
+                <button style="flex: 1" class="confirm-button btn" style="width: 100%;" type="submit">save</button>
               </div>
             </form>
           </div>
         </div>
-
       </div>
   </div>
 </div>

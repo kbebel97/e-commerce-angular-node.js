@@ -46,17 +46,42 @@ export class cartService{
       .subscribe(responseData => {
         if(responseData.cartItem!=null){
           const id = responseData.cartItem._id;
-          let cartItem = {
+          let cartItem : cartItem = {
             cartItemId : id,
             qty : responseData.cartItem.qty,
             display : true,
             item: item,
-            creator: responseData.cartItem.creator
+            creator: responseData.cartItem.creator,
+            itemId: responseData.cartItem.item.Id
           }
           this.cartItems.push(cartItem);
           this.cartUpdated.next({ cartItems: [...this.cartItems], ciCount: responseData.count});
         }
       });
+  }
+
+  savetoCartWithItemId(itemId: string){
+    console.log(itemId);
+    let body = {
+      itemId: itemId
+    }
+    this.http
+      .post<{message: string, cartItem: any, count: number}>('http://localhost:3000/api/cartitems/itemId', body)
+      .subscribe((responseData) => {
+        if(responseData.cartItem!=null){
+          const id = responseData.cartItem._id;
+          let cartItem : cartItem = {
+            cartItemId : id,
+            qty : responseData.cartItem.qty,
+            display : true,
+            item: responseData.cartItem.item,
+            creator: responseData.cartItem.creator,
+            itemId: responseData.cartItem.item.Id
+          }
+          this.cartItems.push(cartItem);
+          this.cartUpdated.next({ cartItems: [...this.cartItems], ciCount: responseData.count});
+        }
+      })
   }
 
   addInvoice(cartItems: cartItem[], totalItems: number){
@@ -81,6 +106,7 @@ export class cartService{
           qty: item.qty,
           display: true,
           item: item.item,
+          itemId: item.item.Id,
           creator: item.creator
         };
       }), ciCount: cartitemData.ciCount

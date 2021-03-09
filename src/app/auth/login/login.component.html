@@ -15,27 +15,36 @@
         <br/>
       </div>
     </form>
-    <div [ngSwitch]="option" style="padding: 5px;">
-      <div [ngSwitch]="displayMessage">
-        <div class="display-message" *ngSwitchCase="1">Account Successfully Created</div>
-        <div class="display-message" style="background: RGB(237, 92, 92)" *ngSwitchCase="2">Email is already taken</div>
-        <div class="display-message" style="background: RGB(237, 92, 92)" *ngSwitchCase="3">Passwords do not match</div>
-        <div class="display-message" style="background: RGB(237, 92, 92)" *ngSwitchCase="4">User profile was not found</div>
+    <div [ngSwitch]="displayMessage">
+      <div [ngStyle]="{'display':isVisible ? 'flex' : 'none'}">
+        <div class="error-message">
+          <div *ngSwitchCase="1">Fields must be filled out!</div>
+          <div *ngSwitchCase="2">Email is already taken.</div>
+          <div *ngSwitchCase="3">Passwords do not match.</div>
+          <div *ngSwitchCase="4">User profile was not found.</div>
+          <div *ngSwitchCase="5">Password must be at least 8 and 15 characters.</div>
+          <div *ngSwitchCase="6">Email is too short.</div>
+          <div *ngSwitchCase="7">Email is too long.</div>
+          <div *ngSwitchCase="8">You are not an Admin!</div>
+          <div *ngSwitchCase="9">Email is not a verified Admin email!</div>
+        </div>
       </div>
+    </div>
+    <div [ngSwitch]="option" style="padding: 5px;">
       <div *ngSwitchCase="1" style="display: flex; flex-direction: column;">
+        <div style="display: flex; flex-direction: row; align-items: center; column-gap: 4px; justify-content: initial;">
+          <input type="checkbox" id="vehicle1" [(ngModel)]="asAdmin"/>
+          <div class="label">As admin?</div>
+        </div>
         <div>
-          <!-- <mat-error *ngIf="emailInput.invalid">Please enter a valid email</mat-error> -->
           <div class="label-value" style="padding: 0">
             <div class="label" style="flex: 1">Email:</div>
             <input class="value" style="flex: 1.5; margin-top: 3px;" type="email" [(ngModel)]="email" placeholder="enter email"/>
-            <!-- <input matInput name="email" ngModel class="value" style="flex: 1.5; margin-top: 3px;" type="email" #emailInput="ngModel" placeholder="enter email" required email/> -->
           </div>
         </div>
         <div>
-          <!-- <mat-error *ngIf="passwordInput.invalid">Please enter a valid password</mat-error> -->
           <div class="label-value" style="padding: 0;">
             <div class="label" style="flex: 1">Password:</div>
-            <!-- <input matInput name="password" ngModel class="value" style="flex: 1.5; margin-top: 3px;" type="password" #passwordInput="ngModel" placeholder="enter password" required/> -->
             <input class="value" style="flex: 1.5; margin-top: 3px;" type="password" [(ngModel)]="password" placeholder="enter password"/>
           </div>
         </div>
@@ -45,6 +54,10 @@
         </div>
       </div>
       <div *ngSwitchCase="2" style="display: flex; flex-direction: column;">
+        <div style="display: flex; flex-direction: row; align-items: center; column-gap: 4px; justify-content: initial;">
+          <input type="checkbox" [(ngModel)]="asAdmin"/>
+          <div class="label">As admin?</div>
+        </div>
         <div>
           <div class="label-value" style="padding: 0">
             <div class="label" style="flex: 1">Email</div>

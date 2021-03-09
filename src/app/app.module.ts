@@ -33,7 +33,12 @@ import { MenuComponent } from './menu/menu.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { settingsService } from './settings/settings.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
-
+import { AdminComponent } from './auth/admin/admin.component';
+import { adminService } from './auth/admin/admin.service';
+import { MatTableModule} from '@angular/material/table';
+import { CreditCardDirective } from './settings/credit-card.directive';
+import { ExpirationDateDirective } from './settings/expiration-date.directive';
+import { CreditCardDirectivesModule } from 'angular-cc-library';
 
 
 @NgModule({
@@ -50,8 +55,11 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     CarouselInvoiceComponent,
     MenuComponent,
     LoginComponent,
-
+    AdminComponent,
+    CreditCardDirective,
+    ExpirationDateDirective
   ],
+
   imports: [
     FlexLayoutModule,
     BrowserModule,
@@ -66,11 +74,13 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     ReactiveFormsModule,
     MatPaginatorModule,
     MatProgressBarModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatTableModule,
+    CreditCardDirectivesModule
   ],
   // Import services and interceptors. Set AuthInterceptor multi to true in order to implement multiple interceptors
   providers:
-  [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, catalogService, cartService, generalService, invoiceService, authService, itemService, settingsService],
+  [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, catalogService, cartService, generalService, invoiceService, authService, itemService, settingsService, adminService],
   bootstrap: [AppComponent]
 })
 

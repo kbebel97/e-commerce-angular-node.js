@@ -7,7 +7,7 @@ const itemsRoutes = require("./routes/items");
 const cartItemRoutes = require("./routes/cartItems");
 const userRoutes = require("./routes/user");
 const invoiceRoutes = require("./routes/invoices");
-
+const reviewRoutes = require("./routes/reviews");
 
 mongoose.connect("mongodb+srv://Kacper:F3RnoSvralxtB4Ba@cluster0.modg4.mongodb.net/e-commerce")
   .then(() => {
@@ -39,7 +39,7 @@ app.use("/api/items", itemsRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/cartitems", cartItemRoutes);
 app.use("/api/invoices", invoiceRoutes);
-
+app.use("/api/reviews", reviewRoutes);
 
 
 

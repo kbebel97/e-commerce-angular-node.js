@@ -1,93 +1,80 @@
-
-
-
-
 #item-header{
-   display: flex;
-   flex-direction: row;
-   justify-content: space-evenly;
- }
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
 
- #item-body{
+#item-body{
   display: flex;
   flex-direction: column;
   height: fit-content;
-
- }
+  overflow-y: scroll;
+}
 
  #item-foot{
   position: -webkit-sticky;
   position: sticky;
   bottom: 0;
-  overflow-y: scroll;
-  border-top: 1px black solid;
-  background: black;
+  background: transparent;
  }
 
- .item-carousel{
-   flex: 1;
-   display: block;
+.item-carousel{
+  flex: 1;
+  display: block;
+}
 
+#item-general-info{
+  padding: 5px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  height: 300px;
+}
 
- }
+#item-container{
+  display: flex;
+  flex-direction: column;
+  border-top: black solid 2px;
+  border-bottom: black solid 2px;
+  height: 100%;
+}
 
- #item-general-info{
-   padding: 5px;
-   flex: 1;
-   display: flex;
-   flex-direction: column;
-   background: transparent;
-   height: 300px;
-   border-bottom: black 2px solid;
- }
-
- #item-container{
-   display: block;
-   border-top: black solid 2px;
-   border-bottom: black solid 2px;
-
- }
-
- .star-button{
+.star-button{
   font-size:30px;
   padding: 0px;
   color: gray;
- }
+}
 
- .star-button:hover{
+.star-button:hover{
  color: white;
 }
 
- .heading{
-   display: flex;
-   align-self: start;
-   width: 100%;
+.heading{
+  display: flex;
+  align-self: start;
+  width: 100%;
+}
 
-
- }
 .material-icons{
   display: flex;
   flex-direction: row;
   justify-content: start;
   align-items: center;
-
 }
 
 .reviews{
+  flex: 1;
   padding: 5px;
   display: grid;
-  /* justify-content: start; */
   align-items: center;
-  /* flex: 1; */
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-
 }
 
 .review-rating{
   display: flex;
   flex-direction: row;
   flex: 5;
-
 }
 
 .name {
@@ -96,16 +83,21 @@
   grid-row: 1;
 }
 
-
-
 .description {
   grid-column:5/ span 12;
   grid-row: 1;
-  max-height: 150px;
+  max-height: 225px;
   overflow-y: scroll;
 }
 
 ::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* make scrollbar transparent */
+}
+
+@media (max-width: 1000px) {
+  #item-header{
+    display: flex;
+    flex-direction: column;
+  }
 }

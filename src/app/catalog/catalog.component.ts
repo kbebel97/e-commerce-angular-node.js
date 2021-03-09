@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Item } from '../shared/Item.model';
 import { catalogService } from './catalog.service';
 import { User } from '../shared/user.model';
@@ -21,7 +21,7 @@ export class CatalogComponent implements OnInit {
   totalItems = 150;
   itemsPerPage = 20;
   currentPage = 1;
-  constructor( private catalogService: catalogService, private router: Router) { }
+  constructor( private catalogService: catalogService, private router: Router, private route : ActivatedRoute) { }
 
   ngOnInit(){
     this.isLoading = true;
@@ -46,14 +46,15 @@ export class CatalogComponent implements OnInit {
   }
 
   onShowMore(item: Item){
-    this.router.navigate(['/menus/item']);
+    // this.carouselService.setPhotos(item.imagePaths);
+    this.router.navigate(['/item'], {queryParams: {itemId: item.id}});
   }
 
-  onDelete(itemId: string){
-    this.isLoading = true;
-    this.catalogService.deleteItemMongo(itemId).subscribe(() => {
-      this.catalogService.getCatalogMongo(this.itemsPerPage, this.currentPage);
-    })
-  }
+  // onDelete(itemId: string){
+  //   this.isLoading = true;
+  //   this.catalogService.deleteItemMongo(itemId).subscribe(() => {
+  //     this.catalogService.getCatalogMongo(this.itemsPerPage, this.currentPage);
+  //   })
+  // }
 }
 

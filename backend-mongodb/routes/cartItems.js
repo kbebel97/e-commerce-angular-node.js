@@ -1,6 +1,7 @@
 const express = require("express");
 
 const CartItem = require("../models/cartItem");
+const Item = require("../models/item");
 
 const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
@@ -40,6 +41,51 @@ router.post("", checkAuth, (req, res, next) => {
         })
       }
     })
+});
+
+router.post("/itemId", checkAuth, (req, res, next) => {
+  console.log(req.body.itemId);
+  const itemQuery = Item.findOne({_id : req.body.itemId});
+  const cartitemQuery = CartItem.findOne({itemId : req.body.itemId, creator: req.userData.userId})
+  let fetchedCartItem;
+  // Chaining multiple queries. 1st query retrieves cartitem need to be updated, 2nd query increases cartitem quantity by one if it exists in db
+  itemQuery.then((fetchedItem) => {
+    fetchedItem = fetchedItem;
+    return fetchedItem;
+  })
+  .then((fetchedItem)=> {
+    cartitemQuery
+    .then(document => {
+      console.log(document);
+      fetchedCartItem = document;
+      return CartItem.count();
+    })
+    .then((count) => {
+      if(fetchedCartItem!=null){
+        const cartItem = new CartItem({
+          _id: fetchedCartItem._id,
+          itemId: req.body.itemId,
+          qty: parseInt(fetchedCartItem.qty) + 1,
+          item: fetchedItem,
+          creator: req.userData.userId
+        });
+        CartItem.updateOne({ _id: fetchedCartItem._id, creator: req.userData.userId }, cartItem).then(result => {
+          console.log(result);
+          res.status(200).json({message: "Update successful!", cartItem : null, count : count});
+        });
+      } else {
+        const cartItem = new CartItem({
+          itemId: req.body.itemId,
+          qty: 1,
+          item: fetchedItem,
+          creator: req.userData.userId
+        });
+        cartItem.save().then((result) => {
+          res.status(201).json({message: 'Item added successfully!', cartItem: result, count : count});
+        })
+      }
+    })
+  })
 });
 
 router.put("", checkAuth, (req, res, next) => {
